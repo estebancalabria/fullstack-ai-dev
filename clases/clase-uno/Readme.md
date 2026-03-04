@@ -9,6 +9,7 @@
 
   * Crear un repositorio en Github con el suiente nombre : BOTTCAMP-EDIT-[Apellido]
   * Completar el google form del profe donde informan la url del repo
+          * https://docs.google.com/forms/d/e/1FAIpQLSeSmBBJUom8mr4bj0jdyskUxEDx_h4GU81rKOsOwuA3hxQliA/viewform?usp=publish-editor
   * Avisarle al profe cada tanto "Hacele commit"
   * Asegurarse de tener instalado python
    * Si en la terminal pones : python
