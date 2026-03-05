@@ -4,6 +4,9 @@
 
   * Python
     * https://www.instagram.com/p/C_VyOHHRv0N/?img_index=4
+  * System Design
+     * Programacio Orientada a Objetos
+     * Diseniar/Diagramar la solucion
   * Git
      * Lo vamos au sar en todo el curso
   * Base De Datos Relacionales
@@ -25,6 +28,22 @@
 * Backend
   * Base De Datos Relacionales
 
+```mermaid
+graph TD
+    Frontend["**Frontend**"]
+    Backend["**Backend**"]
+    DB["**Base de Datos**"]
+    LLM["**LLM**"]
+
+    Frontend --> Backend
+    Backend --> LLM
+    Backend --> DB
+```
+Diagrama hecho con Mermaid : https://mermaid.live/
+
+# Git
+
+
 # Tareas
 
   * Crear un repositorio en Github con el suiente nombre : BOTTCAMP-EDIT-[Apellido]
@@ -43,6 +62,7 @@ pip 25.3 from C:\Coding\Python\Lib\site-packages\pip (python 3.11)
 ``` 
   * Una hora antes el profesor se va a estar conectando en Discord (18:00)
   * Seguir al profe en su IG Profesional : https://www.instagram.com/mct.esteban.calabria/ (mct.esteban.calabria@...gmail...)
+  * 
   
 # Herramientas
 
@@ -66,3 +86,8 @@ pip 25.3 from C:\Coding\Python\Lib\site-packages\pip (python 3.11)
 
 * Colab que vamos ausar esta clase:
    * https://colab.research.google.com/drive/1MUluNBY9ohn7z695XWCgirS8J7U_SgIy?usp=sharing
+
+# IA para programadores
+
+* https://claude.ai/
+  * IA Mas para programar...
