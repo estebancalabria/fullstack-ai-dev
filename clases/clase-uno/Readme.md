@@ -89,5 +89,14 @@ pip 25.3 from C:\Coding\Python\Lib\site-packages\pip (python 3.11)
 
 # IA para programadores
 
+## Claude
+
 * https://claude.ai/
   * IA Mas para programar...
+  * Se puede verificar en : https://arena.ai/
+
+```
+Quiero que me programes un Artefacto que se el juego pong en html en un solo artefacto. Que el jugador de la izquierda se mueva con la a y z y el de la derecha con las reclas de cursor (ARRIBA-ABAJO) . Que tenga efectos de particulas y se vea moderno y responsive.
+```
+* Con eso generamos este ejemplo : https://claude.ai/public/artifacts/c31c370f-95ef-4915-af4f-006f632e05e7
+* Asi lo generamos : https://claude.ai/public/artifacts/c31c370f-95ef-4915-af4f-006f632e05e7
