@@ -3,13 +3,33 @@
 # Roadmap
 
   * Python
-  * IS Para PRogramadores
+    * https://www.instagram.com/p/C_VyOHHRv0N/?img_index=4
+  * Git
+     * Lo vamos au sar en todo el curso
+  * Base De Datos Relacionales
+     * SQL
+     * SQlite / Postgres / MySQL
+  * IA Para Programadores
+     * Vamos a programar con IA y ver herramientas que me ayuden a programar
+     * Como utilizar la IA con criterio para programar
+     * https://www.instagram.com/p/DJrpLZWgqJr/?img_index=1
+  * Aplicacaiones Inteligentes
+     * Uso de LLM mediante API Key
+     * Agentes
+        * Agentes Conversacionales (Chatbot pero especializado en algo : Atencion al cliente)
+        * Agentes Autonomos
+
+# Arquitectura Full-Stack
+
+* Front-end
+* Backend
+  * Base De Datos Relacionales
 
 # Tareas
 
   * Crear un repositorio en Github con el suiente nombre : BOTTCAMP-EDIT-[Apellido]
   * Completar el google form del profe donde informan la url del repo
-          * https://docs.google.com/forms/d/e/1FAIpQLSeSmBBJUom8mr4bj0jdyskUxEDx_h4GU81rKOsOwuA3hxQliA/viewform?usp=publish-editor
+     * https://docs.google.com/forms/d/e/1FAIpQLSeSmBBJUom8mr4bj0jdyskUxEDx_h4GU81rKOsOwuA3hxQliA/viewform?usp=publish-editor
   * Avisarle al profe cada tanto "Hacele commit"
   * Asegurarse de tener instalado python
    * Si en la terminal pones : python
@@ -21,7 +41,9 @@ Type "help", "copyright", "credits" or "license" for more information.
 C:\Users\esteb>pip --version
 pip 25.3 from C:\Coding\Python\Lib\site-packages\pip (python 3.11)
 ``` 
-
+  * Una hora antes el profesor se va a estar conectando en Discord (18:00)
+  * Seguir al profe en su IG Profesional : https://www.instagram.com/mct.esteban.calabria/ (mct.esteban.calabria@...gmail...)
+  
 # Herramientas
 
   * Google Colab
