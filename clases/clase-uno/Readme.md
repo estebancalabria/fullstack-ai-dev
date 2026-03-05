@@ -100,3 +100,7 @@ Quiero que me programes un Artefacto que se el juego pong en html en un solo art
 ```
 * Con eso generamos este ejemplo : https://claude.ai/public/artifacts/c31c370f-95ef-4915-af4f-006f632e05e7
 * Asi lo generamos : https://claude.ai/public/artifacts/c31c370f-95ef-4915-af4f-006f632e05e7
+
+# Para la proxima...
+
+* Vamos a avanzar en python y ejecutar ejemplos lolcamente
