@@ -17,6 +17,11 @@
   * Hicimos el ejemplo del Pong con Claude
 * Seguir al profe en Instagram
 
+# Git
+
+* Instalar CLI git
+> https://git-scm.com/install/
+
 # Cursor (IDE)
 
 * Es ideal para proyectos grandes, indexa muy bien todo el codebase (la base de codigo)
