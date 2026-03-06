@@ -4,6 +4,7 @@ Listado de repositorios de GitHub de los alumnos del bootcamp.
 
 | Alumno | Repositorio |
 |------|------|
+| Agustin | https://github.com/sugaxd/bootcamp-EDIT-BazanAgustin |
 | Cristian | https://github.com/Cristian-Bosz/BOTTCAMP-EDIT-BOSZ |
 | Lucas | https://github.com/LucasDominguez/BOOTCAMP-EDIT-DOMINGUEZ |
 | Gaston | https://github.com/gastonhrios/BOTTCAMP-EDIT-HERRERA |
