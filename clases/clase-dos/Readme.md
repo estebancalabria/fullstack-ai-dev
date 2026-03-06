@@ -54,6 +54,7 @@ code .
     * Su ecosistema de librerias.
       * Ejemplo de Librerias
         * PyGame : https://www.pygame.org/news
+        * Compilado de Liberias de Python  : https://www.instagram.com/p/DPmewyVjs88/?img_index=1
     * Busca su facilida de lecura
     
 * El Colab del Dia
@@ -512,3 +513,12 @@ pip install pygame
 pip install pygame-ce
 ```
 
+* Para ver donde instala las librerias
+
+```cmd
+pip show pygame
+```
+
+> Asi como usamos el pip instala la libreria para rada la computadora. Es un problema cuando dos programas usan versiones distintas de la misma liberia. Trae conflicto. Por ese motivo en general se trabaja utilizando "entornos virtuales". La forma pro de trabajar con librerias en python que vamos a ver mas adelante
+
+>  Es fundamental saber que librerias usar y para que sirven para saber darle un buen prompt a la IA - Matias
