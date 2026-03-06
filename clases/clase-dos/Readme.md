@@ -522,3 +522,11 @@ pip show pygame
 > Asi como usamos el pip instala la libreria para rada la computadora. Es un problema cuando dos programas usan versiones distintas de la misma liberia. Trae conflicto. Por ese motivo en general se trabaja utilizando "entornos virtuales". La forma pro de trabajar con librerias en python que vamos a ver mas adelante
 
 >  Es fundamental saber que librerias usar y para que sirven para saber darle un buen prompt a la IA - Matias
+
+
+# Alumnu
+
+* Vamos Viendo
+ * Modulo 1
+ * Modulo 3
+ * Modulo 10 
