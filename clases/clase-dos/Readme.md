@@ -554,8 +554,64 @@ pip show pygame
 
 >  Es fundamental saber que librerias usar y para que sirven para saber darle un buen prompt a la IA - Matias
 
+## Tipos de Datos primitivos en python
 
-# Alumnu
+* int
+* float
+* complex
+* bool
+* str
+* bytes
+* Vimos la funcion build-in
+  * type
+  * isinstance(a, int)
+ 
+```
+# Pytho es un lenguaje Dinamicamente tipado
+
+a = 10
+print(a)
+print(type(a))
+print(type(a).__name__)
+
+print("-------------")
+
+a = 10.5
+print(a)
+print(type(a))
+print(type(a).__name__)
+
+print("-------------")
+
+a = "Hola"
+print(a)
+print(type(a))
+print(type(a).__name__)
+
+print("-------------")
+
+#a = 2 + 3j
+a = (-1) ** (1/2) #Rais cuadrada de menos uno
+print(a)
+print(a.imag)
+print(type(a))
+print(type(a).__name__)
+
+print("-------------")
+
+a = True
+print(a)
+print(type(a))
+print(type(a).__name__)
+
+```
+
+ ## Repo con proyectitos sencillos en python
+
+ > https://github.com/ShravanDalavi/Simple-Python-Mini-Projects
+
+
+# Alumni
 
 * Vamos Viendo
  * Modulo 1
