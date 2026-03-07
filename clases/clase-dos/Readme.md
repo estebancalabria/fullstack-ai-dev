@@ -30,6 +30,37 @@ git clone <URL DE SU REPO>
 ```cmd
 git clone https://github.com/estebancalabria/fullstack-ai-dev.git
 ```
+* Las carpetas que estan dentro de un repotorio git me doy cuenta porque tiene un directorio oculto que se llama .git
+* Para subir los cambios
+```cmd
+# Marca los archivos para agregar
+git add *
+
+# Muestra los cambios pendientes de confirmar
+git status
+
+# Los sube localmente al staging (NO los sube a internet)
+git commit -m "Estuve programando en python"
+
+# Actualiza el repositorio local con los cambios que hay en el repositorio remoto
+git pull
+
+# Sube los cambios locales al repositorio remoto (intenet)
+git push
+```
+
+Si tira el error
+
+```
+Author identity unknown
+*** Please tell me who you are. me tira ese error al tirar el commit
+```
+
+Hay que decir quien sos
+```
+git config --global user.name "Matias Scarola"
+git config --global user.email "<El mismo mail que tenes en github>"
+```
 
 # Cursor (IDE)
 
