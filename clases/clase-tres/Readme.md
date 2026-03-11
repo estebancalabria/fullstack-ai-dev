@@ -74,26 +74,6 @@ elif isinstance(variable, str):
 
 ## Identidades de objetos en python
 
-```mermaid
-graph TB
-    subgraph CACHE["🔒 Cache de Python (integers -5 a 256)"]
-        OBJ1["Objeto int\nvalor = 1\nid: 0x1A2B"]
-    end
-
-    subgraph HEAP["🧠 Heap (integers fuera del cache)"]
-        OBJ2["Objeto int\nvalor = 1000\nid: 0x3C4D"]
-        OBJ3["Objeto int\nvalor = 1000\nid: 0x5E6F"]
-    end
-
-    uno["uno"] -->|"apunta a"| OBJ1
-    otro_uno["otro_uno"] -->|"apunta a"| OBJ1
-
-    mil["mil"] -->|"apunta a"| OBJ2
-    otro_mil["otro_mil"] -->|"apunta a"| OBJ3
-
-    style CACHE fill:#d4edda,stroke:#28a745
-    style HEAP fill:#f8d7da,stroke:#dc3545
-```
 
 ```pyton
 # Curiosidad de python
@@ -123,6 +103,59 @@ if not(mil is otro_uno):
 
 # Porque pasa esto???
 # 
+```
+
+```mermaid
+graph TB
+    subgraph CACHE["🔒 Cache de Python (integers -5 a 256)"]
+        OBJ1["Objeto int\nvalor = 1\nid: 0x1A2B"]
+    end
+
+    subgraph HEAP["🧠 Heap (integers fuera del cache)"]
+        OBJ2["Objeto int\nvalor = 1000\nid: 0x3C4D"]
+        OBJ3["Objeto int\nvalor = 1000\nid: 0x5E6F"]
+    end
+
+    uno["uno"] -->|"apunta a"| OBJ1
+    otro_uno["otro_uno"] -->|"apunta a"| OBJ1
+
+    mil["mil"] -->|"apunta a"| OBJ2
+    otro_mil["otro_mil"] -->|"apunta a"| OBJ3
+
+    style CACHE fill:#d4edda,stroke:#28a745
+    style HEAP fill:#f8d7da,stroke:#dc3545
+```
+
+# Puntos flotantes
+
+* Las compus son muy buenas para manejar numeros enteros, pero hay numeros de punto flotante que no se pueden repesentar bien
+* Esto tiene que ver con la forma que las computadoras almacenan los numeros de punto flotante
+* Para aplicaciones cientificas, juegos, esto generalmente no es un problema porque son aproximaciones lo suficientemente buenas
+
+```python
+print(0.1 + 0.2)
+```
+
+* Deberia dar
+
+```
+0.30000000000000004
+
+```
+
+* Para aplicaciones financieras se invento el decimal que trabaja con una cantidad finita de decimales
+
+```pyton
+from decimal import Decimal
+
+num1 = Decimal('0.1')
+# En la computadora no se puede representar el 0.2 en flotante. Por eso u samos string
+num2 = Decimal('0.2')
+print(num1 + num2)
+```
+* Ahi da...
+```
+0.3
 ```
 
 ## Entornos Virtuales
