@@ -160,6 +160,20 @@ print(num1 + num2)
 
 ## Entornos Virtuales
 
+* Cuando instalaba un programa con pip install donde lo instaba?
+ * Los instalaba global para todos mis programas en python
+ * Se puede ver donde estan con
+    * pip --version
+    * pip show <Nombre libreria>
+* Ahora que pasa cuando tendo dos programas que usan la misma liberia pero necesitan versiones distintas?????
+   * En ese caso hay que usar ENTORNOS VIRTUALES
+   * Que son entornos aislados que tienen una copia de la libreria que usa mi programa
+* El lio de las librerias no es solo en python cada lenguaje tiene su administrador de paquetes
+
+ 
+
+
+
 ## Tipos de Aplicaciones
 
 ## Para hacer 
