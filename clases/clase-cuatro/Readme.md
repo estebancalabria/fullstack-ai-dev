@@ -194,6 +194,10 @@ print(lista_facil)
 
 ## Operador Slicing
 
+* Sintaxis
+  * [inicio:fin]
+    * [1:3]
+
 ```python
 lista = [1,2,3,4,5]
 # Como en los rangos el indice final no se incluye
