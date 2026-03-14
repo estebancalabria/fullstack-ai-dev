@@ -197,6 +197,9 @@ print(lista_facil)
 * Sintaxis
   * [inicio:fin]
     * [1:3]
+    * [:3]   que es lo mismo que [0:3]
+    * [3:]   del indice 3 al final
+  * [inicio:fin:salto]
 
 ```python
 lista = [1,2,3,4,5]
@@ -219,5 +222,44 @@ print(copia)
 copia = lista[1:]
 print(copia)
 ```
+
+* Ejemplo de slicing con el paramerro de salto
+
+```python
+#El operador de slice con los 3 parametros
+#[inicio:fin:salto]
+lista = [1,2,3,4,5,6,7,8,9,10]
+
+#Sin omitir ningun parametro
+copia = lista[0:10:2]
+print(copia)
+
+#Omito el segundo parametro el de fin 
+otra_copia = lista [0::2]
+print(otra_copia)
+
+#Omito el inicio y el fin
+otra_copia_mas = lista[::2]
+print(otra_copia_mas)
+
+#Si quiero [2,4,6,8,10]
+mas_copias = lista[1::2] #Desde el indice 1 hasta el final saltando cada 2
+print(mas_copias)
+
+#Si quiero [10,9,8,7,6,5,4,3,2,1]
+uff_cuantas_copias = lista[::-1]
+print(uff_cuantas_copias)
+
+#Si quiero [9,7,5,3,1]
+otra = lista[8::-2]
+print(otra)
+
+otra_mas = lista[-2::-2]
+print(otra_mas)
+```
+
+# Recursos para practicar Python
+
+> https://www.hackerrank.com/domains/python
 
 # Tipos de Aplicacione en Python
