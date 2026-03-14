@@ -263,3 +263,196 @@ print(otra_mas)
 > https://www.hackerrank.com/domains/python
 
 # Tipos de Aplicacione en Python
+
+* Existen dos terminales en la compu (CLI): cmd y powershell
+  * cmd es clasico, de toda la vida
+  * powershell es mas moderno, tiene mas comados per mas restricciones de permisos
+ 
+* Vamos a generar una aplicacion multi plataforma utilizando la libreria kivy (Esta no viene con python com tkinter)
+* A Claude le digo : "haceme un ejemplo en python de una aplicacion multi-plataforma con la libreria kivy. Un codigo no muy extenso."
+  
+```python
+from kivy.app import App
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+from kivy.uix.textinput import TextInput
+from kivy.uix.boxlayout import BoxLayout
+
+
+class Calculadora(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(orientation="vertical", padding=10, spacing=8, **kwargs)
+
+        # Pantalla
+        self.pantalla = TextInput(
+            font_size=36,
+            readonly=True,
+            halign="right",
+            size_hint_y=0.25,
+            background_color=(0.15, 0.15, 0.15, 1),
+            foreground_color=(1, 1, 1, 1),
+        )
+        self.add_widget(self.pantalla)
+
+        # Botones
+        botones = [
+            ["7", "8", "9", "/"],
+            ["4", "5", "6", "*"],
+            ["1", "2", "3", "-"],
+            ["C", "0", "=", "+"],
+        ]
+
+        grid = GridLayout(cols=4, spacing=6)
+        for fila in botones:
+            for label in fila:
+                btn = Button(
+                    text=label,
+                    font_size=24,
+                    background_color=self._color(label),
+                    background_normal="",
+                )
+                btn.bind(on_press=self.al_presionar)
+                grid.add_widget(btn)
+
+        self.add_widget(grid)
+
+    def _color(self, label):
+        if label == "=":
+            return (0.2, 0.7, 0.4, 1)
+        if label == "C":
+            return (0.8, 0.3, 0.3, 1)
+        if label in "/*-+":
+            return (0.3, 0.5, 0.8, 1)
+        return (0.25, 0.25, 0.25, 1)
+
+    def al_presionar(self, boton):
+        texto = boton.text
+        if texto == "C":
+            self.pantalla.text = ""
+        elif texto == "=":
+            try:
+                self.pantalla.text = str(eval(self.pantalla.text))
+            except Exception:
+                self.pantalla.text = "Error"
+        else:
+            self.pantalla.text += texto
+
+
+class CalculadoraApp(App):
+    def build(self):
+        self.title = "Calculadora Kivy"
+        return Calculadora()
+
+
+if __name__ == "__main__":
+    CalculadoraApp().run()
+```
+
+* Cuando lo ejecuta hago esto me tira que no tengo el modulo de Kivy
+```
+C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>python kivy-demo.py
+Traceback (most recent call last):
+  File "C:\Cursos\fullstack-ai-dev\clases\clase-cuatro\kivy-demo.py", line 1, in <module>
+    from kivy.app import App
+ModuleNotFoundError: No module named 'kivy'
+```
+
+* Voy a crear un entorno virtual e instalo kyvu
+
+```
+Microsoft Windows [Version 10.0.26200.8037]
+(c) Microsoft Corporation. All rights reserved.
+
+WARNING: Package(s) not found: kivy
+
+C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>python kivy-demo.py
+Traceback (most recent call last):
+  File "C:\Cursos\fullstack-ai-dev\clases\clase-cuatro\kivy-demo.py", line 1, in <module>     
+    from kivy.app import App
+ModuleNotFoundError: No module named 'kivy'
+
+C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>python -m venv entorno-virtual
+
+C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>entorno-virtual\Scripts\activate
+
+(entorno-virtual) C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>deactivate
+C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>entorno-virtual\Scripts\activate
+
+(entorno-virtual) C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>pip install kivy
+Collecting kivy
+  Using cached Kivy-2.3.1-cp311-cp311-win_amd64.whl (4.6 MB)
+Collecting Kivy-Garden>=0.1.4
+  Using cached Kivy_Garden-0.1.5-py3-none-any.whl (4.6 kB)
+Collecting docutils
+  Downloading docutils-0.22.4-py3-none-any.whl (633 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 633.2/633.2 kB 6.7 MB/s eta 0:00:00
+Collecting pygments
+  Using cached pygments-2.19.2-py3-none-any.whl (1.2 MB)
+Collecting requests
+  Using cached requests-2.32.5-py3-none-any.whl (64 kB)
+Collecting filetype
+  Using cached filetype-1.2.0-py2.py3-none-any.whl (19 kB)
+Collecting kivy-deps.angle~=0.4.0
+  Using cached kivy_deps.angle-0.4.0-cp311-cp311-win_amd64.whl (5.1 MB)
+Collecting kivy-deps.sdl2~=0.8.0
+  Using cached kivy_deps.sdl2-0.8.0-cp311-cp311-win_amd64.whl (4.2 MB)
+Collecting kivy-deps.glew~=0.3.1
+  Using cached kivy_deps.glew-0.3.1-cp311-cp311-win_amd64.whl (123 kB)
+Collecting pypiwin32
+  Using cached pypiwin32-223-py3-none-any.whl (1.7 kB)
+Collecting pywin32>=223
+  Using cached pywin32-311-cp311-cp311-win_amd64.whl (9.5 MB)
+Collecting charset_normalizer<4,>=2
+  Downloading charset_normalizer-3.4.5-cp311-cp311-win_amd64.whl (142 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 142.4/142.4 kB ? eta 0:00:00
+Collecting idna<4,>=2.5
+  Using cached idna-3.11-py3-none-any.whl (71 kB)
+Collecting urllib3<3,>=1.21.1
+  Using cached urllib3-2.6.3-py3-none-any.whl (131 kB)
+Collecting certifi>=2017.4.17
+  Using cached certifi-2026.2.25-py3-none-any.whl (153 kB)
+Installing collected packages: pywin32, kivy-deps.sdl2, kivy-deps.glew, kivy-deps.angle, filetype, urllib3, pypiwin32, pygments, idna, docutils, charset_normalizer, certifi, requests, Kivy-Garden, kivy
+Successfully installed Kivy-Garden-0.1.5 certifi-2026.2.25 charset_normalizer-3.4.5 docutils-0.22.4 filetype-1.2.0 idna-3.11 kivy-2.3.1 kivy-deps.angle-0.4.0 kivy-deps.glew-0.3.1 kivy-deps.sdl2-0.8.0 pygments-2.19.2 pypiwin32-223 pywin32-311 requests-2.32.5 urllib3-2.6.3
+
+[notice] A new release of pip available: 22.3.1 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+(entorno-virtual) C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>   
+```
+
+*  Ahora parado dentro del enrono virtual podes ejecutarlo
+
+```
+(entorno-virtual) C:\Cursos\fullstack-ai-dev\clases\clase-cuatro>python kivy-demo.py    
+[INFO   ] [Logger      ] Record log in C:\Users\esteb\.kivy\logs\kivy_26-03-13_0.txt
+[INFO   ] [deps        ] Successfully imported "kivy_deps.angle" 0.4.0
+[INFO   ] [deps        ] Successfully imported "kivy_deps.glew" 0.3.1
+[INFO   ] [deps        ] Successfully imported "kivy_deps.sdl2" 0.8.0
+[INFO   ] [Kivy        ] v2.3.1
+[INFO   ] [Kivy        ] Installed at "C:\Cursos\fullstack-ai-dev\clases\clase-cuatro\entorno-virtual\Lib\site-packages\kivy\__init__.py"
+[INFO   ] [Python      ] v3.11.1 (tags/v3.11.1:a7a450f, Dec  6 2022, 19:58:39) [MSC v.1934 64 bit (AMD64)]
+[INFO   ] [Python      ] Interpreter at "C:\Cursos\fullstack-ai-dev\clases\clase-cuatro\entorno-virtual\Scripts\python.exe"
+[INFO   ] [Logger      ] Purge log fired. Processing...
+[INFO   ] [Logger      ] Purge finished!
+[INFO   ] [Factory     ] 195 symbols loaded
+[INFO   ] [Image       ] Providers: img_tex, img_dds, img_sdl2 (img_pil, img_ffpyplayer ignored)
+[INFO   ] [Text        ] Provider: sdl2
+[INFO   ] [Window      ] Provider: sdl2
+[INFO   ] [GL          ] Using the "OpenGL" graphics system
+[INFO   ] [GL          ] GLEW initialization succeeded
+[INFO   ] [GL          ] Backend used <glew>
+[INFO   ] [GL          ] OpenGL version <b'4.6.0 - Build 30.0.101.1994'>
+[INFO   ] [GL          ] OpenGL vendor <b'Intel'>
+[INFO   ] [GL          ] OpenGL renderer <b'Intel(R) Iris(R) Xe Graphics'>
+[INFO   ] [GL          ] OpenGL parsed version: 4, 6
+[INFO   ] [GL          ] Shading version <b'4.60 - Build 30.0.101.1994'>
+[INFO   ] [GL          ] Texture max size <16384>
+[INFO   ] [GL          ] Texture max units <32>
+[INFO   ] [Window      ] auto add sdl2 input provider
+[INFO   ] [Window      ] virtual keyboard not allowed, single mode, not docked
+[INFO   ] [Base        ] Start application main loop
+[INFO   ] [GL          ] NPOT texture support is available
+```
+# Para la proxima
+
+* Vamos a ver como trabajar con distintas versiones de python!!! Importante!
