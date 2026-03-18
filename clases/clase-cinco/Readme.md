@@ -20,6 +20,22 @@
 
 # Python
 
+## Tipos de Datos
+
+* Tipos de datos
+  * Basicos
+     * int
+     * float
+     * str
+     * complex
+     * bool
+  * Colecciones
+     * list - []
+     * tuple - ()
+     * range
+     * set   >>>>> proximamente
+     * dict  >>>>> proximamente
+
 ## Tuplas
 
 * Se usan las listas cuando los datos cambian y las tuplas cuando los datos son fijos
