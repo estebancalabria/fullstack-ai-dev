@@ -33,6 +33,7 @@
      * list - []
      * tuple - ()
      * range
+     * enumerate
      * set   >>>>> proximamente
      * dict  >>>>> proximamente
 
@@ -191,6 +192,62 @@ print(f"La lista ocupa en memoria {sys.getsizeof(lista_mil_elementos)} bytes")
 print(f"El rango ocupa en memoria {sys.getsizeof(rango_mil_elementos)} bytes")
 ```
 
+### Funcion Enumerate
+
+```pyton
+personas = ["Juan", "Pedro", "Lauraro", "Majo", "Matias"]
+
+enumerado = enumerate(personas)  #Es como si fuera una lista de tuplas
+
+print(enumerado)
+
+for persona in enumerado:
+  print(persona)
+
+print("----")
+
+for indice, persona in enumerate(personas):
+  print(f"{indice+1} - {persona}")
+
+# El enumerate devuelve un objeto enumerate
+# Es como una lista de tuplas, donde cada tupla, tiene el (indice, valor)
+# Se usa para cuando quiero recorrer una lista y ademas necesito el indice
+```
+
 # Funciones
+
+* Les presento a las funciones en python
+
+```python
+# Las funciones son como fragmentos de codigo reutilizables
+# def <nombre_funcion>(parametro1, pametro2,..., parametron):
+
+
+def sumar(a, b):
+  return a + b
+
+print(sumar(1,2)) 
+
+resultado = sumar(1,2)
+print(resultado)
+
+#Version pro de Carla
+def promedio(lista_numeros):
+    return sum(lista_numeros) / len(lista_numeros)
+
+# Version mas tradicional
+def promedio_tradicional(lista_numeros):
+  suma = 0
+  for numero in lista_numeros:
+    suma += numero
+  return suma / len(lista_numeros)
+    
+
+promedio_notas = promedio([6,7,8,5,10,9,7])
+print(promedio_notas)
+
+promedio_notas = promedio_tradicional([6,7,8,5,10,9,7])
+print(promedio_notas)
+```
 
 # Aplicaciones Web
