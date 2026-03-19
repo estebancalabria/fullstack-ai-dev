@@ -250,4 +250,102 @@ promedio_notas = promedio_tradicional([6,7,8,5,10,9,7])
 print(promedio_notas)
 ```
 
-# Aplicaciones Web
+# Git
+
+* Creacion del archivo .gitignore
+ * Sirve para que un archivo o una carpeta no se suba a github
+ * En general todo el enotorno virtual no lo subo a github
+ * Que cada uno lo cree de nuevo en su maquina local
+
+# Entornos Virtuales
+
+* Cuando un programa tiene muchas liberias estaria bueno informarle al que lo usa que librerias tiene que isntalar
+* En python la forma tradicional de hacerlo es utilizando un archivo Requirements.txt
+* Para instalar todas las librerias declaradas en ese archivo
+
+```cmd
+pip install -r requirements.txt
+```
+
+# Aplicaciones Web - APIS
+
+* Las apis son aplicaciones web sin frontend, toman y devuelven texto
+* Para hacer apis usamos la libreria Flask
+
+## Flask 
+
+> https://flask.palletsprojects.com/en/stable/
+
+* Generamos nuestro proyecto con Claude
+ * "Quiero un hola mundo en python que sea utilizando la libreria Flask. Dame el codigo en un artefacto"
+
+```python
+from flask import Flask
+ 
+app = Flask(__name__)
+ 
+@app.route("/")
+def hola_mundo():
+    return "<h1>¡Hola, Mundo!</h1>"
+ 
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+
+* Para ejecutar primero creamos un entono virtual y lo activamos
+
+```cmd
+> python -m venv ventorno
+> ventorno/scripts/activate
+```
+
+* Despues creamos un archivo requirements.txt donde dijimos que necesitamos flask
+
+```
+flask
+```
+
+* Instalamos todas las librerias del archivo requirements.txt
+
+```cmd
+pip install requirements.txt
+```
+
+* Ejecutamos el proyecto en python
+
+```cmd
+python web-demo.py
+```
+
+* Me mostro en la consola que se habilito el puerto 5000 y con eso voy a una ventana del navegador
+
+```cmd
+[notice] A new release of pip available: 22.3.1 -> 26.0.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+(ventorno) C:\Cursos\fullstack-ai-dev\clases\clase-cinco>python web-demo.py
+ * Serving Flask app 'web-demo'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 200-920-772
+127.0.0.1 - - [18/Mar/2026 21:15:10] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [18/Mar/2026 21:15:11] "GET /favicon.ico HTTP/1.1" 404 -
+```
+
+# Recapitulando
+
+* Librerias que vimos hasta ahora
+  * flask : para programar apis
+  * pygame : para hacer juegos
+  * tkinter : para hacer aplicaciones de escritorio
+  * kivy : para hacer aplicaciones multiplataforma (para moviles ppalmente)
+  * pandas : de oido... todavia no sabemos para que es
+  * Ya venian con python
+    * random : para crear numeros al azar
+    * date, datetime : No me acordaba si las usamos mucho pero es para fechas y horas
+    * sys : para ver informacion del sistema (por ejemplo cuanto espacio en memoria ocupa una variable)
+    * os : No la vimos pero se usa para interactuar con el sistema operativo, ej : leer archivos
