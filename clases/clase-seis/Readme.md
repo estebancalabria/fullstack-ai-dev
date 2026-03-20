@@ -29,14 +29,14 @@
 * Diccionarios
 * Sets / conjuntos
 
-# Javascript
+## Javascript
 
 * El lenguaje de programacion utilizado dentro de los navegador para la parte de front
 * Si estoy en el navegador y aprego f12 puedo abrir la consola del navegador de Javascript
 * Javascript fue un lenguaje trascendental en mundo DEV. Todos de alguna manera lidian lidian con el.
 * Javascript puso de moda un lenguaje/formato que se usa para para representar informacion, almacenar informacion, comunucar inforacion entre sistemas
 
- # JSON (Javascript Object Notation)
+## JSON (Javascript Object Notation)
 
  * Por ejemplo en la consola de javascript (F12 en cualquier pagina) puedo declarar un objeto json
 
@@ -72,6 +72,17 @@ persona["nombre"]
 
 * Si hago un paralelismo con la programacion orientada a objetos, un objeto json se centra mas en la parte de datos que la de comportamiento
 * En python vimos que las variables son objetos. Y a los objetos le puedo pedir cosas ejecutando metodos sobre ellos. Por ejemplos. "cadena".upper().
+
+## API (Aplication program Interface)
+
+* Esta MUY relacioado con JSON
+* Es una forma de comunicar programas (generalmente un frontend con un backend)
+   * Generalmetne trabaja sobre el protocolo HTTP (Hipertext transfer protocol o protocolo para tranferir texto para los amigos)
+   * Hoy en dia se usa el https que le agrega seguridad
+   * La clase que viene vamos a hablr sobre http pero pueden ir viendo esto : https://www.instagram.com/p/DMMcfavuN58/?img_index=1
+* Lo puedo pensar como si fuera una aplicacion web pero que en vez de devoler html, devuelve y recibe json
+* Ejemplos de API
+  * https://rickandmortyapi.com/api/character << Me devuelve un json son los personajes de rick and morty
 
 # Noticias
 
