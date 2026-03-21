@@ -297,6 +297,61 @@ for clave, valor in diccionario.items():
     print(f"{clave} : {valor} ({type(valor)})")
 ```
 
+## Creando una API con Flask y usando diccionarios
+
+* Creo el archivo requirements.txt
+
+```
+flasj
+```
+
+* Vamos a crear el enorno virtual e instalar las dependencias
+
+```
+> python -m venv venv
+
+> venv\Scripts\activate
+
+> pip install -r requirements.txt
+
+```
+
+* El archivo api.py queda
+
+```python
+
+from flask import Flask, jsonify
+ 
+app = Flask(__name__)
+
+personas = [
+    {"id": 1, "nombre": "Juan", "edad": 30},
+    {"id": 2, "nombre": "Maria", "edad": 25},
+    {"id": 3, "nombre": "Pedro", "edad": 35}
+]
+ 
+@app.route("/api/personas")
+def obtener_personas():
+    #Parecido a json.dumps 
+    #pero con un formato más adecuado para APIs
+    return jsonify(personas)
+
+ 
+app.run(debug=True)
+```
+
+* Lo ejecuto como
+
+```
+> python api.py
+```
+
+* Se abre http://127.0.0.1:5000,  por lo que accedo a
+
+```
+http://127.0.0.1:5000/api/personas
+```
+
 
 # Glosario
 
