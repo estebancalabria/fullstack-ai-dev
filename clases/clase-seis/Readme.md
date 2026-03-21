@@ -83,6 +83,8 @@ persona["nombre"]
 * Lo puedo pensar como si fuera una aplicacion web pero que en vez de devoler html, devuelve y recibe json
 * Ejemplos de API
   * https://rickandmortyapi.com/api/character << Me devuelve un json son los personajes de rick and morty
+  * https://pokeapi.co/api/v2/pokemon/   << La api de pokemon
+  * https://thesimpsonsapi.com/api/characters  << La api de los simpsons
 
 # Noticias
 
@@ -216,4 +218,108 @@ print("Recorro ambos al mismo tiempo")
 for clave, valor in automovil.items():
     print(f"{clave} : {valor}")
 
+```
+
+## Trabajar con JSON
+
+* Algo de todos los dias (sobre todo cuando se trabaja con apis) es pasar de un diccionario a un json (str) y de un json a un diccionario
+
+### Convertir un diccionario a un json
+
+```python
+import json
+
+persona = {
+    "nombre" : "Juan",
+    "apellido" : "Perez",
+    "edad" : 30,
+}
+
+#El dups convierte un diccionario a un string con su representacion json 
+json_str = json.dumps(persona)
+
+print(type(json_str))
+print(json_str)
+
+
+json_str = json.dumps(persona, indent=4)
+print(json_str)
+```
+
+### Convertir un JSON a un diccionario
+
+```python
+import json 
+
+cadena_con_json = """
+{"count":1350,"next":"https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20","previous":null,"results":[{"name":"bulbasaur","url":"https://pokeapi.co/api/v2/pokemon/1/"},{"name":"ivysaur","url":"https://pokeapi.co/api/v2/pokemon/2/"},{"name":"venusaur","url":"https://pokeapi.co/api/v2/pokemon/3/"},{"name":"charmander","url":"https://pokeapi.co/api/v2/pokemon/4/"},{"name":"charmeleon","url":"https://pokeapi.co/api/v2/pokemon/5/"},{"name":"charizard","url":"https://pokeapi.co/api/v2/pokemon/6/"},{"name":"squirtle","url":"https://pokeapi.co/api/v2/pokemon/7/"},{"name":"wartortle","url":"https://pokeapi.co/api/v2/pokemon/8/"},{"name":"blastoise","url":"https://pokeapi.co/api/v2/pokemon/9/"},{"name":"caterpie","url":"https://pokeapi.co/api/v2/pokemon/10/"},{"name":"metapod","url":"https://pokeapi.co/api/v2/pokemon/11/"},{"name":"butterfree","url":"https://pokeapi.co/api/v2/pokemon/12/"},{"name":"weedle","url":"https://pokeapi.co/api/v2/pokemon/13/"},{"name":"kakuna","url":"https://pokeapi.co/api/v2/pokemon/14/"},{"name":"beedrill","url":"https://pokeapi.co/api/v2/pokemon/15/"},{"name":"pidgey","url":"https://pokeapi.co/api/v2/pokemon/16/"},{"name":"pidgeotto","url":"https://pokeapi.co/api/v2/pokemon/17/"},{"name":"pidgeot","url":"https://pokeapi.co/api/v2/pokemon/18/"},{"name":"rattata","url":"https://pokeapi.co/api/v2/pokemon/19/"},{"name":"raticate","url":"https://pokeapi.co/api/v2/pokemon/20/"}]}
+"""
+
+diccionario = json.loads(cadena_con_json)
+
+print(type(diccionario))
+print(diccionario)
+nombre_segundo_pokemon = diccionario["results"][1]["name"]
+print(f"El nombre del segundo pokemon es {nombre_segundo_pokemon}")
+```
+
+### Compatibilidad con los tipos de datos javascript-pyton
+
+
+```python
+import json
+
+string_json = """
+{
+    "cadena" : "Hola Mundo",
+    "numero" : 42,
+    "booleano" : true,
+    "flotante" : 3.14
+}
+"""
+
+# SI pongo True el mayucula el json.loads me da un error 
+#porque javascript es case sensitive
+#string_json = """
+#{
+#    "cadena" : "Hola Mundo",
+#    "numero" : 42,
+#    "booleano" : True,
+#    "flotante" : 3.14
+#}
+#"""
+
+
+diccionario = json.loads(string_json)
+print(diccionario)
+
+for clave, valor in diccionario.items():
+    print(f"{clave} : {valor} ({type(valor)})")
+```
+
+
+# Glosario
+
+* Hardcodeado o hardcoded :
+    * Le pregunto a ChatGPT : "Que seria en el codigo tener un valor hardcodeado y porque es algo que habria que evitar a la hora de programar bien"
+
+```markdown
+Tener un valor **hardcodeado** en un programa significa **escribir un valor literal directamente en el código** en lugar de usar una variable, constante, parámetro o configuración externa. Por ejemplo:
+
+# Valor hardcodeado
+precio_iva = 21  # % de IVA directamente en el código
+
+# Mejor forma
+IVA = 21  # como constante
+precio_total = precio * (1 + IVA/100)
+
+### Por qué hay que evitarlo:
+
+1. **Difícil de mantener:** Si el valor cambia (por ejemplo, el IVA sube a 25%), hay que buscar y reemplazarlo en todo el código.
+2. **Menos flexible:** No se puede reutilizar fácilmente para distintos escenarios o entornos.
+3. **Riesgo de errores:** Si hay varios hardcodeados, uno puede olvidarse y generar inconsistencias.
+4. **Complica la configuración:** No permite que otros usuarios o entornos ajusten el valor sin tocar el código.
+5. **Mala práctica profesional:** Los programas bien diseñados usan constantes, variables, archivos de configuración o parámetros.
+
+💡 **Regla general:** Si un valor puede cambiar o es relevante para la lógica, **no lo pongas fijo en el código**; usa variables, constantes o configuraciones externas.
 ```
