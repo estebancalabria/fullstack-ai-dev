@@ -14,7 +14,7 @@ En este laboratorio aprenderás a:
 
 ---
 
-## **1️⃣ Funciones y retorno implícito**
+## **1 Funciones y retorno implícito**
 
 ```python id="f1a2b3"
 # Definimos una función sin return explícito
@@ -33,7 +33,7 @@ print("El resultado de la función es:", resultado)
 
 ---
 
-## **2️⃣ Ventaja de usar nombres de parámetros**
+## **2️ Ventaja de usar nombres de parámetros**
 
 ```python id="f2c4d5"
 def presentar(nombre, edad, ciudad):
@@ -50,7 +50,7 @@ presentar(edad=30, nombre="Ana", ciudad="Buenos Aires")
 
 ---
 
-## **3️⃣ Uso del asterisco `*` al definir parámetros**
+## **4 Uso del asterisco `*` al definir parámetros**
 
 ```python id="f3e6f7"
 def sumar_todos(*numeros):
@@ -66,7 +66,7 @@ print(sumar_todos(1, 2, 3, 4))
 
 ---
 
-## **4️⃣ `*args` y estructuras recibidas**
+## **5 `*args` y estructuras recibidas**
 
 ```python id="f4g8h9"
 def mostrar_args(*args):
@@ -82,7 +82,7 @@ mostrar_args(10, 20, 30)
 
 ---
 
-## **5️⃣ `**kwargs` y estructuras recibidas**
+## **6 `**kwargs` y estructuras recibidas**
 
 ```python id="f5i10j11"
 def mostrar_kwargs(**kwargs):
