@@ -389,7 +389,7 @@ print(restar(1, 2))
 
 ```
 
-o bien
+* o bien
 
 ```
 from calculadora import sumar as sum, restar as minus
@@ -400,4 +400,22 @@ print(minus(1, 2))
 
 ```
 
- 
+* Lo probamos
+
+```
+> python .\importar-partes-especificas.py
+3.0
+-1.0
+```
+
+> Con estos esjemplos ya tienen conocimiento de las 4 alternativas mas comunes apra trabajar con modulos y hacer imports
+
+* TIP PRO: Asi puedo ver los las carpetas donde python busca las librerias
+
+```
+import sys
+
+# Te muestra las rutas de los modulos que python esta usando.
+print(sys.path)
+
+````
