@@ -61,8 +61,18 @@
 * Alguna vez les todo trabajar en un proyecto grande?
    * Se imaginan que no es factible trabajar en un proyecto donde todo este en un solo archivo
    * (Junior tiene a meter todo el codigo en un solo archivo)  ---->  (Senior sabe organizar su codigo en forma eficiente diviendolo en varios archivos)
-   * 
+   
+* Hoy vamos a trabajar local. Abrimos una carpeta con visual studio code 
 
+```cmd
+> code .
+```
+
+* El que se anime puede hacer esto mirmo con cursor
+
+```cmd
+> cursor .
+```
   
 
 
