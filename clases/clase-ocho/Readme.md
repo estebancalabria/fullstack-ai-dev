@@ -37,10 +37,32 @@
   * Deepseek (El que invento  el modo razonamiento)
       * https://chat.deepseek.com/
 
-> Van a probar Quen para la semana que viene y me cuentan
+> (CTA) : Van a probar Quen para la semana que viene y me cuentan
 
 # Noticias de IA
 
 * Hay red social para IAS
   * https://cnnespanol.cnn.com/2026/02/03/ciencia/moltbook-red-social-bots-inteligencia-artificial-trax
+
+# IDES especialiazas con IA
+
+* Cursor
+  * https://cursor.com/
+  * Fork de visual studio code que integra la ia en forma nativa
+  * Esta pensado para desarrollar proyectos grandes
+  * Mantiene mucho mejor el contexto de toda la estructura de proyecto
+
+> (CTA) : Se iniman a instalarlo asi lo probamos la proxima
+
+# Python
+
+## Modulos de Python
+
+* Alguna vez les todo trabajar en un proyecto grande?
+   * Se imaginan que no es factible trabajar en un proyecto donde todo este en un solo archivo
+   * (Junior tiene a meter todo el codigo en un solo archivo)  ---->  (Senior sabe organizar su codigo en forma eficiente diviendolo en varios archivos)
+   * 
+
+  
+
 
