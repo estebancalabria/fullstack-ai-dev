@@ -419,3 +419,127 @@ import sys
 print(sys.path)
 
 ````
+
+# Django
+
+* Todas las clases vemos una libreria del ecosistema python...
+* Hoy vamos a ver un framework para hacer paginas web
+  * Nota mental Django = Flask + html
+* Hoy toca usar QWEN (https://chat.qwen.ai/)
+
+```
+Haceme un proyecto en python con django (el archivo principal se llama django-demo.py) y los pasos para ejecutarlo  y probarlo usando entornos virtuales
+```
+
+* Me hizo esto
+
+```
+import os
+import sys
+import django
+from django.conf import settings
+from django.urls import path
+from django.http import HttpResponse
+from django.core.management import execute_from_command_line
+
+# -----------------------------------------------------------------------------
+# 1. CONFIGURACIÓN DE DJANGO (SIN BASE DE DATOS)
+# -----------------------------------------------------------------------------
+settings.configure(
+    DEBUG=True,
+    SECRET_KEY='una-clave-secreta-para-demo',
+    ROOT_URLCONF=__name__,
+    INSTALLED_APPS=[],  # Sin apps, sin DB
+    MIDDLEWARE=[
+        'django.middleware.security.SecurityMiddleware',
+        'django.middleware.common.CommonMiddleware',
+    ],
+)
+
+django.setup()
+
+# -----------------------------------------------------------------------------
+# 2. VISTAS
+# -----------------------------------------------------------------------------
+
+def home(request):
+    html = """
+    <html>
+        <head><title>Django Demo</title></head>
+        <body style="font-family: sans-serif; text-align: center; padding: 50px;">
+            <h1 style="color: #0C4B33;">¡Hola Mundo desde Django!</h1>
+            <p>Proyecto limpio, sin base de datos innecesaria.</p>
+            <hr>
+            <a href="/about/" style="text-decoration: none; background: #0C4B33; color: white; padding: 10px 20px; border-radius: 5px;">Ir a "Sobre Nosotros"</a>
+        </body>
+    </html>
+    """
+    return HttpResponse(html)
+
+def about(request):
+    return HttpResponse("<h1>Página Sobre Nosotros</h1><p>Este es un ejemplo de routing en Django.</p><br><a href='/'>Volver al inicio</a>")
+
+def api_demo(request):
+    import json
+    data = {"mensaje": "Esto es una respuesta JSON", "status": "ok", "version": "1.0"}
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+# -----------------------------------------------------------------------------
+# 3. URLS
+# -----------------------------------------------------------------------------
+
+urlpatterns = [
+    path('', home, name='home'),
+    path('about/', about, name='about'),
+    path('api/', api_demo, name='api'),
+]
+
+# -----------------------------------------------------------------------------
+# 4. EJECUCIÓN
+# -----------------------------------------------------------------------------
+
+if __name__ == '__main__':
+    execute_from_command_line(sys.argv)
+```
+
+> OJO: Esta es la segunda interaccion, a la primera me puso una base de datos que ni siquiera usaba y no se la pedi. En general el codigo que genera la IA hay que chequearlo, adaptarlo, iterarlo
+
+* Esta el fantasma que dicee "La ia va a dejar alos programadores sin trabajo"
+  * Por ahora no es asi, al contrario. Solo que pasamos de generar todo el codigo nosotros a interar sobre el codigo que  nos da la ia
+  * Es una forma de trabajar nueva
+  * Los que ahora van a tener trabajo (Y MUCHO) son los que aprendan a usar la IA para generar codigo
+  * 
+
+
+* Creo un entorno virtual e instalo la libreria
+
+```
+pip install django
+```
+
+* Lo ejecuto (aca la IA me dice como hacerlo)
+
+```
+python django-demo.py runserver
+```
+
+* Me muestra lo siguiente
+
+```
+> python django-demo.py runserver
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 14 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): auth, contenttypes.
+Run 'python manage.py migrate' to apply them.
+March 27, 2026 - 21:07:48
+Django version 5.2.12, using settings None
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+(venv) (base) PS C:\Cursos\fullstack-ai-dev\clases\clase-ocho> 
+```
