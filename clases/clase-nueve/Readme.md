@@ -41,6 +41,8 @@
 
 # Proyecto Integrador
 
+## Enununciado
+
 * El proyecto integrador es basicamente un CRUD (Create Read Update Delete) / ABM (Alta Baja Modificacion) el alumnos
 * El alumno es una entidad de negocio / dominio
 
@@ -52,9 +54,13 @@
 
 * Todo el registro de los alumnos lo vamos a guardar en MEMORIA (si cierro la app pierdo todo)
 
+* Para cada Alumno individual voy a genera un diccionario y la base de datos en memoria la voy a tener en una lista de diccionarios
+
+## Desarrollo de la version Consola
+
 * Primero vamos a hacer una version Consola y despues la version Escritorio como pide el enunciado
 
-* Para cada Alumno individual voy a genera un diccionario y la base de datos en memoria la voy a tener en una lista de diccionarios
+* Esta version la genere utilizando el Github copilot que me fue de mucha ayuda
 
 * Nuestra primera version
 
@@ -157,6 +163,8 @@ while True:
         print("Opción no válida. Por favor, seleccione una opción del menú.")
 
 ```
+
+## Mejora iterativa del codigo utilizando la IA
 
 * Observaciones
     * Manejo de Errores
@@ -314,3 +322,23 @@ while True:
     else:
         print("Opción no válida. Por favor, seleccione una opción del menú.")
 ```
+
+## 
+
+---
+
+ # Uso de Codding Assistants (Como Github copilot)
+
+* Formas de utilizar un codding assitant
+  * Mediante comentario descriptivo
+      * Escribo un comentario, le doy enter, y la IA me va a sugerir un codigo fantasma (ghost code) que piensa que esta de acuerdo al comentario.
+      * Si me parece Ok presiono el tabulador y acepto los cambios
+  * Usar el chat interactivo
+     * Agente
+        * Si le pongo un prompt de lo que quiero modifica el codigo de acuerdo a mi prompt
+        * Antes de aceptar los cambios esta bueno mirar el codigo a ver si lo entiendo y estoy de acuerdo (no aceptar de una) 
+      * Ask
+      * Plan
+  * Mediante seleccion de codigo y chat inline
+     * Selecciono el codigo, presiono ctrl+ I (cambia segun la herramienta) y le digo el cambio concreto sobre el codigo seleccionado
+ 
