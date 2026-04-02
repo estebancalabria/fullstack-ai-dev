@@ -323,7 +323,146 @@ while True:
         print("Opción no válida. Por favor, seleccione una opción del menú.")
 ```
 
-## 
+## Convertimos nuestra version Consola en una aplicacion de escritorio
+
+* Para hacer esta conversion a tkinter ahora si utilizamos directamente ChatGPT
+  * https://chatgpt.com/share/69cdb637-7c84-83e9-b428-b75b31a593b5
+ 
+* El codigo Generado
+
+```python
+import tkinter as tk
+from tkinter import messagebox
+
+# Base de datos en memoria
+db = [
+    {
+        "id": 1,
+        "nombre": "Esteban",
+        "apellido": "Calabria",
+        "cantidad_cursos": 3
+    }
+]
+
+# ---------- FUNCIONES ----------
+def generar_id():
+    return max(alumno["id"] for alumno in db) + 1 if db else 1
+
+def actualizar_lista():
+    lista.delete(0, tk.END)
+    for alumno in db:
+        texto = f"{alumno['id']} - {alumno['nombre']} {alumno['apellido']} ({alumno['cantidad_cursos']} cursos)"
+        lista.insert(tk.END, texto)
+
+def agregar_alumno():
+    try:
+        nombre = entry_nombre.get().strip()
+        apellido = entry_apellido.get().strip()
+        cursos = int(entry_cursos.get())
+
+        if not nombre or not apellido:
+            raise ValueError
+
+        nuevo = {
+            "id": generar_id(),
+            "nombre": nombre,
+            "apellido": apellido,
+            "cantidad_cursos": cursos
+        }
+
+        db.append(nuevo)
+        actualizar_lista()
+        limpiar_campos()
+
+    except:
+        messagebox.showerror("Error", "Datos inválidos")
+
+def eliminar_alumno():
+    seleccionado = lista.curselection()
+    if not seleccionado:
+        return
+
+    index = seleccionado[0]
+    db.pop(index)
+    actualizar_lista()
+
+def cargar_seleccion():
+    seleccionado = lista.curselection()
+    if not seleccionado:
+        return
+
+    alumno = db[seleccionado[0]]
+
+    entry_nombre.delete(0, tk.END)
+    entry_nombre.insert(0, alumno["nombre"])
+
+    entry_apellido.delete(0, tk.END)
+    entry_apellido.insert(0, alumno["apellido"])
+
+    entry_cursos.delete(0, tk.END)
+    entry_cursos.insert(0, alumno["cantidad_cursos"])
+
+def modificar_alumno():
+    seleccionado = lista.curselection()
+    if not seleccionado:
+        return
+
+    try:
+        alumno = db[seleccionado[0]]
+
+        alumno["nombre"] = entry_nombre.get()
+        alumno["apellido"] = entry_apellido.get()
+        alumno["cantidad_cursos"] = int(entry_cursos.get())
+
+        actualizar_lista()
+        limpiar_campos()
+
+    except:
+        messagebox.showerror("Error", "Datos inválidos")
+
+def limpiar_campos():
+    entry_nombre.delete(0, tk.END)
+    entry_apellido.delete(0, tk.END)
+    entry_cursos.delete(0, tk.END)
+
+# ---------- UI ----------
+ventana = tk.Tk()
+ventana.title("Gestión de Alumnos")
+ventana.geometry("500x400")
+
+# Inputs
+tk.Label(ventana, text="Nombre").pack()
+entry_nombre = tk.Entry(ventana)
+entry_nombre.pack()
+
+tk.Label(ventana, text="Apellido").pack()
+entry_apellido = tk.Entry(ventana)
+entry_apellido.pack()
+
+tk.Label(ventana, text="Cursos").pack()
+entry_cursos = tk.Entry(ventana)
+entry_cursos.pack()
+
+# Botones
+tk.Button(ventana, text="Agregar", command=agregar_alumno).pack(pady=5)
+tk.Button(ventana, text="Modificar", command=modificar_alumno).pack(pady=5)
+tk.Button(ventana, text="Eliminar", command=eliminar_alumno).pack(pady=5)
+
+# Lista
+lista = tk.Listbox(ventana)
+lista.pack(fill=tk.BOTH, expand=True)
+
+lista.bind("<<ListboxSelect>>", lambda e: cargar_seleccion())
+
+# Inicializar
+actualizar_lista()
+
+ventana.mainloop()
+```
+
+* Version
+
+<img width="761" height="657" alt="image" src="https://github.com/user-attachments/assets/5dc0a087-6a5a-4334-9121-2c6186e9a7ed" />
 
 ---
 
