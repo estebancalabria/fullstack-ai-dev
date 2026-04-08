@@ -59,5 +59,29 @@
    * Aprender a programar (if/while./logica) ----------->  Diseniar sistemas
 * Camino Actual
    * Aprender como estan construidos los sistemas --------------> Darle instrucciones a la IA para que programe
+   * (LA IA permite abarcar el system design de forma mas temprana)
+
+## Buenas practicas a la hora de programar
+
+* Clean Code
+  * https://www.instagram.com/p/C745gVWR8MV/?img_index=1
+* Hay que mirar todo el tiempo lo que hace la Ia y corregirlo
+
+## Panorama HOY
+
+* (Mucho codigo generado por IA) ---> (Nadie entiende ese codigo) ---> (deuda cognitiva)
+
+* Panorama deseable
+ * (Disenio de sistena) --> (Mucho codigo generado por IA dentro de mis parametros) --> (sistemas que puedo mantener)
 
 # OOP (Object Oriented Programming)
+
+* (Programba como podia (codigo espaggueti)
+     * (sistema fueron creciendo) ---> (sistemas inmantenibles)
+        * Programacion estructurada
+           * (sistema siguieron creciendo) ---> (sistemas costos de mantener) ---> (se empezo a hablar de system design)
+              * Programacion orientada a objetos
+                 * ----> (sistemas mas mantenibles)
+               
+
+
