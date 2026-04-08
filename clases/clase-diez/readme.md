@@ -74,6 +74,11 @@
 * Panorama deseable
  * (Disenio de sistena) --> (Mucho codigo generado por IA dentro de mis parametros) --> (sistemas que puedo mantener)
 
+# Debate Alumnos
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/18286473-ae40-4783-a981-129c274f0e01" />
+
+
 # OOP (Object Oriented Programming)
 
 * (Programba como podia (codigo espaggueti)
