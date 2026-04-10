@@ -264,8 +264,28 @@ impl std::fmt::Display for Alumno {
 }
 ```
 
+* Diferencias
+  * En python el constructor declara los atributos
+  * En otos lenguajes los atriburos los puedo declarar aparte y puedo tener constructores vacios
+  * 
+
+* Antes
+  * Sistemas ENORMES
+* Ahora
+   * Sistemas Mas chicos que se comunicas
+
+* Observaciones
+   * Python no es la mejor opcion para aprender POO. Se puede pero los que hicieron el lenguaje priorizaron otras cosas : facilida de lectura, menos codigo, 
+      * Admite programar sin objetos con programacion estructurada
+      * Pithon tiene un ecosistema de librerias GIGANTE.
+      * Cada vez que haces algo no hay que reinventar la rueda
+      * MAs facil para sistemas Chicos
+   * C# y Java son lenguajes fuertemente tipados que llevaban la POO como bandera, era algo fundamental de como se concibio
+      * Te obligan a programar en objetos
+      * Ideales para sistemas GRANDES, son mas seguros, 
+
 ## 
 
 ## Conceptos
 
-* Contructor : 
+* Contructor : El inicializados de un objeto. Cuando creas un objeto se ejecuta si o si este metodo y adentro hay un molde como quiero que sean los objetos del mismo tipo (clase) al principio. Al momento de crear el objeto con el constructor se pide memoria en un lugar de la memoria que generalmente se llama HEAP.
