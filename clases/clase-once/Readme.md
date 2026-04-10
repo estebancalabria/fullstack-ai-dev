@@ -264,10 +264,33 @@ impl std::fmt::Display for Alumno {
 }
 ```
 
+* UML (Unfified Modeling Language)
+ * Me permite hacer el dibujo del sistema como si fuera el plano de la casa sin programarlo
+   
+```mermaid
+classDiagram
+    class Alumno {
+        -String nombre
+        -String apellido
+        -int cantidad_cursos
+        
+        +Alumno(nombre: String, apellido: String, cantidad_cursos: int)
+        +getNombre() String
+        +getApellido() String
+        +getCantidadCursos() int
+        +setNombre(nombre: String)
+        +setApellido(apellido: String)
+        +setCantidadCursos(cantidad_cursos: int)
+        +toString() String
+    }
+```
+
+
 * Diferencias
   * En python el constructor declara los atributos
   * En otos lenguajes los atriburos los puedo declarar aparte y puedo tener constructores vacios
-  * 
+  * En JAVA (y en los otros lenguajes) se ve que hay setters y getters (y que corno es esto) y en Python no  <<<<<
+  * El constructor se escribe distinto segun el lenguaje (Todos tienen constructor pero cambia la forma __init___, Alumno, construnctor)
 
 * Antes
   * Sistemas ENORMES
@@ -284,7 +307,12 @@ impl std::fmt::Display for Alumno {
       * Te obligan a programar en objetos
       * Ideales para sistemas GRANDES, son mas seguros, 
 
-## 
+## Hablar de la POO
+
+* Hay dos Enfonques
+   * Clasico : Una sintaxis para aprender a programar de una forma determinada
+   * System Design : Una forma de pensar y organizar un sistema para que sea facil de mantener y entender
+       * Donde nosotros como personas hoy en dia aportamos el CRITERIO
 
 ## Conceptos
 
