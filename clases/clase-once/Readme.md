@@ -1,4 +1,4 @@
-# Clase Once - 10 de Abril del 2026
+<img width="280" height="180" alt="image" src="https://github.com/user-attachments/assets/995fe866-8f38-4733-9cd6-bb63eb2da58a" /># Clase Once - 10 de Abril del 2026
 
 # Repaso
 
@@ -22,6 +22,7 @@
       * @classmethod @staticmethod   << Metodos de Clase y Metodos de Instancia
       * Setters, Gettters, Encapsulamiento
 
+
 # Frase Destacadas de la clase
 
 * "El futuro es saber un poco de todo"
@@ -34,6 +35,8 @@
 * Hablar un poco de lenguajes de programacion
 * Hablar de la POO
 * Ver la deuda cognitiva
+
+# Colab de la clase
 
 # Progracion Orientada a Objetos
 
@@ -307,13 +310,236 @@ classDiagram
       * Te obligan a programar en objetos
       * Ideales para sistemas GRANDES, son mas seguros, 
 
-## Hablar de la POO
+## Programacion Orientada a Objetos
 
 * Hay dos Enfonques
    * Clasico : Una sintaxis para aprender a programar de una forma determinada
    * System Design : Una forma de pensar y organizar un sistema para que sea facil de mantener y entender
        * Donde nosotros como personas hoy en dia aportamos el CRITERIO
 
-## Conceptos
+### Conceptos
+
+* Consistencia : Cuano tengo un conjunto de datos relacionados, los datos son consistentes cuando tienen sentido en el contexto que plante
+  * Alumno (nombre="Juan", apellido="Perez", cantidad_cursos=3)         <<< Alumno consistente
+  * Alumno (nombre="", apellido="Perez", cantidad_cursos=3)             <<< Alumno Inconsistente
+  * Alumno (nombre="@4334$#@#$", apellido="Perez", cantidad_cursos=3)   <<< Alumno Inconsistente
+  * La consistencia muchas veces me la define las reglas de negocio, el contexto
 
 * Contructor : El inicializados de un objeto. Cuando creas un objeto se ejecuta si o si este metodo y adentro hay un molde como quiero que sean los objetos del mismo tipo (clase) al principio. Al momento de crear el objeto con el constructor se pide memoria en un lugar de la memoria que generalmente se llama HEAP.
+     * Buena Practira : Asegurar que el objeto que se cree sea consistente
+
+* Objeto : Tiene un conjunto de atributos que en un momento dato tienen un valor especifico (muchas variables declaradas en una sola)
+     * Buena practica : Es deseable asegurar que los atributos de un objeto sean consistentes todo el tiempo
+
+* Encapsulamiento
+   * Formal : Es separar la representacion interna del objeto de los mecanismos para interactuar con ella
+   * Santiago : Es guardar los datos y como funcionan dentro del objeto para que desde afuera solo puedas usarlo sin romper lo que hay por dentro
+   * Proteger los atributos de un objeto para que no los puedan manosar desde afuera y dejarnos el objeto inconsistnte
+
+* Ejemplo
+ * Con encapsulamiento
+   <img width="280" height="180" alt="image" src="https://github.com/user-attachments/assets/6931b3fe-2813-4c12-b2d5-bf9be1c0cae4" />
+ * Sin Encapsulamiento
+   <img width="302" height="519" alt="image" src="https://github.com/user-attachments/assets/db0f2b81-855f-46ab-8f7a-e7f5a199888d" />
+
+> [!NOTE]
+> La primera version que nos hizo python de la clase Alumno es como tener un auto que para prenderlo tenemos que hacer corto con los bables y no hay llave
+
+> [!NOTE]
+> Voy a una casa, el tablero tiene todos los cables al aire pelado, le llueve, hace chispas
+
+## Ejemplo
+
+* Tengo este codigo (Parcialmente generado con la IA)
+```
+class Alumno:
+    #Constuctor
+    def __init__(self, nombre, apellido, cantidad_cursos):
+        self.nombre = nombre
+        self.apellido = apellido
+        self.cantidad_cursos = cantidad_cursos
+    
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} - {self.cantidad_cursos} cursos"
+
+# Observacion 1: Veo que el sistema permite crear objetos inconsistentes
+pedro = Alumno("Pedro","",-1)
+print(pedro)
+
+# Observacion 2 : Tengo un objeto consistente, modifico desde afuera sus atributos y lo vuelvo inconsitent
+juan = Alumno("Juan","Perez",1)
+juan.nombre = "";
+print(juan)
+```
+
+* Obsercaciones
+  * El sistema me pemite crear objetos inconsistntes
+
+```python
+class Alumno:
+    def __init__(self, nombre, apellido, cantidad_cursos):
+        # Validaciones
+        if not isinstance(nombre, str) or not nombre.strip():
+            raise ValueError("El nombre debe ser un string no vacío")
+        if not isinstance(apellido, str) or not apellido.strip():
+            raise ValueError("El apellido debe ser un string no vacío")
+        if not isinstance(cantidad_cursos, int) or cantidad_cursos < 0:
+            raise ValueError("cantidad_cursos debe ser un entero no negativo")
+        
+        self.nombre = nombre.strip()
+        self.apellido = apellido.strip()
+        self.cantidad_cursos = cantidad_cursos
+    
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} - {self.cantidad_cursos} cursos"
+    
+```
+
+* Obsercaciones
+  * El sistema me pemite crear objetos consistentes pero despues cambiarles un atributo y volverlos incosistentes
+  * Por este problema se inventaron lo setters, que son metodos especiales que llamo cuando quiero cargar un atributo
+  * Por eso Claude hizo este codigo
+  * En python como practica dudosa muchas veces omiten los setters pero lenguajes como java te obligan a tenerlo
+ 
+
+```python
+class Alumno:
+    def __init__(self, nombre, apellido, cantidad_cursos):
+        # Validaciones
+        if not isinstance(nombre, str) or not nombre.strip():
+            raise ValueError("El nombre debe ser un string no vacío")
+        if not isinstance(apellido, str) or not apellido.strip():
+            raise ValueError("El apellido debe ser un string no vacío")
+        if not isinstance(cantidad_cursos, int) or cantidad_cursos < 0:
+            raise ValueError("cantidad_cursos debe ser un entero no negativo")
+        
+        self.nombre = nombre.strip()
+        self.apellido = apellido.strip()
+        self.cantidad_cursos = cantidad_cursos
+    
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} - {self.cantidad_cursos} cursos"
+    
+    # Setter con validación
+    def set_nombre(self, nombre):
+        if not isinstance(nombre, str) or not nombre.strip():
+            raise ValueError("El nombre debe ser un string no vacío")
+        self.nombre = nombre.strip()
+
+
+# Crear alumno válido
+juan = Alumno("Juan", "Pérez", 3)
+print(f"Original: {juan}")
+print(f"Nombre actual: {juan.nombre}")
+
+# Cambiar nombre correctamente (VÁLIDO)
+juan.set_nombre("Juanito")
+print(f"\nDespués del cambio: {juan}")
+print(f"Nombre nuevo: {juan.nombre}")
+
+# Intentar cambiar con un valor inválido (FALLA)
+try:
+    juan.set_nombre("")  # Intenta poner vacío
+except ValueError as e:
+    print(f"\nError al cambiar: {e}")
+    print(f"El nombre se mantiene: {juan.nombre}")  # Sigue siendo "Juanito"
+
+# Otro intento inválido
+try:
+    juan.set_nombre(123)  # Intenta pasar un número
+except (ValueError, AttributeError) as e:
+    print(f"\nError al cambiar: {e}")
+    print(f"El nombre se mantiene: {juan.nombre}")  # Sigue siendo "Juanito"
+```
+
+* Por esto python no es tan bueno para programar en objetos
+ * A pesar de que tengo el Setter me deja hacer esto
+ * Al divino boton el setter
+
+```python
+alu = Alumno("Juan", "Perez", 1)
+alu.nombre = ""
+print(alu)
+```
+
+* Le pedimos que lo mejore
+* Se lo planteo a Claude y me hace este codigo
+
+```
+class Alumno:
+    def __init__(self, nombre, apellido, cantidad_cursos):
+        # Validaciones
+        if not isinstance(nombre, str) or not nombre.strip():
+            raise ValueError("El nombre debe ser un string no vacío")
+        if not isinstance(apellido, str) or not apellido.strip():
+            raise ValueError("El apellido debe ser un string no vacío")
+        if not isinstance(cantidad_cursos, int) or cantidad_cursos < 0:
+            raise ValueError("cantidad_cursos debe ser un entero no negativo")
+        
+        self._nombre = nombre.strip()
+        self._apellido = apellido.strip()
+        self._cantidad_cursos = cantidad_cursos
+    
+    # PROPERTY para nombre - obliga a pasar por validación
+    @property
+    def nombre(self):
+        return self._nombre
+    
+    @nombre.setter
+    def nombre(self, valor):
+        if not isinstance(valor, str) or not valor.strip():
+            raise ValueError("El nombre debe ser un string no vacío")
+        self._nombre = valor.strip()
+    
+    # PROPERTY para apellido
+    @property
+    def apellido(self):
+        return self._apellido
+    
+    @apellido.setter
+    def apellido(self, valor):
+        if not isinstance(valor, str) or not valor.strip():
+            raise ValueError("El apellido debe ser un string no vacío")
+        self._apellido = valor.strip()
+    
+    # PROPERTY para cantidad_cursos
+    @property
+    def cantidad_cursos(self):
+        return self._cantidad_cursos
+    
+    @cantidad_cursos.setter
+    def cantidad_cursos(self, valor):
+        if not isinstance(valor, int) or valor < 0:
+            raise ValueError("cantidad_cursos debe ser un entero no negativo")
+        self._cantidad_cursos = valor
+    
+    def __str__(self):
+        return f"{self._nombre} {self._apellido} - {self._cantidad_cursos} cursos"
+
+
+# Ahora SÍ funciona como debe ser
+alu = Alumno("Juan", "Pérez", 1)
+print(f"Original: {alu}")
+
+# Intento cambiar directamente (AHORA FALLA)
+try:
+    alu.nombre = ""
+except ValueError as e:
+    print(f"Error: {e}")
+    print(f"El nombre se mantiene: {alu.nombre}")
+
+# Cambio válido
+alu.nombre = "Juanito"
+print(f"Después del cambio: {alu}")
+
+# Intento con cantidad_cursos inválida
+try:
+    alu.cantidad_cursos = -5
+except ValueError as e:
+    print(f"Error: {e}")
+    print(f"Cursos se mantienen: {alu.cantidad_cursos}")
+```
+
+# Padlet
+
+<img width="1602" height="702" alt="image" src="https://github.com/user-attachments/assets/d75cae3e-eefe-4687-a892-978df7810065" />
