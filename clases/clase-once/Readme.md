@@ -1,4 +1,4 @@
-<img width="280" height="180" alt="image" src="https://github.com/user-attachments/assets/995fe866-8f38-4733-9cd6-bb63eb2da58a" /># Clase Once - 10 de Abril del 2026
+# Clase Once - 10 de Abril del 2026
 
 # Repaso
 
