@@ -347,5 +347,130 @@ class Alumno:
         return cantidad_cursos
 
 ```
-## Incoporar a Proyecto Integrador
 
+### Deuda Cognitiva
+
+> En esta seccion vamos a analizar el codigo de la IA y aprender de él
+
+#### Uso de Excepciones
+
+* Cuando ocurre un error por ejemplo con validacion usa el raise (raise TypeError("...")
+   * Si quiero controlar el error tengo que usar el bloque try
+
+ * Si escribo este codigo
+```python
+from alumno import Alumno
+
+alu = Alumno(1, "Juan", "Pérez", 3)
+print(alu.nombre)  # Juan
+
+## Esto no debería funcionar, ya que el nombre no puede ser vacío
+alu.nombre = ""
+alu.apellido = "García"
+```
+
+* Me tira este mensaje
+
+```
+C:\Cursos\fullstack-ai-dev\clases\clase-doce>python ejemplo-raise.py
+Juan
+Traceback (most recent call last):
+  File "C:\Cursos\fullstack-ai-dev\clases\clase-doce\ejemplo-raise.py", line 7, in <module>
+    alu.nombre = ""
+    ^^^^^^^^^^
+  File "C:\Cursos\fullstack-ai-dev\clases\clase-doce\alumno.py", line 24, in nombre
+    self._nombre = self._validar_nombre(nuevo_nombre)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Cursos\fullstack-ai-dev\clases\clase-doce\alumno.py", line 61, in _validar_nombre
+    raise ValueError("El nombre no puede estar vacio.")
+ValueError: El nombre no puede estar vacio.
+
+C:\Cursos\fullstack-ai-dev\clases\clase-doce>
+```
+
+#### Tipos de Excepciones estandar en Python
+
+* TypeError()
+    * El error estandar cuando una variable no tiene el tipo de dato que espero
+* ValueError()
+    * El error estandar cuando una variable no tiene un valor aceptable
+* Otro : ModuleError()
+* Otros tipos de Excepciones
+    * https://chatgpt.com/share/69e02675-31cc-83e9-a406-d5d4128f8f18
+
+#### Metodos __str__ y __repr___
+
+* Son metodos estandar (magicos) que se usan en las claes de python
+  * __str__ devuelve la presentacion en string el objeto
+       * Ej : print(obj) <<< llama automaticmaente al __str___
+  * ___repr___ es parecido pero decuelve una representacion del objeto mas "tecnica" orientaa al dev
+
+* Ejemplo con y sin STR
+```
+C:\Cursos\fullstack-ai-dev\clases\clase-doce>python ejemplo_str.py
+<alumno.Alumno object at 0x0000023B5ACD4750>
+
+C:\Cursos\fullstack-ai-dev\clases\clase-doce>python ejemplo_str.py
+Juan Pérez
+```
+
+* Agregamos a la clase alumno
+```python
+    def __str__(self) -> str:
+        return f"{self._nombre} {self._apellido}"
+    
+    def __repr__(self) -> str:
+        return f"---{self._nombre} {self._apellido}---"
+```
+
+#### Decoradores Encapsulamiento
+
+En pyton @property y el @atributo.setter son decoradores (estandar) que permiten gestionar el acceso a los atributos de manera controlada. Son la manera de aplicar en python el encapsulamiento
+
+```
+    @property
+    def nombre(self) -> str:
+        return self._nombre
+
+    @nombre.setter
+    def nombre(self, nuevo_nombre: str) -> None:
+        self._nombre = self._validar_nombre(nuevo_nombre)
+```
+
+* Al usarlo no tenemos que usar parentesis
+
+```
+from alumno import Alumno
+
+alu = Alumno(1, "Juan", "Pérez", 3)
+print(alu.nombre)  # Juan
+
+alu.nombre = "María"
+print(alu)  # María
+```
+
+* Se ve que el setter y getter se llaman solos (no hay parentesis)
+* Para el que lo usa es transparente
+
+> [!NOTA]
+> Que es un decorador? No lo vimos....
+> Adelanto : Es sintaxis para una anotacion expecial sobre clases, metodos, variables
+> Podes programar cosas todo los metodos que tengan el decorador @mostrar hacen un print antes de llamar a ese metodos
+> Es una funcion que se ejecuta antes y despues del metodo (para los decoradores de metodo)
+
+#### Type Hints
+
+* Veo que de acuerdo como eduque a la IA aplica los type hings
+* Valores esperados en una funcion
+    * def foo(a: int)  eso espera un int
+* Valores de retorno de una funcion
+    * def foo() -> int    devuelve un int
+    * def foo() -> None   no devuelve nada (es un procedimiento como el print)
+ 
+---
+
+# Deuda cognitiva para proxima clase
+
+* Que un decorador???
+* @staticmethos
+* @classmethod
