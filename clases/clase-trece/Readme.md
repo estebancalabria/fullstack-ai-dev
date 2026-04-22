@@ -42,7 +42,29 @@
 pip install mypy
 ```
 
+* Si tengo este archivo demo-type-hints.py
 
+```python
+def sumar(a:int, b:int) -> int:
+    return a + b
+
+resultado = sumar(3, "5")
+print(resultado)
+```
+
+* Y hago
+
+```
+mypy  demo-type-hints.py
+```
+
+* Me devuelve
+
+```
+C:\Cursos\fullstack-ai-dev\clases\clase-trece>mypy  demo-type-hints.py
+demo-type-hints.py:6: error: Argument 2 to "sumar" has incompatible type "str"; expected "int"  [arg-type]
+Found 1 error in 1 file (checked 1 source file)
+```
 
 ## Metodos 
 
