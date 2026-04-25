@@ -329,11 +329,75 @@ class RepositorioAlumnos:
  * Postgres
  * SqlServer
  * Sqlite
-    * https://sqlite.org/
+
+
+* Generalmente todos los motores
+  * Responden a la arquitectura cliente servidor
+  * Estan pensados para que se conecten muchos usuarios en forma concurrente (a la vez)
+  * Salvo SQLITE el cual no requiere cliente, servidor (Stand Alone)
+
+
+## SQLITE 
+
+* https://sqlite.org/
+* No necesita instalacion
+* Se pueden descagar un cli desde
+   * https://sqlite.org/download.html
+   * Para Windows : https://sqlite.org/2026/sqlite-tools-win-x64-3530000.zip
+
+* Para ejecutar el CLI
+ * En una forma de interacturar con la base de datos desde la consola
+ * Consultar la base de datos por fuera de la app en python
+```
+> sqlite3 C:\Cursos\fullstack-ai-dev\clases\clase-quince\alumnos.db
+```
+
+* Para probar listar la tabla alumnos por fuera de la aplicacion en python
+  * No olvidarse el ; (punto y coma) despues del select
+
+```
+SQLite version 3.49.2 2025-05-07 10:39:52
+Enter ".help" for usage hints.
+sqlite> select * from alumnos;
+2|Ana|Gomez|2
+3|Juan|Perez|1
+sqlite>
+```
+
+* Solo el nombre
+
+```
+sqlite> select nombre from alumnos;
+Ana
+Juan
+```
+
+* Ver el esquema de una tabla
+
+```
+sqlite> .schema alumnos
+CREATE TABLE alumnos (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre TEXT NOT NULL,
+                    apellido TEXT NOT NULL,
+                    cantidad_cursos INTEGER NOT NULL
+                );
+```
 
 ## Lenguaje para hablar con ls bases de datos
 
 * SQL : Standard Queyr Language
+  * Select
+  * DDL : Data Definition Lagunage
+    * CREATE TABLE
+    * ALTER TABLE
+  * DML : Data Manitpulation Language
+    * INSERT
+    * UPDATE
+    * DELETE
+  * El SQL es un lenguaje declarativo
+    * Vos decis lo que queres pero no la setie de pasos que tenes que haer para conseguirlo
+
 
 # Deuda Cognitiva
 
