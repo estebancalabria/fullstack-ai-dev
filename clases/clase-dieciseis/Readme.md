@@ -340,3 +340,18 @@ INSERT INTO Alumno
 VALUES
    ('12', 'Juan', 'Perez', '1998-05-14');
 ```
+
+# Ejercitacion
+
+* Definir la tabla Curso
+* ID
+* Nombre Curso
+* Codigo
+* Cantitad Clases
+* Hs por Clase
+* Tema
+* Max Alumnos
+* ...uds pueden definir mas campos
+
+> [!NOTE]
+> No confundir con el concepto de cursada. Un curso se puede volver a dictar numerosas veces
