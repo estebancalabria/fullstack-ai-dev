@@ -1,4 +1,6 @@
-<img width="1110" height="881" alt="image" src="https://github.com/user-attachments/assets/d4498fba-fd82-491f-9e64-ef6185bbd442" /># Repaso
+# Clase Diceciseis - 29 de Abril del 2026
+
+# Repaso
 
 * Bibliografia
     * Clean Code
