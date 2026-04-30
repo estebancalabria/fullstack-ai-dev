@@ -1,4 +1,4 @@
-# Repaso
+<img width="1110" height="881" alt="image" src="https://github.com/user-attachments/assets/d4498fba-fd82-491f-9e64-ef6185bbd442" /># Repaso
 
 * Bibliografia
     * Clean Code
@@ -355,3 +355,113 @@ VALUES
 
 > [!NOTE]
 > No confundir con el concepto de cursada. Un curso se puede volver a dictar numerosas veces
+
+* Tuvimos varias Propuestas
+
+  <img width="1110" height="881" alt="image" src="https://github.com/user-attachments/assets/1bb066da-7836-4f57-8b48-37ec2afa4a88" />
+
+* La Combinamos con la IA
+   * https://claude.ai/share/5e7659b1-e724-45d0-b084-40ee35defb38
+
+* Finalmente tuvimos esta ultra mega buenisima propuesta
+  
+```sql
+CREATE TABLE curso (
+    id          INTEGER     NOT NULL
+                            CONSTRAINT pk_curso PRIMARY KEY AUTOINCREMENT,
+
+    nombre      TEXT        NOT NULL
+                            CONSTRAINT ck_nombre_no_vacio  CHECK (LENGTH(TRIM(nombre)) > 0)
+                            CONSTRAINT ck_nombre_formato   CHECK (nombre GLOB '[A-Za-z0-9 ]*'),
+
+    codigo      TEXT        NOT NULL
+                            CONSTRAINT uq_codigo           UNIQUE
+                            CONSTRAINT ck_codigo_longitud  CHECK (LENGTH(TRIM(codigo)) BETWEEN 3 AND 20)
+                            CONSTRAINT ck_codigo_formato   CHECK (codigo GLOB '[A-Za-z0-9-_]*'),
+
+    cantidad_clases INTEGER NOT NULL
+                            CONSTRAINT ck_cantidad_clases  CHECK (cantidad_clases BETWEEN 1 AND 100),
+
+    horas_por_clase REAL    NOT NULL
+                            CONSTRAINT ck_horas_por_clase  CHECK (horas_por_clase BETWEEN 0.5 AND 8),
+
+    tema        TEXT        NOT NULL
+                            CONSTRAINT ck_tema_no_vacio    CHECK (LENGTH(TRIM(tema)) > 0)
+                            CONSTRAINT ck_tema_enum        CHECK (tema IN ('Programacion', 'Base de Datos', 'Redes', 'Matematica', 'Sistemas', 'General')),
+
+    min_alumnos INTEGER     NOT NULL DEFAULT 5
+                            CONSTRAINT ck_min_alumnos      CHECK (min_alumnos >= 1),
+
+    max_alumnos INTEGER     NOT NULL DEFAULT 30
+                            CONSTRAINT ck_max_alumnos      CHECK (max_alumnos BETWEEN 1 AND 100),
+
+    descripcion TEXT,
+
+    nivel       TEXT        NOT NULL DEFAULT 'basico'
+                            CONSTRAINT ck_nivel            CHECK (nivel IN ('basico', 'intermedio', 'avanzado')),
+
+    estado      TEXT        NOT NULL DEFAULT 'ACTIVO'
+                            CONSTRAINT ck_estado           CHECK (estado IN ('ACTIVO', 'INACTIVO', 'FINALIZADO', 'SUSPENDIDO')),
+
+    activo      INTEGER     NOT NULL DEFAULT 1
+                            CONSTRAINT ck_activo           CHECK (activo IN (0, 1)),
+
+    fecha_creacion      TEXT NOT NULL DEFAULT (datetime('now')),
+    fecha_actualizacion TEXT,
+
+    CONSTRAINT ck_rango_alumnos CHECK (min_alumnos <= max_alumnos)
+);
+```
+
+* Vamos a insertar varios cursos de UNA!
+
+```sql
+INSERT INTO curso (
+    nombre, codigo, cantidad_clases, horas_por_clase,
+    tema, min_alumnos, max_alumnos, descripcion,
+    nivel, estado, activo
+) VALUES
+    ('Introduccion a la Programacion',   'PROG-101', 20, 2.0, 'Programacion',  5, 25, 'Logica, algoritmos y pseudocodigo. Primera aproximacion al pensamiento computacional.',          'basico',       'ACTIVO',      1),
+    ('Python para Data Science',         'PYDS-301', 24, 2.5, 'Programacion',  5, 20, 'Pandas, NumPy, visualizacion con Matplotlib y primeros modelos con scikit-learn.',              'avanzado',     'ACTIVO',      1),
+    ('Desarrollo Web Full Stack',        'WEBF-201', 32, 2.0, 'Programacion',  5, 20, 'HTML, CSS, JavaScript, React en frontend. Node.js y Express en backend. Deploy en la nube.',   'intermedio',   'ACTIVO',      1),
+    ('Base de Datos Relacionales',       'BBDD-201', 16, 2.0, 'Base de Datos', 5, 25, 'Modelado entidad-relacion, SQL avanzado, normalizacion y optimizacion de consultas.',           'intermedio',   'ACTIVO',      1),
+    ('Administracion de Redes TCP/IP',   'REDES-201',18, 2.0, 'Redes',         4, 20, 'Modelo OSI, subnetting, routing, switching y configuracion de equipos Cisco.',                  'intermedio',   'ACTIVO',      1),
+    ('Ciberseguridad Fundamentos',       'CSEC-301', 20, 2.5, 'Redes',         4, 18, 'OWASP Top 10, ethical hacking, hardening de sistemas y respuesta a incidentes.',               'avanzado',     'ACTIVO',      1),
+    ('Arquitectura de Microservicios',   'ARCH-401', 16, 2.5, 'Programacion',  4, 15, 'DDD, patrones de comunicacion, Docker, Kubernetes y observabilidad.',                          'avanzado',     'ACTIVO',      1),
+    ('Inteligencia Artificial Aplicada', 'IART-301', 24, 2.5, 'Sistemas',      5, 20, 'Machine learning supervisado y no supervisado, NLP basico, integracion de LLMs via API.',      'avanzado',     'ACTIVO',      1),
+    ('Excel para Analisis de Datos',     'EXCL-101', 12, 2.0, 'General',       5, 30, 'Tablas dinamicas, funciones avanzadas, Power Query y dashboards con graficos interactivos.',   'basico',       'ACTIVO',      1),
+    ('Metodologias Agiles y Scrum',      'AGIL-101',  8, 2.0, 'Sistemas',      5, 30, 'Framework Scrum, ceremonias, roles, Kanban y herramientas de gestion como Jira y Trello.',    'basico',       'ACTIVO',      1),
+    ('DevOps y CI/CD con Azure',         'DVOP-401', 20, 2.5, 'Sistemas',      4, 15, 'Pipelines con Azure DevOps, GitHub Actions, Docker, Terraform e Infrastructure as Code.',     'avanzado',     'ACTIVO',      1),
+    ('Matematica para Programadores',    'MATE-101', 16, 2.0, 'Matematica',    5, 25, 'Algebra lineal, logica proposicional, combinatoria y probabilidad aplicadas al software.',     'basico',       'FINALIZADO',  0);
+```
+
+* Quiero eliminar el campo estado (me quedo solo con activo)
+
+```sql
+ALTER TABLE Curso DROP COLUMN estado;
+```
+
+* Quiero actualizar todos los cursos y ponerle que la fecha de actualizacion sea igual a la fecha de creacion
+
+```sql
+UPDATE curso
+SET fecha_actualizacion = fecha_creacion;
+```
+
+* Quiero actualizar la tabla. Quiero que la fecha de actualizacion no admita nulos y por defecto sea igual a la fecha de creacion
+
+```sql
+<<<< PARA DESPUES, USA TRIGGER
+```
+
+# Observaciones de lo que hizo la IA
+
+* La IA tomo algunas decisiones tecnicas muy comunes
+   * Campo estado (1 o 0) - Implementar Baja logica
+   * Fecha_Creacion - Para llevar un registro de cuando se creo el registro
+   * Fecha_Actualizacion - Para consistencia
+
+# Para la proxima clase
+
+*  Relaciones entre tablas y claves foraneas
+*  Generar diagramas (DER) de las bases de datos
