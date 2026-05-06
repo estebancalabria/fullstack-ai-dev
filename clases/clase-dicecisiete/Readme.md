@@ -1,4 +1,4 @@
-# Repaso
+<img width="1440" height="630" alt="image" src="https://github.com/user-attachments/assets/91f85049-7e5e-4d98-bba1-259b3199c4f8" /># Repaso
 
 * SQL (con SQLite)
   * DBBrowser
@@ -102,6 +102,36 @@ CREATE TABLE Curso (
     fecha_actualizacion TEXT,
 
     CONSTRAINT ck_rango_alumnos CHECK (min_alumnos <= max_alumnos)
+```
+
+* DER
+
+```mermaid
+erDiagram
+  Alumno {
+    INTEGER id PK
+    TEXT tipo_documento "DNI|PASAPORTE|CUIT|LE|LC|CDI"
+    TEXT documento "6-20 chars, UNIQUE con tipo"
+    TEXT nombre "2-100 chars"
+    TEXT apellido "2-100 chars"
+    TEXT fecha_nacimiento "DATE, max hoy"
+  }
+  Curso {
+    INTEGER id PK
+    TEXT nombre "alfanumérico + espacio"
+    TEXT codigo UK "3-20 chars, alfanum + guiones"
+    INTEGER cantidad_clases "1-100"
+    REAL horas_por_clase "0.5-8"
+    TEXT tema "Programacion|BD|Redes|Matematica|Sistemas|General"
+    INTEGER min_alumnos "default 5, min 1"
+    INTEGER max_alumnos "default 30, 1-100"
+    TEXT descripcion "nullable"
+    TEXT nivel "basico|intermedio|avanzado"
+    INTEGER activo "0|1, default 1"
+    TEXT fecha_creacion "default now()"
+    TEXT fecha_actualizacion "nullable"
+  }
+```
 ```
 
 ## Herramientas de IA
