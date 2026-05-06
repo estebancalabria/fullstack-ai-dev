@@ -275,7 +275,7 @@ erDiagram
   }
   Comision {
     INTEGER id PK
-    INTEGER codigo UK "autoincremental"
+    INTEGER codigo UK 
     INTEGER id_curso FK
     TEXT fecha_inicio "DATE NOT NULL"
     TEXT fecha_fin "DATE >= fecha_inicio"
