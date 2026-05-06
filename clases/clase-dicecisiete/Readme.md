@@ -28,6 +28,8 @@
 
 ## Reconstruyendo la base
 
+* Tabla Alumno
+  
 ```
 CREATE TABLE Alumno (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,16 +51,31 @@ CREATE TABLE Alumno (
     CONSTRAINT ck_apellido CHECK (
         LENGTH(TRIM(apellido)) BETWEEN 2 AND 100
     ),
-    CONSTRAINT ck_fecha_nacimiento CHECK (
+   CONSTRAINT ck_fecha_nacimiento CHECK (
+       fecha_nacimiento GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
+       AND SUBSTR(fecha_nacimiento, 1, 4) BETWEEN '1900' AND '2100'
+       AND SUBSTR(fecha_nacimiento, 6, 2) BETWEEN '01' AND '12'
+       AND SUBSTR(fecha_nacimiento, 9, 2) BETWEEN '01' AND '31'
+   )
+    CONSTRAINT uq_tipo_documento UNIQUE (tipo_documento, documento)
+);
+```
+
+> [!NOTE]
+> Tuve que corregir la tabla alumno porque no puedo usar la funcion DATE('now') en la creacion
+> Tuve que cabiar esto
+
+
+```
+     CONSTRAINT ck_fecha_nacimiento CHECK (
         DATE(fecha_nacimiento) IS NOT NULL
         AND DATE(fecha_nacimiento) = fecha_nacimiento
         AND fecha_nacimiento <= DATE('now')
         AND SUBSTR(fecha_nacimiento, 1, 4) BETWEEN '1900' AND '2100'
     ),
-    CONSTRAINT uq_tipo_documento UNIQUE (tipo_documento, documento)
-);
-
 ```
+
+* Curso
 
 ```
 CREATE TABLE Curso (
@@ -131,6 +148,12 @@ erDiagram
     TEXT fecha_creacion "default now()"
     TEXT fecha_actualizacion "nullable"
   }
+```
+
+* Agregar Datos
+
+* Quiero el insert para 3 alumnos y 3 cursos
+
 ```
 ```
 
