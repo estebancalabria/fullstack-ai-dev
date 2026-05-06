@@ -1,4 +1,4 @@
-<img width="1440" height="630" alt="image" src="https://github.com/user-attachments/assets/91f85049-7e5e-4d98-bba1-259b3199c4f8" /># Repaso
+# Repaso
 
 * SQL (con SQLite)
   * DBBrowser
