@@ -26,6 +26,11 @@
 
 # Base de Datos
 
+## 
+
+* Conversacion con Claude
+ * https://claude.ai/share/650d6c75-ae08-4237-909b-e793a4431bd0
+
 ## Reconstruyendo la base
 
 * Tabla Alumno
@@ -166,7 +171,9 @@ INSERT INTO Curso (nombre, codigo, cantidad_clases, horas_por_clase, tema, min_a
     ('Redes y Conectividad',   'RD-201',  12, 1.5, 'Redes',         4, 30, 'Protocolos, topologias y configuracion LAN', 'intermedio',  1);
 ```
 
-## Extendiendo nuesto modelo
+---
+
+## Extendiendo nuesto modelo : Claves foraneas 1 a N 
 
 * Si tengo un curso de Introduccion a Python por la tarde y otro por la noche. No deberia haber dos registros en la tabla de Curso
   * Si lo hiciera habria informacion redundante
@@ -246,6 +253,10 @@ VALUES
 (1002, (SELECT * FROM Curso WHERE nombre like '%Python%' LIMIT 1), '2026-05-01', '2026-07-31', 'Virtual');
 ```
 
+> [!NOTA]
+> Un query (un select) que devuelve 1 solo elemento se llama Singleton SELECT
+> En el caso de usar un subquery (subselect) dentro de un insert como el caso anterior debemos asegurarnos de utilizar un Singleon Select
+
 * El DER Queda
 
 ```mermaid
@@ -285,11 +296,228 @@ erDiagram
   Curso ||--o{ Comision : "tiene"
 ```
 
+---
+
+# Otra relacion 1 a N : Tabla Clases
+
+* Tabla Clase
+ * "Colgar de la comision"
+ * 1 Comision - N Clases
+ * Campso
+   * id
+   * id_comision << Clave Foranea
+   * fecha
+   * hora_inicio
+   * hora_fin
+   * descripcion
+   * estado (pendiente, dictada, cancelada)
+   * (url_git) <<< Buenisimo!!
+
+```sql
+CREATE TABLE Clase (
+    id           INTEGER NOT NULL CONSTRAINT pk_clase PRIMARY KEY AUTOINCREMENT,
+    id_comision  INTEGER NOT NULL CONSTRAINT fk_comision REFERENCES Comision(id),
+    fecha        TEXT    NOT NULL CONSTRAINT ck_fecha CHECK (
+                             DATE(fecha) IS NOT NULL
+                             AND DATE(fecha) = fecha
+                         ),
+    hora_inicio  TEXT    NOT NULL CONSTRAINT ck_hora_inicio CHECK (
+                             hora_inicio GLOB '[0-2][0-9]:[0-5][0-9]'
+                         ),
+    hora_fin     TEXT    NOT NULL CONSTRAINT ck_hora_fin CHECK (
+                             hora_fin GLOB '[0-2][0-9]:[0-5][0-9]'
+                             AND hora_fin > hora_inicio
+                         ),
+    descripcion  TEXT    NOT NULL DEFAULT '',
+    estado       TEXT    NOT NULL DEFAULT 'pendiente'
+                         CONSTRAINT ck_estado CHECK (
+                             estado IN ('pendiente', 'dictada', 'cancelada')
+                         ),
+    url_git      TEXT    NOT NULL DEFAULT ''
+);
+```
+
+* El der queda
+
+```
+**DDL:**
+
+```sql
+CREATE TABLE Clase (
+    id           INTEGER NOT NULL CONSTRAINT pk_clase PRIMARY KEY AUTOINCREMENT,
+    id_comision  INTEGER NOT NULL CONSTRAINT fk_comision REFERENCES Comision(id),
+    fecha        TEXT    NOT NULL CONSTRAINT ck_fecha CHECK (
+                             DATE(fecha) IS NOT NULL
+                             AND DATE(fecha) = fecha
+                         ),
+    hora_inicio  TEXT    NOT NULL CONSTRAINT ck_hora_inicio CHECK (
+                             hora_inicio GLOB '[0-2][0-9]:[0-5][0-9]'
+                         ),
+    hora_fin     TEXT    NOT NULL CONSTRAINT ck_hora_fin CHECK (
+                             hora_fin GLOB '[0-2][0-9]:[0-5][0-9]'
+                             AND hora_fin > hora_inicio
+                         ),
+    descripcion  TEXT    NOT NULL DEFAULT '',
+    estado       TEXT    NOT NULL DEFAULT 'pendiente'
+                         CONSTRAINT ck_estado CHECK (
+                             estado IN ('pendiente', 'dictada', 'cancelada')
+                         ),
+    url_git      TEXT    NOT NULL DEFAULT ''
+);
+```
+
+* **Mermaid completo:**
+
+```mermaid
+erDiagram
+  Alumno {
+    INTEGER id PK
+    TEXT tipo_documento "DNI|PASAPORTE|CUIT|LE|LC|CDI"
+    TEXT documento "6-20 chars, UNIQUE con tipo"
+    TEXT nombre "2-100 chars"
+    TEXT apellido "2-100 chars"
+    TEXT fecha_nacimiento "DATE, max hoy"
+  }
+  Curso {
+    INTEGER id PK
+    TEXT nombre "alfanumérico + espacio"
+    TEXT codigo UK "3-20 chars, alfanum + guiones"
+    INTEGER cantidad_clases "1-100"
+    REAL horas_por_clase "0.5-8"
+    TEXT tema "Programacion|BD|Redes|Matematica|Sistemas|General"
+    INTEGER min_alumnos "default 5, min 1"
+    INTEGER max_alumnos "default 30, 1-100"
+    TEXT descripcion "nullable"
+    TEXT nivel "basico|intermedio|avanzado"
+    INTEGER activo "0|1, default 1"
+    TEXT fecha_creacion "default now()"
+    TEXT fecha_actualizacion "nullable"
+  }
+  Comision {
+    INTEGER id PK
+    INTEGER codigo UK "autoincremental"
+    INTEGER id_curso FK
+    TEXT fecha_inicio "DATE NOT NULL"
+    TEXT fecha_fin "DATE >= fecha_inicio"
+    TEXT modalidad "Presencial|Virtual|Asincronico|Hibrida"
+    INTEGER activo "0|1, default 1"
+  }
+  Clase {
+    INTEGER id PK
+    INTEGER id_comision FK
+    TEXT fecha "DATE NOT NULL"
+    TEXT hora_inicio "HH:MM"
+    TEXT hora_fin "HH:MM > hora_inicio"
+    TEXT descripcion "default empty"
+    TEXT estado "pendiente|dictada|cancelada"
+    TEXT url_git "default empty"
+  }
+  Curso ||--o{ Comision : "tiene"
+  Comision ||--o{ Clase : "tiene"
+```
+
+## Redundancia de datos
+
+* En una base de datos hay dos conceptos que nos interean
+  * Consistencia
+  * Evitar redundancia
+    * En nuestro modelo tal vez tener la fecha_inicio y fecha_fin en la tabla de comision es redundante. Lo puedo ver en las clase
+
+* Me gustaria eliminar las columnas fecha_inicio y fecha_fin de la tabla de Comision
+
+```sql
+alter table Comision drop column fecha_fin;
+alter table Comision drop column fecha_inicio;
+```
+
+## Manejo de transacciones
+
+* Consistencia de datos
+   * Consistencia de datos a nivel registro.
+     * Lo puede asegurar el que diseña la base de datos utilizando constaints
+   * Consistencia de datos a nivel varias tablas.
+      * Un curso sin clases << Esto puede ser una inconsistencia
+      * Esta puede ser mas peligrosa, porque es mas dificil asegurarla a nivel diseño de de base de datos y generalmente se delega al programa
 
 
-## Herramientas de IA
+* Cuando hacemos varios insert relacionados tenemos que tner cuidado de no generar incosistencias a nivel varias tablas
+* Tengo que tener un mecanismo que me aseguren que todos los insert se ejecutan juntos o fallan todos
+ * Mencanismo
+ * STAR TRANSACTION
+   * Insert 1
+   * Insert 2
+   * ...
+   * Insert N
+ * COMMIT
+   * Hasta que no hago commit no se inserta nada en la base de datos
+ * ROLLBACK
+   * Si quiero volver todo atras
 
-## Claves Foraneas
+* Ejemplo. Tiro los insert sin una transaccion con error
+
+```
+-- 1 Comision de Python
+INSERT INTO Comision (codigo, id_curso, modalidad)
+VALUES (1001, 1, 'Virtual');
+
+-- 4 Clases para esa comision (ajustá el id_comision si es diferente)
+INSERT INTO Clase (id_comision, fecha, hora_inicio, hora_fin, descripcion, estado)
+VALUES
+(1, '2026-05-11', '19:00', '21:00', 'Introduccion a Python', 'pendiente'),
+(1, '2026-05-18', '19:00', '21:00', 'Variables y tipos de datos', 'pendiente'),
+(4, '2026-05-25', '19:00', '21:00', 'Listas y diccionarios', 'pendiente'), 
+(1, '2026-06-01', '19:00', '21:00', 'Funciones y modulos', 'pendiente');
+```
+
+* Me quedo una comision sin clases
+
+```
+select * from comision;
+select * from Clase;
+```
 
 
-# Expresiones Regulares
+* Quiero un insert de una comision de python con 4 clases (5 inserts en total)
+```sql
+
+-- 1 Comision de Python
+INSERT INTO Comision (codigo, id_curso, modalidad)
+VALUES (1001, 1, 'Virtual');
+
+-- 4 Clases para esa comision (ajustá el id_comision si es diferente)
+INSERT INTO Clase (id_comision, fecha, hora_inicio, hora_fin, descripcion, estado)
+VALUES
+(1, '2026-05-11', '19:00', '21:00', 'Introduccion a Python', 'pendiente'),
+(1, '2026-05-18', '19:00', '21:00', 'Variables y tipos de datos', 'pendiente'),
+(1, '2026-05-25', '19:00', '21:00', 'Listas y diccionarios', 'pendiente'),
+(1, '2026-06-01', '19:00', '21:00', 'Funciones y modulos', 'pendiente');
+
+```
+
+* Con Start transaction
+```sqlite
+BEGIN TRANSACTION;
+
+-- 1 Comision de Python
+INSERT INTO Comision (codigo, id_curso, modalidad)
+VALUES (1001, 1, 'Virtual');
+
+-- 4 Clases para esa comision (ajustá el id_comision si es diferente)
+INSERT INTO Clase (id_comision, fecha, hora_inicio, hora_fin, descripcion, estado)
+VALUES
+(1, '2026-05-11', '19:00', '21:00', 'Introduccion a Python', 'pendiente'),
+(1, '2026-05-18', '19:00', '21:00', 'Variables y tipos de datos', 'pendiente'),
+(4, '2026-05-25', '19:00', '21:00', 'Listas y diccionarios', 'pendiente'), 
+(1, '2026-06-01', '19:00', '21:00', 'Funciones y modulos', 'pendiente');
+
+COMMIT;
+```
+
+> [!NOTE]
+> Algo loquisimo que paso en SQLITE hice ROLLBACK y me borro todas las tablas 🤣😂🤣😂
+> Como decia TUSAM "Puede fallar"
+
+# Proxima Clase
+
+* Herramientas de IA para base de datos
+* Expresiones Regulares
