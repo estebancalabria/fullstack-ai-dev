@@ -100,6 +100,22 @@ WHERE id NOT IN (
 > [!NOTE]
 > Luego vamos a migrar nuestra base de SQLite a Postgres SQL
 
+## Draw.IO
+
+* Es una herramienta bastante estandar hoy en dia para realizar diagramas
+
+### Diagram GPT
+
+* Es como un chatGPT para generar diagramas
+
+> https://www.eraser.io/diagramgpt
+
+* Genere el DER de nuestra base de datos
+
+<img width="1671" height="892" alt="image" src="https://github.com/user-attachments/assets/f21a68e8-d31b-44e7-a040-87898552a8ab" />
+
+
+
 ---
 
 # Expresiones regulares
