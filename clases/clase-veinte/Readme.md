@@ -461,4 +461,153 @@ INSERT INTO Comision (
 );
 ```
 
+# Join entre tablas
+
+## Inner join
+
+```sql
+select * 
+from Comision
+inner join Inscripcion on Comision.id = Inscripcion.id_comision;
+```
+
+## Left Join
+
+```
+select * 
+from Comision
+left join Inscripcion on Comision.id = Inscripcion.id_comision;
+```
+
+# Funciones de Agregacion
+
+* Son Estandar
+   * Count
+   * Sum
+   * Avg
+   * Max
+   * Min
+* Se usan en general acompaniadas de GROUP BY
+
+* Quiero la cantidad total de alumnos
+
+```
+SELECT count(id) from Alumno
+```
+
+* Quiero la cantidad total de alumnos de Argentina
+
+```
+SELECT count(id ) from Alumno where país = 'Argentina';
+SELECT count(id ) from Alumno where país LIKE 'Argentina';
+SELECT count(id) from Alumno where pAis GLOB 'Arg*';
+```
+
+* Quiero la cantidad total de alumnos por pais
+
+```
+SELECT pais, Count(*) as Cantidad 
+from Alumno
+group by pais;
+```
+* Cuando hago un group by en el select solamente puedo mencionar los campos por los que agrupe y funciones de agregacion
+
+* LA cantidad de alumnos por pais considerando solamente los paises que tienen mas de un alumno
+
+```
+SELECT 
+    pais,
+    COUNT(*) AS cantidad_alumnos
+FROM Alumno
+GROUP BY pais
+HAVING COUNT(*) > 1
+ORDER BY cantidad_alumnos DESC;
+```
+
+* Quiero la cantidad de alumnos inscriptos en cada comision
+
+```
+select * from Inscripcion;
+
+select id_comision, count(id_alumno) from Inscripcion group by id_comision;
+``
+
+* Si solo quiero las comisiones que tienen alumnos inscriptos
+```
+select Comision.codigo, count(id_alumno) 
+from Inscripcion 
+INNER join Comision on Comision.id = Inscripcion.id_comision
+group by Comision.codigo;
+```
+
+* Si quiero TODAS las comisiones (incluso las que no tien alumnos)
+
+```
+SELECT
+    c.id AS id_comision,
+    c.codigo,
+    COUNT(i.id_alumno) AS cantidad_alumnos
+FROM Comision c
+LEFT JOIN Inscripcion i
+       ON c.id = i.id_comision
+GROUP BY c.id, c.codigo;
+```
+
+* La cantidad de clases pendites y completadas para cada comisionn
+
+```
+select 
+   Comision.Codigo, Clase.estado, count(*) as Cantidad
+From
+	Comision
+inner join Clase on Clase.id_comision = Comision.id
+Group by Comision.codigo, Clase.estado
+```
+
+* Pero me gusta mas la version de Carla...
+
+```
+SELECT
+    c.id AS id_comision,
+    c.codigo,
+    
+    COUNT(
+        CASE
+            WHEN cl.estado = 'pendiente' THEN 1
+        END
+    ) AS clases_pendientes,
+
+    COUNT(
+        CASE
+            WHEN cl.estado = 'dictada' THEN 1
+        END
+    ) AS clases_completadas
+
+FROM Comision c
+
+LEFT JOIN Clase cl
+       ON c.id = cl.id_comision
+
+GROUP BY c.codigo;
+```
+
+*  Otra nueva (No conocia)
+```
+SELECT
+    c.id AS id_comision,
+    c.codigo,
+    
+    COUNT(*) FILTER (WHERE cl.estado = 'pendiente') AS clases_pendientes,
+
+	COUNT(*) FILTER (WHERE cl.estado = 'dictada') AS clases_completadas
+
+FROM Comision c
+
+LEFT JOIN Clase cl
+       ON c.id = cl.id_comision
+
+GROUP BY c.codigo;
+```
+
+
 # Python con IA
