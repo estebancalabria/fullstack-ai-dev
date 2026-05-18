@@ -609,5 +609,79 @@ LEFT JOIN Clase cl
 GROUP BY c.codigo;
 ```
 
+* Obtener el total de horas de capacitacion que se cubren en cada tema (Cuantas horas de base de datos, de redes, 
 
-# Python con IA
+```
+SELECT
+	tema,
+	SUM(cantidad_clases * horas_por_clase) AS total_horas_capacitacion
+FROM 
+	Curso
+GROUP BY 
+	tema;
+```
+
+* El promedio de inscriptos por modalidad (presencial/virtual)
+
+
+```
+SELECT c.modalidad,
+       AVG(inscriptos) AS promedio_inscriptos
+FROM (
+    SELECT i.id_comision,
+           COUNT(*) AS inscriptos
+    FROM Inscripcion i
+    GROUP BY i.id_comision
+) sub
+JOIN Comision c ON c.id = sub.id_comision
+GROUP BY c.modalidad;
+```
+
+* Usa tabla derivada
+* Ejemplo
+```sql
+select * from (Select * from Alumno)
+```
+* Es lo mismo que hacer
+```
+Select * from Alumno
+```
+
+* Primero calcula la cantidad de inscriptos por comision
+
+```
+    SELECT i.id_comision,
+           COUNT(*) AS inscriptos
+    FROM Inscripcion i
+    GROUP BY i.id_comision
+```
+
+* A esa tabla derivada le da un alias (sub) y la une con la comision
+
+```
+SELECT
+*
+FROM (
+    SELECT i.id_comision,
+           COUNT(*) AS inscriptos
+    FROM Inscripcion i
+    GROUP BY i.id_comision
+) sub
+INNER JOIN Comision c ON c.id = sub.id_comision
+
+```
+
+* JOIN E INNER JOIN ES LO MISMO
+
+* Finalmente nos queda
+
+```
+Select * FROM
+(
+    SELECT i.id_comision,
+           COUNT(*) AS inscriptos
+    FROM Inscripcion i
+    GROUP BY i.id_comision
+) sub
+INNER JOIN Comision on Comision.id = sub.id_comision
+```
