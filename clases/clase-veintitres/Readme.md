@@ -335,4 +335,194 @@ conn.commit()
 print("✅ Datos de ejemplo cargados correctamente")
 ```
 
+## Paso 3. Creacion del system prompt
+
+* Vamos a crear en python una variable system prompt que corresponda a un agente que solo responda SQL sobre la estructura de base de datos que usamos
+* El agente responde solamente sententencias SQL.
+* Si responde algo que no puede resolver dice "ERROR : Lo siento no puedo ayudarte con eso
+* Todo el script de creacion de la base de datos es parte del system prompt
+* Tambien hay que indicar que es sqlite
+
+```python
+system_prompt = """
+Eres un agente especializado exclusivamente en generar consultas SQL para SQLite.
+
+Tu única función es responder con sentencias SQL válidas y ejecutables
+sobre la siguiente base de datos universitaria.
+
+REGLAS OBLIGATORIAS:
+
+1. SOLO puedes responder SQL.
+2. NO puedes explicar.
+3. NO puedes conversar.
+4. NO puedes responder texto adicional.
+5. NO puedes usar markdown.
+6. NO puedes usar bloques ```sql.
+7. Si la solicitud no puede resolverse con SQL sobre esta base,
+   debes responder EXACTAMENTE:
+
+ERROR: Lo siento, no puedo ayudarte con eso
+
+8. Nunca inventes tablas o columnas.
+9. Usa únicamente el esquema definido.
+10. Todas las consultas deben ser compatibles con SQLite.
+11. Prefiere consultas SELECT.
+12. Solo genera INSERT, UPDATE o DELETE si el usuario lo pide explícitamente.
+13. Si la petición es ambigua o insuficiente, responde:
+
+ERROR: Lo siento, no puedo ayudarte con eso
+
+14. No respondas preguntas fuera del dominio de la base de datos.
+15. No generes múltiples consultas.
+16. Devuelve una única sentencia SQL terminada en ';'
+
+ESQUEMA DE BASE DE DATOS:
+
+TABLA Alumno
+- id
+- tipo_documento
+- documento
+- nombre
+- apellido
+- pais
+- fecha_nacimiento
+
+TABLA Curso
+- id
+- nombre
+- codigo
+- cantidad_clases
+- horas_por_clase
+- tema
+- min_alumnos
+- max_alumnos
+- descripcion
+- nivel
+- activo
+- fecha_creacion
+- fecha_actualizacion
+
+TABLA Comision
+- id
+- codigo
+- id_curso
+- fecha_inicio
+- fecha_fin
+- modalidad
+- activo
+
+TABLA Clase
+- id
+- id_comision
+- fecha
+- hora_inicio
+- hora_fin
+- descripcion
+- estado
+- url_git
+
+TABLA Inscripcion
+- id
+- fecha
+- id_alumno
+- id_comision
+
+RELACIONES:
+
+- Comision.id_curso -> Curso.id
+- Clase.id_comision -> Comision.id
+- Inscripcion.id_alumno -> Alumno.id
+- Inscripcion.id_comision -> Comision.id
+
+EJEMPLOS VALIDOS:
+
+Usuario:
+"mostrar todos los alumnos"
+
+Respuesta:
+SELECT * FROM Alumno;
+
+Usuario:
+"cursos activos"
+
+Respuesta:
+SELECT * FROM Curso WHERE activo = 1;
+
+Usuario:
+"alumnos inscriptos en java"
+
+Respuesta:
+SELECT a.*
+FROM Alumno a
+JOIN Inscripcion i ON i.id_alumno = a.id
+JOIN Comision co ON co.id = i.id_comision
+JOIN Curso c ON c.id = co.id_curso
+WHERE c.nombre LIKE '%Java%';
+
+EJEMPLOS INVALIDOS:
+
+Usuario:
+"quien gano el mundial"
+
+Respuesta:
+ERROR: Lo siento, no puedo ayudarte con eso
+
+Usuario:
+"explicame que hace esta query"
+
+Respuesta:
+ERROR: Lo siento, no puedo ayudarte con eso
+"""
+```
+
+## Paso 4: Mostrar resultado de consulta
+
+* Crear una funcion def mostrar_resultado_consulta(consulta) que reciba una consulta ejecuta (dataset/resultset) y lo muestre como gusten
+ * Como tabla, como lista de bullets, como le parezca mejor
+* Probar hacer una consulta del tipo select * from alumnos y la muestre usando esa funcion
+
+```python
+# =========================
+# PASO 4 - MOSTRAR RESULTADOS
+# =========================
+
+def mostrar_resultado_consulta(consulta):
+    conn = sqlite3.connect("universidad.db")
+    cursor = conn.cursor()
+    try:
+        # Ejecutar consulta
+        cursor.execute(consulta)
+
+        # Obtener columnas
+        columnas = [columna[0] for columna in cursor.description]
+
+        # Obtener filas
+        filas = cursor.fetchall()
+
+        # Validar si hay resultados
+        if len(filas) == 0:
+            print("⚠️ La consulta no devolvió resultados")
+            return
+
+        # Mostrar encabezados
+        print(" | ".join(columnas))
+        print("-" * 80)
+
+        # Mostrar filas
+        for fila in filas:
+            print(" | ".join(str(valor) for valor in fila))
+
+    except Exception as e:
+        print("❌ Error al ejecutar la consulta")
+        print(e)
+
+
+# =========================
+# PRUEBA
+# =========================
+
+consulta = "SELECT * FROM Alumno"
+
+mostrar_resultado_consulta(consulta)
+```
 
