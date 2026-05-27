@@ -526,3 +526,115 @@ consulta = "SELECT * FROM Alumno"
 mostrar_resultado_consulta(consulta)
 ```
 
+## Paso 5. Generar un agente
+
+* Vamos a generar un agente que:
+ * Me cuente cual es su objetivo (Bienvenidos al agente conversacional del siste universitario...)
+ * Me pida la api key
+ * Que me pregunte que quiero saber
+* Que muestre el la respuesta del agente (EL SQL generado)
+
+```python
+# =========================
+# PASO 5 - GENERAR AGENTE
+# =========================
+
+from groq import Groq
+from getpass import getpass
+from IPython.display import display, Markdown
+
+print("🎓 Bienvenidos al agente conversacional del sistema universitario")
+print("Este agente convierte preguntas en lenguaje natural a consultas SQL para SQLite.")
+print("Solo responderá consultas SQL sobre la base de datos universidad.db.")
+print()
+
+api_key = getpass("Ingresá tu API Key de Groq: ")
+
+client = Groq(api_key=api_key)
+
+pregunta_usuario = input("¿Qué querés saber sobre la base de datos universitaria?: ")
+
+respuesta = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    messages=[
+        {
+            "role": "system",
+            "content": system_prompt
+        },
+        {
+            "role": "user",
+            "content": pregunta_usuario
+        }
+    ],
+    temperature=0
+)
+
+sql_generado = respuesta.choices[0].message.content.strip()
+
+print("\n🧠 SQL generado por el agente:")
+print(sql_generado)
+```
+
+# Paso 6 : Ahora el agente me devuelve SQL y lo ejecuto.
+
+* Si me devuelve un SELECT. Lo ejecuto y muestro el resultado usando la funcion mostrar_resultado_consulta
+* Si es un insert/update/delete directamente lo ejecuto y digo que se realizao ok
+* Modificar el agente anterior
+
+```python
+# =========================
+# PASO 6 - GENERAR AGENTE
+# =========================
+
+from groq import Groq
+from getpass import getpass
+from IPython.display import display, Markdown
+
+print("🎓 Bienvenidos al agente conversacional del sistema universitario")
+print("Este agente convierte preguntas en lenguaje natural a consultas SQL para SQLite.")
+print("Solo responderá consultas SQL sobre la base de datos universidad.db.")
+print()
+
+api_key = getpass("Ingresá tu API Key de Groq: ")
+
+client = Groq(api_key=api_key)
+
+pregunta_usuario = input("¿Qué querés saber sobre la base de datos universitaria?: ")
+
+respuesta = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    messages=[
+        {
+            "role": "system",
+            "content": system_prompt
+        },
+        {
+            "role": "user",
+            "content": pregunta_usuario
+        }
+    ],
+    temperature=0
+)
+
+sql_generado = respuesta.choices[0].message.content.strip()
+
+print("\n🧠 SQL generado por el agente:")
+print(sql_generado)
+
+#Si el SQL Generado comienza con SELECT
+if sql_generado.startswith("SELECT"):
+    print("\n🧠 SQL generado por el agente:")
+    mostrar_resultado_consulta(sql_generado)
+
+# Si es insert. update o delete
+elif sql_generado.startswith("INSERT") or sql_generado.startswith("UPDATE") or sql_generado.startswith("DELETE"):
+    #Lo ejecuto
+    conn = sqlite3.connect("universidad.db")
+    cursor = conn.cursor()
+    
+    cursor.execute(sql_generado)
+    conn.commit()
+    print("\n✅ Operacion exitosa")
+    
+
+```
