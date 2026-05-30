@@ -55,10 +55,13 @@ curl -X POST https://api.groq.com/openai/v1/responses \
 }'
 ```
 
+### Replit
+
 * Paso 2 : Ir a Replit y crear el proyecto
 
 * Ir y loguearse en:
   * https://replit.com/
+
 * Prompt
 ```
 Quiero una aplicacion web que pueda desplegar en github pages que sea un chatbot con una interfaz tipo chatgpt pero que me permita ingresar la api key de groq.
@@ -75,3 +78,57 @@ curl -X POST https://api.groq.com/openai/v1/responses \
 }'
 
 ```
+
+* Una vez creado vamos a publicar el proyecto en GIT
+
+* Depues lo clonamos localmente
+  * Los proyectos de replit usan pnpm
+
+* Instalamos pnpm
+ * https://pnpm.io/es/installation
+
+* Desde powershell lo podemos instlar con
+
+```
+Invoke-WebRequest https://get.pnpm.io/install.ps1 -UseBasicParsing | Invoke-Expression
+```
+
+* Una vez que lo instalo puedo ejecutar con pmpn
+
+```
+pnpm
+```
+
+> Utiliza pnpm para compilar el proyecto
+
+### Lovable
+
+> https://lovable.dev/
+
+* Mismo prompt
+
+> Usa bun para compilar el proyecto
+
+### Bas44
+
+> https://base44.com/
+
+* Mismo prompt
+
+> Usa Vit
+
+### Bolt.new
+
+> https://bolt.new/
+ 
+* Caracteristicas
+ * Mas facil para descargar el proyecto como ZIP
+
+### V0 (De Verel)
+
+> https://v0.app/
+
+* Me dejo bajar el zip sin pasar por github
+* Descomprimo el zip en una carpeta
+* luego npm install
+* lueto npm run preview
