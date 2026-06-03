@@ -20,6 +20,63 @@
 * Proyecto parecido al que hicimos la clase pasada
     * https://github.com/pewdiepie-archdaemon/odysseus
 
+# Programacion orientada a objetos
+
+## Javascript
+
+* Clase Persona en Javascript (ES6) (Forma Moderna)
+	* Esta es la forma que ya estuvimos viendo cuando hablamos de objetos en javascript
+
+```
+// ES6 - Clase Persona
+class Persona {
+  constructor(nombre, edad, email) {
+    this.nombre = nombre;
+    this.edad = edad;
+    this.email = email;
+  }
+  saludar() {
+    return `Hola, soy ${this.nombre} y tengo ${this.edad} años.`;
+  }
+  esMayorDeEdad() {
+    return this.edad >= 18;
+  }
+}
+```
+
+* Forma anterior o clasica de escribir clases en javascript
+	 * Cada Funcion era en si misma una clase
+	 * Podia usarla como funcion o como clase.
+		  * Si adentro tenia this, posiblemenente era para usarla como clase
+
+```
+// Pre-ES6 (ES5) - con funciones constructoras
+function Persona(nombre, edad, email) {
+  this.nombre = nombre;
+  this.edad = edad;
+  this.email = email;
+}
+
+Persona.prototype.saludar = function() {
+  return "Hola, soy " + this.nombre + " y tengo " + this.edad + " años.";
+};
+
+Persona.prototype.esMayorDeEdad = function() {
+  return this.edad >= 18;
+};
+```
+
+> [!NOTE]
+> En javascript hay dos maneras distintas de definir una clas
+
+* En ambos casos creo una persona con
+
+```
+let p = new Persona("juan", 23, "juan@gmail.com")
+```
+
+
+
 # Programacion orientada a componentes (Dentro de lo que son objetos)
 
 * Objeto : Entidad que representa algo del mundo real capturando sus datos (variables) y sus comportamiento (metodos)
