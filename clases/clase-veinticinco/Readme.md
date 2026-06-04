@@ -209,6 +209,51 @@ function App() {
 npm run dev
 ```
 
+* Vamos a agregar el componente PieDePagina con la ayuda la IA (Esta vez de tipo funcion)
+
+```
+Crear un componente para el pie de pagina de tipo funcion que sea super
+```
+
+* Copilot me crea...
+
+```
+import './PieDePagina.css'
+
+function PieDePagina() {
+	const year = new Date().getFullYear()
+
+	return (
+		<footer className="pie-de-pagina" role="contentinfo">
+			<div className="pie-de-pagina__grid">
+				<div>
+					<h3 className="pie-de-pagina__title">
+						Gracias por llegar hasta aqui. Lo mejor de esta aplicacion apenas
+						comienza.
+					</h3>
+					<p className="pie-de-pagina__subtitle">
+						Construido con energia creativa, codigo limpio y una experiencia que
+						se siente premium.
+					</p>
+				</div>
+
+				<span className="pie-de-pagina__marca">{year} Fullstack AI</span>
+			</div>
+		</footer>
+	)
+}
+
+export default PieDePagina
+```
+
+> [!NOTE]
+> Si bien ambos componentes tienen sintaxis distintas, ambos son clases de javascript que se instancian en objeto
+
+* class Cabecera extends Component {
+* function PieDePagina() {
+
+
+
 # Desarrollo con IA
 
 * Clonar el proyecto que hicimos la clase pasada con Vercell (v0)
