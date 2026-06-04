@@ -389,6 +389,10 @@ export default function DatePicker({ onChange }) {
 }
 ```
 
+> [!NOTE]\
+> Una ventaja de trabajar con componentes es que se pueden generar cada uno por separado con la IA
+
+
 ## Proyecto con el que vamos a trabajar
 
 * Clonar el proyecto que hicimos la clase pasada con Vercell (v0)
@@ -403,6 +407,14 @@ git clone
   * Tecnologia : TypeScrypt/React
   * Estilo de Programacion: 
 
+* Para empaquetarlo para publicarlo
 
+```
+npm run build
+```
+
+* Genera una carpeta dist con todo el proyecto para publicar
+
+* Si le doy al index "Run in live server" puedo ver el proyecto localmente
 
 * 
