@@ -79,6 +79,13 @@
 
 # Web Componentes
 
+* Los Web Components son componentes que funcionan nativamnte sin usar librerias
 
+* El el 2011 nacio React (De Facebook)
+* Segun el estandar HTML se definio el concepto de los Web Components
+* En la indistria REact supero a los Web components en su momento
+  * Hoy en dia esta tendencia se esta revirtiendo en alguno casos
+  * Hay muchos proyectos que se migran de React a Web Coponents
 
+## Nuestro primer web component
   
