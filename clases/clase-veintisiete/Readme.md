@@ -22,12 +22,16 @@
  
 # Noticias
 
-  * Microsoft micro dentro del navegador Edge desde React a Web Components
-      * https://thenewstack.io/how-microsoft-edge-is-replacing-react-with-web-components/
+* Microsoft micro dentro del navegador Edge desde React a Web Components
+   * https://thenewstack.io/how-microsoft-edge-is-replacing-react-with-web-components/
+* Claude Code Code Leake
+   * https://www.mindstudio.ai/blog/claude-code-source-code-leak-8-hidden-features
 
 # AiDev
 
-## Migracion de React a Web Components con IA
+## Ingenieros de Software con IA
+
+### Claude Code : Migracion de React a Web Components con IA
 
 * Verigicamos instalacion de Ollama y Claude
 
@@ -106,3 +110,11 @@ ollama lauch claude
   para componentes. Quiero que sea utilizanda el estnadar html5 de web compoenents
 ```
 
+### Otros
+
+* OpenAI Codex
+  * https://openai.com/es-419/codex/
+* Open Code
+* Aider
+  * https://aider.chat/
+* Github Copilot Workspace (Integrado con girhub)
