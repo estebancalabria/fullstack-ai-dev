@@ -222,3 +222,17 @@ app = rx.App()
 app.add_page(index)
 
 ```
+
+---
+
+# Generacion de una API
+
+* Para el sistema de la universidad
+* Endpoints
+  * Alumno
+   * GET /api/alumno
+   * GET /api/alumno/{id}
+   * POST /api/alumno
+
+* Ademas va a tener una interfaz conversacional! Tipo Agente
+
