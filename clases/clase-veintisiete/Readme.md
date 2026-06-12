@@ -22,12 +22,16 @@
  
 # Noticias
 
-  * Microsoft micro dentro del navegador Edge desde React a Web Components
-      * https://thenewstack.io/how-microsoft-edge-is-replacing-react-with-web-components/
+* Microsoft micro dentro del navegador Edge desde React a Web Components
+   * https://thenewstack.io/how-microsoft-edge-is-replacing-react-with-web-components/
+* Claude Code Code Leake
+   * https://www.mindstudio.ai/blog/claude-code-source-code-leak-8-hidden-features
 
 # AiDev
 
-## Migracion de React a Web Components con IA
+## Ingenieros de Software con IA
+
+### Claude Code : Migracion de React a Web Components con IA
 
 * Verigicamos instalacion de Ollama y Claude
 
@@ -43,4 +47,192 @@ C:\>claude --version
 
 * Preparar una carpeta con el proyecto origen
 
+```
+git clone https://github.com/estebancalabria/v0-groq-chatbot-with-local-storage
+```
+
+* Lo editamos con Visual Studio Code
+
+* Levantamos el servicor de ollama
+
+```
+ollama serve
+```
+
+* Ejecutamos Claude code con un servidor de Ollama
+
+```
+ollama lauch claude
+```
   
+* Elijo el modelo minimax-m3
+
+* Primero le preguntamos de que es el proyecto
+
+```
+> De que es el proyecto?                                                                                                               
+```
+
+* Me responde
+
+```
+  Thought for 8s, read 1 file, listed 1 directory (ctrl+o to expand)
+
+● Sobre el proyecto
+
+  Es un chatbot de Next.js potenciado por Groq (el modelo de IA de alta velocidad de Groq) con almacenamiento local. Generado con v0
+  (https://v0.app) y conectado a un proyecto v0, así que cada cambio puede hacerse desde el chat de v0 y se hace commit/deploy
+  automático a este repo.
+
+  Stack principal:
+  - Next.js (App Router, con app/page.tsx como punto de entrada)
+  - Groq como proveedor de LLM
+  - Almacenamiento local para historial/mensajes (en el navegador del usuario)
+
+  Cómo ejecutarlo localmente:
+  npm run dev
+  Y abrir http://localhost:3000.
+
+  Notas del repo actual:
+  - Estás en la rama main y hay cambios sin commitear: el directorio dist/ fue reconstruido (archivos .js/.css viejos eliminados,
+  nuevos generados) y aparece package-lock.json sin trackear — probablemente de un npm run build o npm install reciente.
+
+  ¿Quieres que profundice en alguna parte (código, configuración de la API key de Groq, estructura del almacenamiento local)?
+
+✻ Brewed for 27s
+```
+
+* Pedir que lo migre a web components
+
+```
+> Generar una carpeta /migracion y quiero migrar todo el proyecto a web components. Quiero un index.html, una carpeta components con
+  todos los web components y el resto de los archivos necesarios. No quiero que dependa ni de react ni de ninguna libreria externa
+  para componentes. Quiero que sea utilizanda el estnadar html5 de web compoenents
+```
+
+### Otros
+
+* OpenAI Codex
+  * https://openai.com/es-419/codex/
+* Open Code
+* Aider
+  * https://aider.chat/
+* Github Copilot Workspace (Integrado con girhub)
+
+> [NOTE!]
+> Migramos el proyecto a Web Components con Github Copilot Workspace y Claude Opus
+
+--- 
+
+# PRogramacion orientada a componentes en python
+
+## Reflex
+
+* Preparar una carpeta para crear mi proyecto en reflex
+
+```
+pip install reflex
+```
+
+* Creamos el directorio y el proyect
+
+```
+C:\>md contador
+
+C:\cd contador
+
+C:\contador>reflex init
+```
+
+* Edito con vscode
+
+```
+code .
+```
+
+* Para correr
+
+```
+>reflex run
+```
+
+* Accedemos en el puerto localhost:3000
+
+* Modificamos el archivo contador.pu
+
+```python
+"""Welcome to Reflex! This file outlines the steps to create a basic app."""
+
+import reflex as rx
+
+from rxconfig import config
+
+
+class State(rx.State):
+    contador: int = 0
+
+    def incrementar(self):
+        self.contador += 1
+
+    def decrementar(self):
+        self.contador -= 1
+
+    def reiniciar(self):
+        self.contador = 0
+
+
+def contador_component():
+    return rx.vstack(
+        rx.heading("Contador Reflex"),
+
+        rx.text(
+            State.contador,
+            size="8"
+        ),
+
+        rx.hstack(
+            rx.button(
+                "-",
+                on_click=State.decrementar
+            ),
+
+            rx.button(
+                "+",
+                on_click=State.incrementar
+            ),
+
+            rx.button(
+                "Reiniciar",
+                on_click=State.reiniciar
+            ),
+        ),
+
+        spacing="4",
+    )
+
+def index() -> rx.Component:
+    # Welcome Page (Index)
+    return rx.center(
+        contador_component(),
+        height="100vh",
+    )
+
+
+app = rx.App()
+app.add_page(index)
+
+```
+
+---
+
+# Generacion de una API
+
+* Para el sistema de la universidad
+* Endpoints
+  * Alumno
+   * GET /api/alumno
+   * GET /api/alumno/{id}
+   * POST /api/alumno
+
+* Ademas va a tener una interfaz conversacional! Tipo Agente
+
