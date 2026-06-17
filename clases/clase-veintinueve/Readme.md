@@ -6,7 +6,10 @@
 
 * Ia para Programadores
   * Uso de la IA en cada etapa de desarrollo de Software
-    * Aider
+   * Aider ( Nos quedamos sin credito al toque)
+* Pruebas Unitarias
+  * Pruebas unitarias en Python
+  * El uso de la IA para generar pruebas unitarias
 
 # Novedades
 
@@ -32,6 +35,12 @@
     * En una prueba que hicios un prompt sencillo tardo 1 minuto
 * Lo puedo ejecutar dentro de la herramienta
 * La solapa Developer permite ejecutar un servidor que cumple la especificacion de api de OpenAI pero local
+
+## LMStudio Con Aider
+
+* La clase pasada usamos AIder con Groq y nos quedamos sin tokens enseguida
+* Aparecio la necesidad de poder utilizar las herramientas como aider (o claude code) con un LLM local
+   * https://aider.chat/docs/llms/lm-studio.html
 
 ---
 
