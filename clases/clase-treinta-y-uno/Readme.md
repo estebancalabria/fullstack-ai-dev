@@ -38,6 +38,62 @@
    * A partir del entrenamiento el modelo aprende a calcular el vector
    * Arma un mapa conceptual
 
+### Calculo de los embedings
+
+* Primero definimos los tokens o el vocabulario de mi modelo de embedings
+   * casa, perro, gato  << Vamos a suponer solamente esos 3 tokens
+   * Hay un proceso de tokenizacion
+* Defino el tamaño del embeding que quiero
+   * Ej 3 dimensiones
+* Para cada token genero un embeding aleatorio
+      * Casa = (1,0,0)
+      * Perro = (0,1,0)
+      * Gato = (0,0,1)
+
+<img width="532" height="438" alt="image" src="https://github.com/user-attachments/assets/7ba38a91-64e5-44c5-a5d0-747387a878c6" />
+
+* Ahora entra en juego el entrenamiento a partir de documentos
+   * "Mi casa tiene un perro"
+   * "Los gatos y los perros se pelean"
+   * "El gato duerme en casa"
+* De cada documento genera un par de palabras (vamos a considerar los tokens que elegimos)
+   * "Mi casa tiene un perro"
+        * (Casa, Perro)
+* El concepto de casa y perro tiene que estar mas cerca porque en el documento encontro que casa y perro estan relacionados
+* Modifica los embedins para que casa y perro esten mas cerca
+   * Originalmente
+      * Casa = (1,0,0)
+      * Perro = (0,1,0)
+      * Gato = (0,0,1)
+   * Luego
+      * Casa = (0.75,0.75,0)
+      * Perro = (0.25,0.25,0)
+      * Gato = (0,0,1)
+
+<img width="1270" height="558" alt="image" src="https://github.com/user-attachments/assets/e2a71829-f0c7-45b6-afdf-66b6b8e28bdd" />
+
+ * Este proceso de calcula millones de veces para todos los documentos y finalmente ocurre que las palabras relacionadas van a quedas mas cerca unas de otras
+
+## Embedings para el documento
+
+* En ejemplo anterior vimos como calcular el embeding para cada para token por separado
+   * Al principio cada token tiene un embeding aleatorio
+   * Luego ese valor aleatorio lo ajustamos con los datos de entrenamiento
+* En el ejemplo que hicimos en python vamos a calcular embedings para documentos
+   * Como se cacula el embeding de un documento si lo que tenemos son los embedings de cada token?
+
+ * Suponiendo el documento
+    * El gato es malo
+ * El modelo sabe el embeding de cada palabra por separado
+   * El -> (0.4, 0.8, 0.5)
+   * Gato -> (0.7, 0.3, 0.2)
+   * Malo ->  (0.2, 0.6, 0.9)
+ * Los combina (por ejemplo sacando el promedio de  cada coordenada, no se si es asi pero es la idea)
+   * Embeding documento = Combinacion ((0.4, 0.8, 0.5), (0.7, 0.3, 0.2), (0.2, 0.6, 0.9))  
+
+> [!NOTE]
+> Cuando empezamos a combinar documentos muy extensos el significado (al promediar los el embeding de los tokens individuales) se va diluyendo. Lo ideal cuando tenemos documentos grandes es dividirlos en parrafos y tomar el signficado semantico de cada parrafo por separado. (chunking)
+
 ### Distancia Coseno
    
 * Indica qué tan parecidos son dos vectores comparando el ángulo entre ellos, sin importar demasiado su magnitud.
@@ -547,3 +603,7 @@ with gr.Blocks(
 # ------------------------------------------------------------
 app.launch(share=True, debug=False)
 ```
+
+# Proxima clase
+
+> Le vamos a meter una base de datos vectorial y vamos a ver el concepto de Chunking
