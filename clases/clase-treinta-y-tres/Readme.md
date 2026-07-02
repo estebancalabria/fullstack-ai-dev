@@ -236,6 +236,7 @@ def generar_respuesta_llm_con_rag(modelo_embeddings, embeddings_docs, pregunta, 
 * Lo Probamos
 
 ```python
+
 api_key = input("Ingrese su api key")
 
 respuesta_con_rag = generar_respuesta_llm_con_rag( 
