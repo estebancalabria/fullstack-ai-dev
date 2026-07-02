@@ -682,3 +682,20 @@ with gr.Blocks(
 # ------------------------------------------------------------
 app.launch(share=True, debug=False)
 ```
+
+--- 
+
+# Tool Use
+
+* Mirar en los modelos de https://console.groq.com/docs/models cuales tienen habilitadas las capacidades de tool use
+
+* Proceso....
+ * Infomramos a un modelo que lo soporte en un json/diccinario las tools (funciones) que tiene disponible
+ * Configuramos el system prompt para avisarle tambien aqui al modelo que tiene tools diponibles para usar
+ * Hacerle una pregunta al modelo en tu prompt
+ * El modelo en base a la pregunta que haces decide si necesita hacer una llamada a una tool o te responde directamente
+ * Si necesita hacer una llamada a una tool no te responde como siempre sino una respuesta especial
+ * Si el modelo me pide que llame a una tool, lo hago y luego hago una segunda llamada donde le paso el resputado de las llamadas a la tuol...
+   
+
+> [!NOTE] A veces el modelo se rebela y no utiliza la tool de la maner esperada y en ese caso debo ajustar al system prompt para ser mas explicito en que momentos debe utilizar la TOOL
