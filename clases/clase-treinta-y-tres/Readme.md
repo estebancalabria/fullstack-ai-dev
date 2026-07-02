@@ -167,18 +167,20 @@ modelo_embeddings = SentenceTransformer('all-MiniLM-L6-v2')
 ```
 
 * Calcular los embeddings para cada documento
-```
+  
+```python
 embeddings_docs = modelo_embeddings.encode(documentos)
 ```
 
 * Mostramos los embbedings
-```
+  
+```python
 embeddings_docs
 ```
 
 * Generamos una respuesta del LLM con un contexto
 
-```
+```python
 from openai import OpenAI
 import os
 
@@ -207,18 +209,18 @@ def generar_respuesta_llm(contexto, pregunta, api_key):
 
 * Lo probamos
 
-```
+```python
 api_key = input("Ingrese su api key")
 
 generar_respuesta_llm(
     contexto ="Argentina gano 5 a 0 a Cabo Verde",
     pregunta="Cuanto gano argentina a Cabo Verde?",
     api_key=api_key)
-``
+```
 
 * Funcion generar respuesta con llm usando el RAG
 
-```
+```python
 def generar_respuesta_llm_con_rag(modelo_embeddings, embeddings_docs, pregunta, api_key)
    
    contexto = recuperar_contexto(modelo_embeddings, embeddings_docs, pregunta, 10)
@@ -230,9 +232,10 @@ def generar_respuesta_llm_con_rag(modelo_embeddings, embeddings_docs, pregunta, 
    
    return respuesta_llm
 ```
+
 * Lo Probamos
 
-```
+```python
 api_key = input("Ingrese su api key")
 
 respuesta_con_rag = generar_respuesta_llm_con_rag( 
@@ -246,7 +249,7 @@ print(respuesta_con_rag)
 
 * Integramos todos
 
-```
+```python
 print("Sistema RAG con LLM")
 api_key = input("Ingrese su api key")
 
