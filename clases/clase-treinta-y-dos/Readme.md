@@ -266,3 +266,10 @@ for rank, idx in enumerate(indices_ordenados[:2], start=1):
     print(f"\n  #{rank} {emoji}  Score: {score:.4f}")
     print(f"       Chunk: \"{chunks[idx][:80]}...\"")
 ```
+
+---
+
+# Uso de Bases de datos de Embeeddings
+
+* Faiss
+* ChromaDB
