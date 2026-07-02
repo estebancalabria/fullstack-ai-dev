@@ -267,3 +267,418 @@ while True:
   
   print(respuesta_con_rag);
 ```
+
+>[!NOTE]
+> Para este ejemplo notamos que el modelo all-MiniLM-L6-v2 no era tan preciso e hizimos una segunda prueba con intfloat/multilingual-e5-large
+
+
+## Rag con Gradio de Julian
+
+```
+
+# ============================================================
+# 🤖 CHAT RAG + GROQ — Mundial 2026
+# Recupera los documentos más relevantes de la variable `documentos` (RAG)
+# y le pide a un modelo de Groq que responda basándose SOLO en esos documentos.
+#
+# IMPORTANTE (Google Colab): este script asume que ya corriste antes, en la
+# misma sesión de Colab, la celda de build_docs que define `documentos = [...]`.
+# No hace falta subir ningún archivo — Colab comparte variables entre celdas.
+# ============================================================
+
+import os
+import re
+
+import numpy as np
+from sentence_transformers import SentenceTransformer
+from sklearn.preprocessing import normalize
+from sklearn.metrics.pairwise import cosine_similarity
+import gradio as gr
+from groq import Groq
+
+# ------------------------------------------------------------
+# 0. DOCUMENTOS
+# ------------------------------------------------------------
+# En Colab, `documentos` NO se importa de un archivo: se genera al correr
+# antes la celda de build_docs (que define `documentos = [...]`) en esta
+# misma sesión. Como Colab comparte el namespace entre celdas, ese `documentos`
+# ya está disponible acá siempre que hayas corrido esa celda primero.
+if "documentos" not in globals():
+    print("⚠️ No se encontró la variable 'documentos' en esta sesión — corré primero "
+          "la celda de build_docs (la que arma la lista `documentos`) y después esta celda.")
+    documentos = [
+        "Fase de grupos | Grupo: A | Jornada: 1 | Partido: México vs Sudáfrica | Resultado: México 2-0 Sudáfrica",
+        "Fase de grupos | Grupo: A | Jornada: 1 | Partido: Corea del Sur vs Chequia | Resultado: Corea del Sur 2-1 Chequia",
+        "Fase de grupos | Grupo: B | Jornada: 1 | Partido: Canadá vs Bosnia y Herzegovina | Resultado: Canadá 1-1 Bosnia y Herzegovina",
+    ]
+else:
+    print(f"✅ Se usan los {len(documentos)} documentos ya cargados en esta sesión de Colab.")
+
+MODELOS_FALLBACK = [
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
+    "openai/gpt-oss-20b",
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+]
+
+# ------------------------------------------------------------
+# 1. EMBEDDINGS DEL RAG (se calculan una sola vez al iniciar)
+# ------------------------------------------------------------
+print("⏳ Cargando modelo de embeddings...")
+modelo_embeddings = SentenceTransformer('all-MiniLM-L6-v2')
+print("✅ Modelo de embeddings listo!")
+
+print("⏳ Indexando documentos del RAG...")
+_vectores_docs = normalize(modelo_embeddings.encode(documentos, show_progress_bar=False))
+print(f"✅ {len(documentos)} documentos indexados.")
+
+
+def etiqueta_corta(texto, maxlen=90):
+    """Convierte un documento pipe-delimited largo en una etiqueta corta
+    tipo 'Equipo A vs Equipo B (resultado)' para mostrar como fuente."""
+    m_partido = re.search(r"Partido:\s*(.*?)\s*\|", texto)
+    if m_partido:
+        partido = m_partido.group(1)
+        m_resultado = re.search(r"Resultado:\s*(.*?)\s*\|", texto)
+        resultado = m_resultado.group(1) if m_resultado else ""
+        etiqueta = partido
+        if resultado and resultado not in ("Pendiente", ""):
+            etiqueta += f" ({resultado})"
+    else:
+        etiqueta = texto
+    if len(etiqueta) > maxlen:
+        etiqueta = etiqueta[:maxlen - 1].rstrip() + "…"
+    return etiqueta
+
+
+def recuperar_contexto(pregunta, k=6, umbral_min=0.15):
+    """Devuelve una lista de (documento, score) con los k documentos más
+    similares a la pregunta, filtrando por un umbral mínimo de similitud."""
+    vec_pregunta = normalize(modelo_embeddings.encode([pregunta]))
+    sims = cosine_similarity(vec_pregunta, _vectores_docs)[0]
+    orden = np.argsort(sims)[::-1]
+    resultados = []
+    for idx in orden[:int(k)]:
+        if sims[idx] >= umbral_min:
+            resultados.append((documentos[idx], float(sims[idx])))
+    return resultados
+
+
+def formatear_fuentes(contexto):
+    if not contexto:
+        return "_No se encontraron documentos por encima del umbral de similitud._"
+    return "\n".join(f"- {etiqueta_corta(doc)} — similitud {score:.2f}" for doc, score in contexto)
+
+
+def construir_system_prompt(contexto):
+    if contexto:
+        contexto_texto = "\n".join(f"- {doc}" for doc, _ in contexto)
+    else:
+        contexto_texto = "(no se encontraron documentos relevantes para esta pregunta)"
+    return (
+        "Sos un asistente experto en el Mundial de Fútbol 2026. "
+        "Respondé ÚNICAMENTE usando la información de los DOCUMENTOS DE CONTEXTO de abajo. "
+        "Si la respuesta no está en el contexto (por ejemplo, un dato que figura como "
+        "'No disponible' o un partido que todavía no se jugó), decí explícitamente que no "
+        "tenés ese dato en la base en vez de inventarlo. Respondé siempre en español, de "
+        "forma clara, directa y sin relleno innecesario.\n\n"
+        f"DOCUMENTOS DE CONTEXTO:\n{contexto_texto}"
+    )
+
+
+def historial_a_mensajes(historial):
+    """Convierte el historial que entrega gr.ChatInterface (puede venir como
+    lista de dicts {role, content} o como lista de pares [usuario, asistente]
+    según la versión de gradio) a la lista de mensajes que espera Groq."""
+    mensajes = []
+    for turno in historial or []:
+        if isinstance(turno, dict):
+            rol = turno.get("role", "user")
+            contenido = turno.get("content", "")
+        else:
+            # compatibilidad con el formato viejo (usuario, asistente)
+            usuario, asistente = turno
+            if usuario:
+                mensajes.append({"role": "user", "content": usuario})
+            if asistente:
+                mensajes.append({"role": "assistant", "content": asistente})
+            continue
+        if contenido:
+            mensajes.append({"role": rol, "content": contenido})
+    return mensajes
+
+
+# ------------------------------------------------------------
+# 2. CONEXIÓN CON GROQ
+# ------------------------------------------------------------
+def cargar_modelos(api_key):
+    """Valida la API key contra Groq y puebla el dropdown con los modelos
+    realmente disponibles para esa cuenta (evita hardcodear nombres)."""
+    if not api_key:
+        return gr.update(choices=MODELOS_FALLBACK, value=MODELOS_FALLBACK[0]), "⚠️ Ingresá tu API key primero."
+    try:
+        client = Groq(api_key=api_key)
+        modelos = client.models.list()
+        ids = sorted(m.id for m in modelos.data)
+        # Evitamos ofrecer por defecto modelos de audio/moderación como modelo de chat
+        candidatos_chat = [i for i in ids if not any(x in i.lower() for x in ("whisper", "tts", "guard"))]
+        opciones = candidatos_chat or ids or MODELOS_FALLBACK
+        valor = "llama-3.3-70b-versatile" if "llama-3.3-70b-versatile" in opciones else opciones[0]
+        return gr.update(choices=opciones, value=valor), f"✅ Conectado — {len(opciones)} modelos disponibles."
+    except Exception as e:
+        return gr.update(choices=MODELOS_FALLBACK, value=MODELOS_FALLBACK[0]), f"❌ No se pudo conectar: {e}"
+
+
+# ------------------------------------------------------------
+# 3. FUNCIÓN DEL CHAT (RAG + Groq, con streaming)
+# ------------------------------------------------------------
+def responder(mensaje, historial, api_key, modelo_id, k, umbral_min):
+    if not api_key:
+        yield "⚠️ Pegá tu **Groq API key** en el panel de la izquierda (y tocá 'Conectar') antes de chatear."
+        return
+    if not modelo_id:
+        yield "⚠️ Elegí un modelo de Groq en el panel de la izquierda."
+        return
+
+    contexto = recuperar_contexto(mensaje, k=k, umbral_min=umbral_min)
+    system_prompt = construir_system_prompt(contexto)
+
+    mensajes = [{"role": "system", "content": system_prompt}]
+    mensajes.extend(historial_a_mensajes(historial))
+    mensajes.append({"role": "user", "content": mensaje})
+
+    try:
+        client = Groq(api_key=api_key)
+        stream = client.chat.completions.create(
+            model=modelo_id,
+            messages=mensajes,
+            temperature=0.2,
+            stream=True,
+        )
+    except Exception as e:
+        yield f"❌ Error al conectar con Groq: {e}"
+        return
+
+    respuesta = ""
+    try:
+        for chunk in stream:
+            delta = chunk.choices[0].delta.content or ""
+            if delta:
+                respuesta += delta
+                yield respuesta
+    except Exception as e:
+        yield respuesta + f"\n\n❌ Error durante la generación: {e}"
+        return
+
+    fuentes = formatear_fuentes(contexto)
+    yield respuesta + f"\n\n---\n📚 **Fuentes consultadas (RAG):**\n{fuentes}"
+
+
+# ------------------------------------------------------------
+# 4. TEMA VISUAL — identidad "Mundial 2026" (cancha, marcador, dorado)
+# ------------------------------------------------------------
+# Nota: todo lo que sigue son overrides por CSS plano y `elem_classes` propias,
+# a propósito — así no dependen de qué parámetros acepte exactamente el
+# gr.Blocks/gr.Chatbot de tu versión de gradio (evita el error de la vez
+# pasada con `type=`). Si alguna variable/selector no existe en tu versión,
+# el navegador simplemente la ignora, no rompe nada.
+CSS_MUNDIAL = """
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+    --wc-pitch-deep: #0b2818;
+    --wc-pitch: #163a2b;
+    --wc-pitch-light: #2d6a4f;
+    --wc-chalk: #f4f1ea;
+    --wc-gold: #ffb703;
+    --wc-gold-deep: #e0980a;
+    --wc-red: #e63946;
+
+    --body-background-fill: var(--wc-pitch-deep);
+    --background-fill-primary: var(--wc-pitch-deep);
+    --background-fill-secondary: var(--wc-pitch);
+    --body-text-color: var(--wc-chalk);
+    --block-background-fill: rgba(22, 58, 43, 0.6);
+    --block-border-color: rgba(255, 183, 3, 0.35);
+    --block-radius: 14px;
+    --panel-background-fill: rgba(22, 58, 43, 0.6);
+    --border-color-primary: rgba(255, 183, 3, 0.25);
+    --border-color-accent: var(--wc-gold);
+    --input-background-fill: rgba(11, 40, 24, 0.65);
+    --button-primary-background-fill: var(--wc-gold);
+    --button-primary-background-fill-hover: var(--wc-gold-deep);
+    --button-primary-text-color: var(--wc-pitch-deep);
+    --button-secondary-background-fill: transparent;
+    --button-secondary-border-color: var(--wc-red);
+    --button-secondary-text-color: var(--wc-red);
+    --slider-color: var(--wc-gold);
+    --body-text-color-subdued: #b7cdbf;
+}
+
+body, .gradio-container {
+    background: repeating-linear-gradient(115deg, #123524 0px, #123524 70px, #0f2f1f 70px, #0f2f1f 140px) !important;
+    font-family: 'Work Sans', sans-serif !important;
+    color: var(--wc-chalk) !important;
+}
+.gradio-container h1, .gradio-container h2, .gradio-container h3 {
+    font-family: 'Bebas Neue', sans-serif !important;
+    letter-spacing: 1.5px;
+    color: var(--wc-gold) !important;
+}
+footer { display: none !important; }
+
+/* Banner tipo marcador de estadio */
+.wc-banner {
+    background: linear-gradient(135deg, var(--wc-pitch-deep), var(--wc-pitch) 60%, var(--wc-pitch-light));
+    border: 1px solid rgba(255,183,3,.4);
+    border-radius: 16px;
+    padding: 22px 28px 18px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+}
+.wc-banner::before, .wc-banner::after {
+    content: "";
+    position: absolute; left: 0; right: 0; height: 5px;
+    background: repeating-linear-gradient(90deg, var(--wc-gold) 0 18px, transparent 18px 32px);
+    opacity: .9;
+}
+.wc-banner::before { top: 0; }
+.wc-banner::after { bottom: 0; }
+.wc-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    letter-spacing: 2px;
+    color: var(--wc-gold);
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 6px;
+}
+.wc-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--wc-gold);
+    box-shadow: 0 0 8px var(--wc-gold);
+}
+.wc-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.6rem; line-height: 1; letter-spacing: 2px;
+    color: var(--wc-chalk); margin: 0 0 6px 0;
+}
+.wc-title span { color: var(--wc-gold); }
+.wc-desc {
+    font-family: 'Work Sans', sans-serif;
+    color: #cfe3d7; font-size: .95rem; max-width: 640px; margin: 0;
+}
+
+/* Panel lateral tipo "ficha técnica" */
+.wc-panel {
+    background: rgba(11, 40, 24, 0.55) !important;
+    border: 1px solid rgba(255,183,3,.25) !important;
+    border-radius: 14px !important;
+    padding: 10px 8px !important;
+}
+.wc-panel h3 {
+    font-size: 1.1rem !important;
+    border-bottom: 2px solid var(--wc-gold);
+    padding-bottom: 4px;
+    display: inline-block;
+}
+
+/* Botones tipo "tarjeta" redondeada */
+button {
+    border-radius: 999px !important;
+    font-family: 'Work Sans', sans-serif !important;
+    font-weight: 600 !important;
+    transition: transform .15s ease, box-shadow .15s ease !important;
+}
+button:hover { transform: translateY(-1px); }
+button.primary {
+    background: var(--wc-gold) !important;
+    color: var(--wc-pitch-deep) !important;
+    border: none !important;
+}
+button.primary:hover { box-shadow: 0 6px 16px rgba(255,183,3,.35) !important; }
+
+/* Burbujas del chat (best-effort, no crítico si el selector no aplica) */
+.message.user, [data-testid="user"] {
+    background: var(--wc-chalk) !important;
+    color: var(--wc-pitch-deep) !important;
+    border-radius: 14px 14px 3px 14px !important;
+}
+.message.bot, [data-testid="bot"] {
+    background: rgba(45,106,79,.55) !important;
+    color: var(--wc-chalk) !important;
+    border-left: 3px solid var(--wc-gold) !important;
+    border-radius: 14px 14px 14px 3px !important;
+}
+code { font-family: 'JetBrains Mono', monospace !important; }
+"""
+
+BANNER_HTML = f"""
+<div class="wc-banner">
+  <div class="wc-eyebrow"><span class="wc-dot"></span> BASE RAG · {len(documentos)} DOCUMENTOS · INFERENCIA GROQ</div>
+  <p class="wc-title">⚽ CHAT <span>MUNDIAL 2026</span></p>
+  <p class="wc-desc">Preguntá por partidos, resultados, goleadores y árbitros. Cada respuesta se arma
+  recuperando los documentos más relevantes de la base y generándola con un modelo de Groq — si el dato
+  no está en la base, te lo va a decir en vez de inventarlo.</p>
+</div>
+"""
+
+# ------------------------------------------------------------
+# 5. INTERFAZ GRADIO
+# ------------------------------------------------------------
+with gr.Blocks(
+    theme=gr.themes.Base(primary_hue="yellow", neutral_hue="slate"),
+    title="⚽ Chat RAG — Mundial 2026 (Groq)",
+    css=CSS_MUNDIAL,
+) as app:
+
+    gr.HTML(BANNER_HTML)
+
+    with gr.Row():
+        with gr.Column(scale=1, min_width=300, elem_classes=["wc-panel"]):
+            gr.Markdown("### 🟨 Conexión con Groq")
+            api_key_box = gr.Textbox(
+                label="Groq API key",
+                type="password",
+                placeholder="gsk_...",
+                value=os.environ.get("GROQ_API_KEY", ""),
+            )
+            btn_conectar = gr.Button("🔌 Conectar y cargar modelos", variant="primary")
+            estado_conexion = gr.Markdown("")
+            modelo_dropdown = gr.Dropdown(
+                label="Modelo de Groq",
+                choices=MODELOS_FALLBACK,
+                value=MODELOS_FALLBACK[0],
+            )
+
+            gr.Markdown("---")
+            gr.Markdown("### 📋 Parámetros de búsqueda (RAG)")
+            k_slider = gr.Slider(1, 15, value=6, step=1, label="Documentos a recuperar (top-k)")
+            umbral_slider = gr.Slider(0.0, 1.0, value=0.15, step=0.05, label="Umbral mínimo de similitud")
+            gr.Markdown(f"📄 Base actual: **{len(documentos)} documentos** cargados desde la celda anterior de `documentos`.")
+
+            btn_conectar.click(
+                cargar_modelos,
+                inputs=[api_key_box],
+                outputs=[modelo_dropdown, estado_conexion],
+            )
+
+        with gr.Column(scale=3):
+            gr.ChatInterface(
+                fn=responder,
+                chatbot=gr.Chatbot(height=560, label="⚽ Chat RAG Mundial 2026"),
+                additional_inputs=[api_key_box, modelo_dropdown, k_slider, umbral_slider],
+                examples=[
+                    ["¿Quién ganó Brasil vs Japón en dieciseisavos de final?"],
+                    ["¿Qué pasó en Alemania vs Paraguay?"],
+                    ["¿Quién fue el árbitro de México vs Sudáfrica?"],
+                    ["¿Cuándo y dónde es la final del Mundial 2026?"],
+                ],
+            )
+
+# ------------------------------------------------------------
+# 5. LANZAR LA APP
+# ------------------------------------------------------------
+app.launch(share=True, debug=False)
+```
