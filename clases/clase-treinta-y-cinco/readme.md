@@ -493,6 +493,6 @@ image
 ```
 
 * Colab
- * https://colab.research.google.com/drive/1vNUNl_3nbcQQtrjFqrst5Cagz9e7XFsV?usp=sharing
+ * https://colab.research.google.com/drive/1vNUNl_3nbcQQtrjFqrst5Cagz9e7XFsV?usp=sharing 
 
 
