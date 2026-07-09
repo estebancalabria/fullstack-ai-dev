@@ -295,3 +295,204 @@ if response.choices[0].message.tool_calls:
 else: 
     print(response.choices[0].message.content)
 ```
+---
+
+# Ejecicio : Reemplazar el ejercicio anterior la tool que devuelve una temperatura al azar y utilizar alguna api para consultar el clima
+
+* Usamos la api de
+  * https://open-meteo.com/
+
+* Ya tenemos la api key en una variable
+```
+api_key = input("Ingrese su ai key");
+```
+
+* Para esta version tenemos que instalar Groq
+```
+!pip install groq
+```
+
+* Cargar las funciones a memoria
+```
+import os
+import json
+import requests
+from IPython.display import display, Markdown
+from groq import Groq
+
+# Opción A (rápida, pero evitá compartir esta celda con la key adentro):
+
+
+# Opción B (recomendada en Colab): guardá la key en el ícono de la llave 🔑
+# a la izquierda, con el nombre GROQ_API_KEY, y usá:
+# from google.colab import userdata
+# os.environ["GROQ_API_KEY"] = userdata.get("GROQ_API_KEY")
+
+client = Groq(api_key=api_key)
+
+# --- 1. Definición de la tool ---
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "Get current weather for a location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "City name, e.g. Rosario, San Francisco, Buenos Aires"
+                    },
+                    "unit": {
+                        "type": "string",
+                        "enum": ["celsius", "fahrenheit"]
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    }
+]
+
+# --- 2. Función real: geocodifica la ciudad y pide el clima ---
+def get_weather(location, unit="celsius"):
+    geo_url = "https://geocoding-api.open-meteo.com/v1/search"
+    geo_resp = requests.get(geo_url, params={"name": location, "count": 1, "language": "es"}).json()
+
+    if "results" not in geo_resp or len(geo_resp["results"]) == 0:
+        return json.dumps({"error": f"No se encontró la ciudad '{location}'"})
+
+    place = geo_resp["results"][0]
+    lat, lon = place["latitude"], place["longitude"]
+    nombre_real = f"{place['name']}, {place.get('country', '')}"
+
+    weather_url = "https://api.open-meteo.com/v1/forecast"
+    temp_unit = "fahrenheit" if unit == "fahrenheit" else "celsius"
+    weather_resp = requests.get(weather_url, params={
+        "latitude": lat,
+        "longitude": lon,
+        "current": "temperature_2m,wind_speed_10m,relative_humidity_2m",
+        "temperature_unit": temp_unit
+    }).json()
+
+    current = weather_resp.get("current", {})
+
+    return json.dumps({
+        "location": nombre_real,
+        "temperature": current.get("temperature_2m"),
+        "unit": unit,
+        "humidity": current.get("relative_humidity_2m"),
+        "wind_speed": current.get("wind_speed_10m")
+    }, ensure_ascii=False)
+
+available_functions = {"get_weather": get_weather}
+
+# --- 3. Función para mostrar el clima bonito (Markdown) ---
+def mostrar_clima_markdown(data_json):
+    data = json.loads(data_json)
+
+    if "error" in data:
+        display(Markdown(f"### ❌ {data['error']}"))
+        return
+
+    unidad_simbolo = "°C" if data["unit"] == "celsius" else "°F"
+
+    md = f"""
+### 🌤️ Clima en **{data['location']}**
+
+| Dato | Valor |
+|---|---|
+| 🌡️ Temperatura | {data['temperature']}{unidad_simbolo} |
+| 💧 Humedad | {data['humidity']}% |
+| 💨 Viento | {data['wind_speed']} km/h |
+"""
+    display(Markdown(md))
+
+# --- 4. Función principal: preguntar ---
+def preguntar(pregunta_usuario):
+    messages = [
+        {"role": "system", "content": "Eres un asistente para responder preguntas sobre el clima. Si te hablan de algo que no tiene que ver con el clima, rechaza amablemente la solicitud. Debes preguntar la ciudad desde la cual te desea saber el clima el usuario si no la informa. Para saber el clima en una ciudad tienes una herramienta get_weather para consultarlo"},
+        {"role": "user", "content": pregunta_usuario}
+    ]
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=messages,
+        tools=tools,
+        tool_choice="auto",
+        max_tokens=1024
+    )
+
+    response_message = response.choices[0].message
+    tool_calls = response_message.tool_calls
+
+    if tool_calls:
+        messages.append(response_message)
+        for tool_call in tool_calls:
+            args = json.loads(tool_call.function.arguments)
+            result = available_functions[tool_call.function.name](**args)
+
+            # 👇 tarjeta bonita del clima
+            mostrar_clima_markdown(result)
+
+            messages.append({
+                "tool_call_id": tool_call.id,
+                "role": "tool",
+                "name": tool_call.function.name,
+                "content": result,
+            })
+
+        second_response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages
+        )
+        respuesta_texto = second_response.choices[0].message.content
+        display(Markdown(f"**🤖 Asistente:** {respuesta_texto}"))
+        return respuesta_texto
+    else:
+        display(Markdown(f"**🤖 Asistente:** {response_message.content}"))
+        return response_message.content
+```
+
+* Invocamos las funciones y las llamadas a herramientas
+
+```
+ciudad = input("¿Sobre qué ciudad querés saber el clima? ")
+preguntar(f"¿Qué clima hace en {ciudad}?")
+```
+
+---
+
+# Vamos a probar generar una imagen en un google colab
+
+* Generamos un google colab nuevo con gpu
+ * Menu -> Entorno de Ejecucion -> Tipo de Entorno de Ejecucion -> 
+
+* Cargamos el modelo
+```
+from diffusers import StableDiffusionPipeline
+import torch
+
+model_id = "sd-legacy/stable-diffusion-v1-5"
+pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+pipe = pipe.to("cuda")
+
+```
+
+* Creamos la imagen
+
+```
+prompt = "a cute kitten"
+
+image = pipe(prompt).images[0]  
+    
+image.save("astronaut_rides_horse.png")
+
+image
+```
+
+* Colab
+ * https://colab.research.google.com/drive/1vNUNl_3nbcQQtrjFqrst5Cagz9e7XFsV?usp=sharing
+
+
