@@ -151,7 +151,67 @@ crear una carpeta migracion-aider y migrar todo el proyecto que esta en React a 
    * Playwright
 * Pruebas Unitarias
    * Fragmentos de Codigo que prueban el codigo
- 
+   * Concepto
+     * Cobertura de Codigo : La cobertura de código (o code coverage) es una métrica de software que mide el porcentaje de tu código fuente que se ejecuta cuando lanzas tus pruebas automatizadas.
+       * Tiene en cuenta que se prueben todos los casos
+   * Para probar APIS es comun hacerlo con un cliente HTTP
+     * Las pruebas unitarias son ideal para probar de forma automatica APIs y no depender de un cliente HTTP
  
 
+> [!NOTE]
+> Nunca habia tiempo en los equipos para pruebas unitarias a pesar que la industria del software exigia pruebas unitarias como prueba de calidad
+> ...hasta que aparecio la IA, que es la que programa las pruebas unitarias por nosotors 
+
 ## Pruebas unitarias
+
+> [!NOTE]
+> Las pruebas unitarias trantan de resolver el problema de un sofware que funciona bien pero al cambiar una parte de rompe algo que ya funcionaba antes
+> La idea que si hacemos un cambio sobre el codigo nos podamos quedar tranquilo que si algo que funcionaba antes se rompio deberia detectarlo la prueba unitaria
+
+* Ejemplo de funcion a probar
+
+```python
+def sumar(a, b):
+    """Suma dos números y retorna el resultado."""
+    return a + b
+```
+
+* Pueba manual
+
+```
+from funciones_a_probar import sumar
+
+resultado = sumar(1,3)
+
+print(resultado)
+```
+  
+> [!NOTE]
+> Tengo que mirar la computadora y el resultado para saber si esta bien
+
+
+* Prueba Unitaria
+
+```
+import unittest
+
+from funciones_a_probar import sumar
+
+
+class PruebaOperaciones(unittest.TestCase):
+    
+    def test_suma(self):
+        resultado = sumar(2,3)
+        self.assertEqual(resultado, 5)
+
+
+unittest.main()
+```
+
+> [!NOTE]
+> Cualqueir llm hace muy buenas pruebas unitarias
+
+
+## TDD (Test Driven Development)
+
+* Es una metodologia de desarrollo segun la cual vos escribis primero las pruebas unitarias y despues todo el codigo para que las pruebas pasen
