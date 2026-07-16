@@ -246,6 +246,50 @@ async def voces_espanol():
 await voces_espanol()
 ```
 
+###  Text to Speech : Con API Key
+
+
+* Ver los modelos de groq
+
+* Sacar una API Key de Groq
+  * https://console.groq.com/keys
+
+* Instalamos libreria Groq
+
+```
+!pip install groq
+```
+
+* Ejecutamos este codigo
+
+```python
+import os
+from groq import Groq
+from IPython.display import Audio
+
+api_key = input("Ingrese su Api Key")
+client = Groq(api_key=api_key)
+
+speech_file_path = "orpheus-english.wav" 
+model = "canopylabs/orpheus-v1-english"
+voice = "troy"
+text = "Welcome to Orpheus text-to-speech. [cheerful] This is an example of high-quality English audio generation with vocal directions support."
+response_format = "wav"
+
+response = client.audio.speech.create(
+    model=model,
+    voice=voice,
+    input=text,
+    response_format=response_format
+)
+
+response.write_to_file(speech_file_path)
+
+Audio(speech_file_path)
+```
+
+---
+
 ### Speech To Text : SpeechRecognition
 
 * URL
@@ -307,3 +351,4 @@ result = model.transcribe("audio.wav", language="es")
 
 print(result["text"])
 ```
+
