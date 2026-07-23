@@ -415,11 +415,10 @@ plt.show()
 * Casos de uso
  * Analisis de Imagen
  * Generacion de Capitions
- * Etiquetado dei magenes
+ * Etiquetado de imagenes
  * Deteccion de objetos
  * Deteccion de personas
  * OCR
- * Eliminacion de fondo
  * Generacion de mascara de primer plano
  * Deteccion de contenido adulto o inapropiado
  * Recorte Intelifente
@@ -701,4 +700,38 @@ HTTP Status: 200
     }
 }
 
+```
+
+### Caption de imagen
+
+```
+import requests
+
+endpoint = input("Ingrese el Endpoint de Azure AI Vision: ").strip().rstrip("/")
+key = input("Ingrese la Key: ").strip()
+
+url = f"{endpoint}/computervision/imageanalysis:analyze"
+
+params = {
+    "api-version": "2024-02-01",
+    "features": "caption"
+}
+
+headers = {
+    "Ocp-Apim-Subscription-Key": key,
+    "Content-Type": "application/octet-stream"
+}
+
+with open("imagen.jpg", "rb") as f:
+    image = f.read()
+
+response = requests.post(
+    url,
+    params=params,
+    headers=headers,
+    data=image
+)
+
+print(response.status_code)
+print(response.text)
 ```
