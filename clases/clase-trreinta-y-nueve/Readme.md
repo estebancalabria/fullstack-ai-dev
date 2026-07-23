@@ -43,6 +43,10 @@ pipdeptree -o text
 
 * Explorar los recursos de Microsoft Foundry
 
+---
+
+## SpeechToText Azure
+
 * Creamos un servicio de SpeechService
 
 * Ir al portal de Speech Service
@@ -250,3 +254,121 @@ elif result.reason == speechsdk.ResultReason.Canceled:
 ```
 
 * El endpoint y la clave la copio del recurso de SpeechService que cree previamente
+
+---
+
+## Text to Speech
+
+* Probamos el texto speech desde la galeria de voces en https://speech.microsoft.com/
+
+```
+import azure.cognitiveservices.speech as speechsdk
+
+speech_key = input("Ingrese Speech Key: ")
+service_region = "westus"
+
+speech_config = speechsdk.SpeechConfig(
+    subscription=speech_key,
+    region=service_region
+)
+
+speech_config.speech_synthesis_voice_name = "es-ES-TristanMultilingualNeural"
+
+text = "Hola, soy Tristan y quiero probar la generación de audio a partir de texto."
+
+# Guardar el audio en un archivo WAV
+audio_config = speechsdk.audio.AudioOutputConfig(filename="tts.wav")
+
+speech_synthesizer = speechsdk.SpeechSynthesizer(
+    speech_config=speech_config,
+    audio_config=audio_config
+)
+
+result = speech_synthesizer.speak_text_async(text).get()
+
+if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
+    print("Audio generado correctamente.")
+    print("Archivo: tts.wav")
+elif result.reason == speechsdk.ResultReason.Canceled:
+    cancellation_details = result.cancellation_details
+    print("Speech synthesis canceled:", cancellation_details.reason)
+    if cancellation_details.reason == speechsdk.CancellationReason.Error:
+        print("Error:", cancellation_details.error_details)
+```
+
+* Luego para reproducir el audio
+
+```
+from IPython.display import Audio, display
+
+display(Audio("tts.wav"))
+```
+
+## Face Api
+
+* Creamos el recurso de Face API
+
+* Vamos al portal de usuario en https://portal.vision.cognitive.azure.com/\\
+
+* Probamos primero el reconocimiento de cara en el portal
+
+* Subo un archivo con un rotro llamado cara.jpg y luego por codigo
+
+```
+import requests
+import json
+
+# Pedir datos al usuario
+endpoint = input("Ingrese el Endpoint de Face API: ").strip().rstrip("/")
+key = input("Ingrese la Key: ").strip()
+
+image_path = "cara.jpg"
+
+# Endpoint de detección
+url = f"{endpoint}/face/v1.0/detect"
+
+params = {
+    "returnFaceId": False,
+    "returnFaceLandmarks": False,
+    "detectionModel": "detection_03"
+}
+
+headers = {
+    "Ocp-Apim-Subscription-Key": key,
+    "Content-Type": "application/octet-stream"
+}
+
+with open(image_path, "rb") as f:
+    image_data = f.read()
+
+response = requests.post(
+    url,
+    headers=headers,
+    params=params,
+    data=image_data
+)
+
+print("HTTP Status:", response.status_code)
+
+try:
+    result = response.json()
+    print(json.dumps(result, indent=4, ensure_ascii=False))
+except Exception:
+    print(response.text)
+```
+
+* Me devuelve
+
+```
+HTTP Status: 200
+[
+    {
+        "faceRectangle": {
+            "top": 62,
+            "left": 289,
+            "width": 227,
+            "height": 317
+        }
+    }
+]
+```
