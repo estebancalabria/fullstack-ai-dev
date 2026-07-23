@@ -304,6 +304,8 @@ from IPython.display import Audio, display
 display(Audio("tts.wav"))
 ```
 
+---
+
 ## Face Api
 
 * Creamos el recurso de Face API
@@ -371,4 +373,332 @@ HTTP Status: 200
         }
     }
 ]
+```
+
+* Codigo para ver el rectangulo en el rostro
+
+```
+from PIL import Image, ImageDraw
+import matplotlib.pyplot as plt
+
+img = Image.open("cara.jpg").convert("RGB")
+draw = ImageDraw.Draw(img)
+
+for face in result:
+    r = face["faceRectangle"]
+    x = r["left"]
+    y = r["top"]
+    w = r["width"]
+    h = r["height"]
+
+    draw.rectangle(
+        [(x, y), (x + w, y + h)],
+        outline="red",
+        width=3
+    )
+
+plt.figure(figsize=(8,8))
+plt.imshow(img)
+plt.axis("off")
+plt.show()
+```
+
+---
+
+## Computer vision
+
+* Creamos el recurso de computer vision en el portal
+
+* Solo funciona mediante codigo, sacaron el portal donde se hacen las demo
+
+
+* Casos de uso
+ * Analisis de Imagen
+ * Generacion de Capitions
+ * Etiquetado dei magenes
+ * Deteccion de objetos
+ * Deteccion de personas
+ * OCR
+ * Eliminacion de fondo
+ * Generacion de mascara de primer plano
+ * Deteccion de contenido adulto o inapropiado
+ * Recorte Intelifente
+ * Extraccion de caraceristicas (calidad, paleta de colors, dimensiones, formato, 
+
+### Analisis de Imagen
+
+* Subimos una imagen y la analizamos con python
+```
+import requests
+import json
+
+# Pedir datos al usuario
+endpoint = input("Ingrese el Endpoint de Azure AI Vision: ").strip().rstrip("/")
+key = input("Ingrese la Key: ").strip()
+
+image_path = "cara.jpg"
+
+# Endpoint de Image Analysis
+url = f"{endpoint}/computervision/imageanalysis:analyze"
+
+# Características a analizar
+params = {
+    "api-version": "2024-02-01",
+    "features": "caption,denseCaptions,tags,objects,read,smartCrops,people"
+}
+
+headers = {
+    "Ocp-Apim-Subscription-Key": key,
+    "Content-Type": "application/octet-stream"
+}
+
+with open(image_path, "rb") as f:
+    image_data = f.read()
+
+response = requests.post(
+    url,
+    headers=headers,
+    params=params,
+    data=image_data
+)
+
+print("HTTP Status:", response.status_code)
+
+try:
+    result = response.json()
+    print(json.dumps(result, indent=4, ensure_ascii=False))
+except Exception:
+    print(response.text)
+```
+
+* Me devuelve
+
+```json
+HTTP Status: 200
+{
+    "modelVersion": "2023-10-01",
+    "captionResult": {
+        "text": "a man in a suit",
+        "confidence": 0.9195850491523743
+    },
+    "denseCaptionsResult": {
+        "values": [
+            {
+                "text": "a man in a suit",
+                "confidence": 0.9195850491523743,
+                "boundingBox": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 768,
+                    "h": 768
+                }
+            },
+            {
+                "text": "a man in a suit and tie",
+                "confidence": 0.8774699568748474,
+                "boundingBox": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 716,
+                    "h": 750
+                }
+            },
+            {
+                "text": "a close up of a tie",
+                "confidence": 0.8234975934028625,
+                "boundingBox": {
+                    "x": 338,
+                    "y": 413,
+                    "w": 126,
+                    "h": 349
+                }
+            },
+            {
+                "text": "a red bird with black eyes",
+                "confidence": 0.7755876779556274,
+                "boundingBox": {
+                    "x": 584,
+                    "y": 551,
+                    "w": 60,
+                    "h": 79
+                }
+            }
+        ]
+    },
+    "metadata": {
+        "width": 768,
+        "height": 768
+    },
+    "tagsResult": {
+        "values": [
+            {
+                "name": "person",
+                "confidence": 0.9971995949745178
+            },
+            {
+                "name": "clothing",
+                "confidence": 0.9942586421966553
+            },
+            {
+                "name": "tie",
+                "confidence": 0.9845768213272095
+            },
+            {
+                "name": "human face",
+                "confidence": 0.9802500009536743
+            },
+            {
+                "name": "collar",
+                "confidence": 0.9767420291900635
+            },
+            {
+                "name": "man",
+                "confidence": 0.9709677696228027
+            },
+            {
+                "name": "formal wear",
+                "confidence": 0.9585469961166382
+            },
+            {
+                "name": "blazer",
+                "confidence": 0.9555672407150269
+            },
+            {
+                "name": "dress shirt",
+                "confidence": 0.9502903819084167
+            },
+            {
+                "name": "gentleman",
+                "confidence": 0.9402216672897339
+            },
+            {
+                "name": "building",
+                "confidence": 0.939478874206543
+            },
+            {
+                "name": "outerwear",
+                "confidence": 0.9210767149925232
+            },
+            {
+                "name": "white-collar worker",
+                "confidence": 0.912745475769043
+            },
+            {
+                "name": "coat",
+                "confidence": 0.8972408175468445
+            },
+            {
+                "name": "businessperson",
+                "confidence": 0.8929969668388367
+            },
+            {
+                "name": "wearing",
+                "confidence": 0.8797560930252075
+            },
+            {
+                "name": "outdoor",
+                "confidence": 0.8754348754882812
+            },
+            {
+                "name": "male person",
+                "confidence": 0.8730376958847046
+            },
+            {
+                "name": "chin",
+                "confidence": 0.856214702129364
+            },
+            {
+                "name": "necktie",
+                "confidence": 0.7616192102432251
+            },
+            {
+                "name": "suit",
+                "confidence": 0.7022040486335754
+            },
+            {
+                "name": "business",
+                "confidence": 0.5766170024871826
+            },
+            {
+                "name": "jacket",
+                "confidence": 0.5423729419708252
+            },
+            {
+                "name": "shirt",
+                "confidence": 0.5380292534828186
+            }
+        ]
+    },
+    "objectsResult": {
+        "values": [
+            {
+                "boundingBox": {
+                    "x": 351,
+                    "y": 430,
+                    "w": 134,
+                    "h": 338
+                },
+                "tags": [
+                    {
+                        "name": "tie",
+                        "confidence": 0.835
+                    }
+                ]
+            },
+            {
+                "boundingBox": {
+                    "x": 19,
+                    "y": 256,
+                    "w": 703,
+                    "h": 506
+                },
+                "tags": [
+                    {
+                        "name": "suit",
+                        "confidence": 0.933
+                    }
+                ]
+            }
+        ]
+    },
+    "readResult": {
+        "blocks": []
+    },
+    "smartCropsResult": {
+        "values": [
+            {
+                "aspectRatio": 1.38,
+                "boundingBox": {
+                    "x": 32,
+                    "y": 32,
+                    "w": 704,
+                    "h": 512
+                }
+            }
+        ]
+    },
+    "peopleResult": {
+        "values": [
+            {
+                "boundingBox": {
+                    "x": 0,
+                    "y": 0,
+                    "w": 755,
+                    "h": 767
+                },
+                "confidence": 0.9619508385658264
+            },
+            {
+                "boundingBox": {
+                    "x": 301,
+                    "y": 295,
+                    "w": 167,
+                    "h": 174
+                },
+                "confidence": 0.0018270768923684955
+            }
+        ]
+    }
+}
+
 ```
