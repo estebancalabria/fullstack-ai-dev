@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Text To Speech</h1>
+    <textarea id="text-input" rows="4" cols="50" placeholder="Escribe el texto aquí...">
+
+    </textarea>
+    
+    <div>
+        <button id="read-text">Leer texto</button>
+    </div>
+
+    <script>
+        const readButton = document.getElementById('read-text');
+        const textInput = document.getElementById('text-input');
+
+        readButton.addEventListener('click', () => {
+
+            const text = textInput.value;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES'; // Establecer el idioma a español
+            speechSynthesis.speak(utterance);
+            
+        });
+    </script>
+</body>
+</html>

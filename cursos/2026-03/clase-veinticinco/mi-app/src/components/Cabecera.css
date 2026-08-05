@@ -1,0 +1,106 @@
+.cabecera {
+  position: relative;
+  overflow: hidden;
+  margin: 24px auto 6px;
+  width: min(980px, calc(100% - 32px));
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--accent), white 55%);
+  padding: clamp(28px, 6vw, 52px);
+  background:
+    radial-gradient(circle at 85% 12%, rgba(10, 161, 255, 0.28), transparent 43%),
+    radial-gradient(circle at 12% 90%, rgba(255, 173, 31, 0.25), transparent 38%),
+    linear-gradient(130deg, #0f1221 0%, #171a2c 46%, #1d2340 100%);
+  text-align: left;
+  box-shadow:
+    0 25px 45px -28px rgba(15, 18, 33, 0.85),
+    0 10px 24px -12px rgba(0, 0, 0, 0.45);
+}
+
+.cabecera::before,
+.cabecera::after {
+  content: '';
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.cabecera::before {
+  width: 170px;
+  height: 170px;
+  top: -58px;
+  right: -24px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.cabecera::after {
+  width: 115px;
+  height: 115px;
+  bottom: -35px;
+  left: -15px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.cabecera__eyebrow {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #fff6cf;
+  background: linear-gradient(90deg, rgba(255, 193, 39, 0.34), rgba(255, 136, 0, 0.34));
+  border: 1px solid rgba(255, 229, 156, 0.4);
+}
+
+.cabecera__title {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(2rem, 5vw, 3.45rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #f8f9ff;
+}
+
+.cabecera__subtitle {
+  margin: 14px 0 0;
+  max-width: 56ch;
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  line-height: 1.5;
+  color: rgba(232, 236, 255, 0.9);
+}
+
+.cabecera__chips {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cabecera__chips span {
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e8ecff;
+  border: 1px solid rgba(239, 242, 255, 0.24);
+  background: rgba(239, 242, 255, 0.08);
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 768px) {
+  .cabecera {
+    width: calc(100% - 24px);
+    margin-top: 14px;
+    border-radius: 18px;
+  }
+
+  .cabecera__chips {
+    gap: 8px;
+  }
+
+  .cabecera__chips span {
+    font-size: 0.84rem;
+  }
+}

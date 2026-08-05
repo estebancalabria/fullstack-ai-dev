@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Presione el boton y comience a hablar...</h1>
+    <button id="start-speach-regnition">Hablar</button>
+    <p id="result">
+        
+    </p>
+
+    <script>
+        const startButton = document.getElementById('start-speach-regnition');
+        const resultParagraph = document.getElementById('result');
+
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'es-ES'; // Establecer el idioma a español
+
+        startButton.addEventListener('click', () => {
+            recognition.start();
+        });
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            resultParagraph.textContent = transcript;
+        };
+    </script>
+
+
+</body>
+</html>
