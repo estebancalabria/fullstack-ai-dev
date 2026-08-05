@@ -7,6 +7,13 @@
 * Desarrollo en Python
   * Lenguaje que exploto de con el tema de la IA
   * Su popularidad la podemos ver en https://www.tiobe.com/tiobe-index/
+* IA para desarrolladores
+ * Como utilizar la IA en cada etapa del proyecto
+   * Desde el analisis, base de datos hasta el despliegue
+ * Herramientas de IA para desarrollar
+ * Buenas practicas de como utilizar la Ia para desarrollar
+   * Evitar la **deuda cognitiva**
+     
 
 # Requerimientos
 
@@ -61,3 +68,13 @@ print("Hola Mundo")
 
 * Enlace de lo que hicimos esta clase:
   * https://colab.research.google.com/drive/1zUj-pqf_7sbnJ3Bd5pRC7iJoCN1w4xRL?usp=sharing
+
+# Notivias y novedades
+
+* MiduDev
+  * https://www.youtube.com/@midudev
+
+# Glosario
+
+* **Deuda cognitiva** 
+  * Cuando no sabes explicar o no sabes que hace tu propio código
