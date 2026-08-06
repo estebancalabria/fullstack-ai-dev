@@ -129,6 +129,12 @@ graph TB
     style EXTAPI fill:#9B59B6,color:#fff
 ```
 
+* PAra generar el diagrama anterior utilice el siguiente prompt en claude
+
+```
+Quiero un artefacto  mermaid con previsualizacion donde se vea la arquitectura full stack con el frontend, el backed, la base datos, la llamada a una api, el uso de un llm, rest, json, http, y todo para entender conceptualmente como es la arqutiectrua full stack que vamos a utilziar en un curso que estamos dictando
+```
+
 ---
 
 # Uso de LLM para programar
