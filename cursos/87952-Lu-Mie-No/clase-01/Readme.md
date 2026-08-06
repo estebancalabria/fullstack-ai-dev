@@ -186,3 +186,6 @@ print("Hola Mundo")
 * No se olviden de crear su cuenta en github y dentro de github crear un repositorio (https://github.com/new)
   * Nombre del Repositorio : 87952-BOOTCAMP-<APELLIDO>
   * El profesor les va a pasar un formulario para que me envien la url del respositorio
+* Mostrar y repasar la plataforma Alumni
+  * Mostrar que estan los te temas que introdujimos pero aclarar cambio de orden
+* Proxima recorddar redes
