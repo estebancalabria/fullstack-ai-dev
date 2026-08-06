@@ -89,6 +89,44 @@ cmd
 * Para entender conceptualmente la forma de trabajar o la arquitectura del desarrollo que buscmos en el curso
 
 ```mermaid
+graph TB
+    subgraph CLIENTE["🖥️ FRONTEND"]
+        UI[Interfaz de Usuario<br/>React / HTML+JS]
+    end
+
+    subgraph SERVIDOR["⚙️ BACKEND"]
+        API[Servidor de API<br/>Node.js / Python / .NET]
+        LOGIC[Lógica de Negocio]
+    end
+
+    subgraph DATOS["🗄️ PERSISTENCIA"]
+        DB[(Base de Datos<br/>SQL / NoSQL)]
+    end
+
+    subgraph EXTERNO["🤖 SERVICIOS EXTERNOS"]
+        LLM[LLM<br/>Claude / GPT / etc]
+        EXTAPI[API de Terceros<br/>ej: clima, pagos]
+    end
+
+    UI -- "1. Request HTTP<br/>(GET/POST)" --> API
+    API -- "2. Response HTTP<br/>formato JSON" --> UI
+
+    API -- "3. Consulta" --> LOGIC
+    LOGIC -- "4. Query" --> DB
+    DB -- "5. Resultado" --> LOGIC
+
+    LOGIC -- "6. Llamada REST<br/>HTTP + JSON" --> LLM
+    LLM -- "7. Respuesta<br/>JSON" --> LOGIC
+
+    LOGIC -- "8. Llamada REST<br/>HTTP + JSON" --> EXTAPI
+    EXTAPI -- "9. Respuesta<br/>JSON" --> LOGIC
+
+    style UI fill:#4A90D9,color:#fff
+    style API fill:#E67E22,color:#fff
+    style LOGIC fill:#E67E22,color:#fff
+    style DB fill:#27AE60,color:#fff
+    style LLM fill:#9B59B6,color:#fff
+    style EXTAPI fill:#9B59B6,color:#fff
 ```
 
 ---
