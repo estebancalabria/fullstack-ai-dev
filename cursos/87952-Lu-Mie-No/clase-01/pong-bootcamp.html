@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>PONG</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    background: #05050a;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  #wrap {
+    position: relative;
+    width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at center, #0d0d1a 0%, #050508 70%);
+  }
+  canvas {
+    display: block;
+    max-width: 100vw; max-height: 100vh;
+    box-shadow: 0 0 60px rgba(0,255,220,0.15), 0 0 20px rgba(255,0,180,0.1);
+    border-radius: 4px;
+  }
+  #hint {
+    position: absolute;
+    bottom: 18px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.45);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    pointer-events: none;
+    text-align: center;
+    line-height: 1.6;
+  }
+  #hint b { color: rgba(0,255,220,0.7); }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game"></canvas>
+  <div id="hint">Izquierda: <b>A / Z</b> &nbsp;·&nbsp; Derecha: <b>↑ / ↓</b> &nbsp;·&nbsp; <b>ESPACIO</b> iniciar / pausar+reiniciar</div>
+</div>
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+// ---------- Responsive sizing ----------
+let W = 900, H = 560;
+function resize() {
+  const maxW = window.innerWidth * 0.94;
+  const maxH = window.innerHeight * 0.82;
+  const ratio = 900/560;
+  let w = maxW, h = w/ratio;
+  if (h > maxH) { h = maxH; w = h*ratio; }
+  W = w; H = h;
+  canvas.width = W; canvas.height = H;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ---------- Game state ----------
+const state = {
+  running: false,
+  paddleW: () => W*0.014,
+  paddleH: () => H*0.16,
+  ballR: () => Math.max(6, W*0.011),
+  left: { y: H/2, score: 0, vy: 0 },
+  right: { y: H/2, score: 0, vy: 0 },
+  ball: { x: W/2, y: H/2, vx: 0, vy: 0, speed: 0 },
+  particles: [],
+  trail: [],
+  shake: 0,
+  flashColor: null,
+  flashAlpha: 0,
+  countdown: 0,
+};
+
+const BASE_SPEED = () => W*0.0075;
+const PADDLE_SPEED = () => H*0.014;
+
+function resetBall(direction) {
+  state.ball.x = W/2;
+  state.ball.y = H/2;
+  const angle = (Math.random()*0.6 - 0.3);
+  const speed = BASE_SPEED();
+  state.ball.speed = speed;
+  state.ball.vx = Math.cos(angle) * speed * (direction || (Math.random()<0.5?-1:1));
+  state.ball.vy = Math.sin(angle) * speed;
+  state.trail = [];
+}
+
+function resetGame() {
+  state.left.y = H/2;
+  state.right.y = H/2;
+  state.left.score = 0;
+  state.right.score = 0;
+  resetBall();
+  state.running = false;
+  state.particles = [];
+}
+
+resetGame();
+
+// ---------- Input ----------
+const keys = {};
+window.addEventListener('keydown', (e) => {
+  if (['ArrowUp','ArrowDown',' '].includes(e.key)) e.preventDefault();
+  keys[e.key.toLowerCase()] = true;
+  if (e.key === ' ') {
+    if (!state.running) {
+      state.running = true;
+      if (state.ball.vx === 0 && state.ball.vy === 0) resetBall();
+    } else {
+      // pause + reset
+      resetGame();
+    }
+  }
+});
+window.addEventListener('keyup', (e) => {
+  keys[e.key.toLowerCase()] = false;
+});
+
+// ---------- Particles ----------
+function spawnParticles(x, y, color, count, spread) {
+  for (let i=0;i<count;i++) {
+    const angle = Math.random()*Math.PI*2;
+    const speed = (Math.random()*2+0.5) * spread;
+    state.particles.push({
+      x, y,
+      vx: Math.cos(angle)*speed,
+      vy: Math.sin(angle)*speed,
+      life: 1,
+      decay: 0.02 + Math.random()*0.02,
+      size: Math.random()*3+1,
+      color
+    });
+  }
+}
+
+function updateParticles() {
+  for (let i=state.particles.length-1;i>=0;i--) {
+    const p = state.particles[i];
+    p.x += p.vx; p.y += p.vy;
+    p.vx *= 0.97; p.vy *= 0.97;
+    p.life -= p.decay;
+    if (p.life <= 0) state.particles.splice(i,1);
+  }
+}
+
+function drawParticles() {
+  for (const p of state.particles) {
+    ctx.globalAlpha = Math.max(p.life,0);
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// ---------- Update ----------
+function update() {
+  // paddle movement
+  if (keys['a']) state.left.y -= PADDLE_SPEED();
+  if (keys['z']) state.left.y += PADDLE_SPEED();
+  if (keys['arrowup']) state.right.y -= PADDLE_SPEED();
+  if (keys['arrowdown']) state.right.y += PADDLE_SPEED();
+
+  const halfP = state.paddleH()/2;
+  state.left.y = Math.max(halfP, Math.min(H-halfP, state.left.y));
+  state.right.y = Math.max(halfP, Math.min(H-halfP, state.right.y));
+
+  if (!state.running) return;
+
+  const b = state.ball;
+  b.x += b.vx;
+  b.y += b.vy;
+
+  state.trail.push({x:b.x, y:b.y});
+  if (state.trail.length > 14) state.trail.shift();
+
+  const r = state.ballR();
+
+  // top/bottom bounce
+  if (b.y - r < 0) { b.y = r; b.vy *= -1; spawnParticles(b.x, 0, '#00ffdc', 8, 1.5); }
+  if (b.y + r > H) { b.y = H-r; b.vy *= -1; spawnParticles(b.x, H, '#00ffdc', 8, 1.5); }
+
+  const pw = state.paddleW();
+  const ph = state.paddleH();
+
+  // left paddle collision
+  const lx = pw*1.5;
+  if (b.x - r < lx + pw/2 && b.x - r > lx - pw/2 &&
+      b.y > state.left.y - ph/2 - r && b.y < state.left.y + ph/2 + r && b.vx < 0) {
+    b.x = lx + pw/2 + r;
+    const rel = (b.y - state.left.y) / (ph/2);
+    const angle = rel * (Math.PI/3.2);
+    b.speed = Math.min(b.speed * 1.06, BASE_SPEED()*3.2);
+    b.vx = Math.cos(angle) * b.speed;
+    b.vy = Math.sin(angle) * b.speed;
+    if (b.vx < 0) b.vx *= -1;
+    spawnParticles(b.x, b.y, '#00e5ff', 16, 2.5);
+    state.shake = 6;
+  }
+
+  // right paddle collision
+  const rx = W - pw*1.5;
+  if (b.x + r > rx - pw/2 && b.x + r < rx + pw/2 &&
+      b.y > state.right.y - ph/2 - r && b.y < state.right.y + ph/2 + r && b.vx > 0) {
+    b.x = rx - pw/2 - r;
+    const rel = (b.y - state.right.y) / (ph/2);
+    const angle = rel * (Math.PI/3.2);
+    b.speed = Math.min(b.speed * 1.06, BASE_SPEED()*3.2);
+    b.vx = -Math.cos(angle) * b.speed;
+    b.vy = Math.sin(angle) * b.speed;
+    if (b.vx > 0) b.vx *= -1;
+    spawnParticles(b.x, b.y, '#ff2ea6', 16, 2.5);
+    state.shake = 6;
+  }
+
+  // scoring
+  if (b.x < -30) {
+    state.right.score++;
+    state.flashColor = '#ff2ea6';
+    state.flashAlpha = 0.4;
+    spawnParticles(0, b.y, '#ff2ea6', 40, 4);
+    state.running = false;
+    setTimeout(()=>{ resetBall(1); state.running = true; }, 700);
+  }
+  if (b.x > W+30) {
+    state.left.score++;
+    state.flashColor = '#00e5ff';
+    state.flashAlpha = 0.4;
+    spawnParticles(W, b.y, '#00e5ff', 40, 4);
+    state.running = false;
+    setTimeout(()=>{ resetBall(-1); state.running = true; }, 700);
+  }
+
+  updateParticles();
+  if (state.shake > 0) state.shake *= 0.85;
+  if (state.flashAlpha > 0) state.flashAlpha *= 0.9;
+}
+
+// ---------- Draw ----------
+function draw() {
+  ctx.save();
+
+  // shake
+  const sx = (Math.random()-0.5)*state.shake;
+  const sy = (Math.random()-0.5)*state.shake;
+  ctx.translate(sx, sy);
+
+  // background
+  const grad = ctx.createRadialGradient(W/2,H/2,10,W/2,H/2,W*0.8);
+  grad.addColorStop(0, '#10101c');
+  grad.addColorStop(1, '#050508');
+  ctx.fillStyle = grad;
+  ctx.fillRect(-20,-20,W+40,H+40);
+
+  // flash
+  if (state.flashAlpha > 0.01) {
+    ctx.fillStyle = state.flashColor;
+    ctx.globalAlpha = state.flashAlpha * 0.3;
+    ctx.fillRect(-20,-20,W+40,H+40);
+    ctx.globalAlpha = 1;
+  }
+
+  // center line
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([10, 12]);
+  ctx.beginPath();
+  ctx.moveTo(W/2, 0);
+  ctx.lineTo(W/2, H);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // center glow circle
+  ctx.beginPath();
+  ctx.arc(W/2, H/2, Math.min(W,H)*0.12, 0, Math.PI*2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  drawParticles();
+
+  const pw = state.paddleW();
+  const ph = state.paddleH();
+
+  // left paddle
+  ctx.save();
+  ctx.shadowColor = '#00e5ff';
+  ctx.shadowBlur = 20;
+  const lgrad = ctx.createLinearGradient(0, state.left.y-ph/2, 0, state.left.y+ph/2);
+  lgrad.addColorStop(0, '#00fff0');
+  lgrad.addColorStop(1, '#0090ff');
+  ctx.fillStyle = lgrad;
+  roundRect(ctx, pw*1.5-pw/2, state.left.y-ph/2, pw, ph, pw/2);
+  ctx.fill();
+  ctx.restore();
+
+  // right paddle
+  ctx.save();
+  ctx.shadowColor = '#ff2ea6';
+  ctx.shadowBlur = 20;
+  const rgrad = ctx.createLinearGradient(0, state.right.y-ph/2, 0, state.right.y+ph/2);
+  rgrad.addColorStop(0, '#ff2ea6');
+  rgrad.addColorStop(1, '#ff7a00');
+  ctx.fillStyle = rgrad;
+  roundRect(ctx, W-pw*1.5-pw/2, state.right.y-ph/2, pw, ph, pw/2);
+  ctx.fill();
+  ctx.restore();
+
+  // ball trail
+  for (let i=0;i<state.trail.length;i++) {
+    const t = state.trail[i];
+    const alpha = (i/state.trail.length)*0.5;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(t.x, t.y, state.ballR()*0.7, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  // ball
+  ctx.save();
+  ctx.shadowColor = '#ffffff';
+  ctx.shadowBlur = 25;
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(state.ball.x, state.ball.y, state.ballR(), 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  // scores
+  ctx.font = `bold ${H*0.11}px 'Segoe UI', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(0,229,255,0.85)';
+  ctx.shadowColor = '#00e5ff';
+  ctx.shadowBlur = 15;
+  ctx.fillText(state.left.score, W*0.28, H*0.16);
+  ctx.fillStyle = 'rgba(255,46,166,0.85)';
+  ctx.shadowColor = '#ff2ea6';
+  ctx.fillText(state.right.score, W*0.72, H*0.16);
+  ctx.shadowBlur = 0;
+
+  // start prompt
+  if (!state.running && state.ball.vx !== 0) {
+    // between-point pause, no text
+  } else if (!state.running) {
+    ctx.font = `bold ${H*0.045}px 'Segoe UI', sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 12;
+    ctx.fillText('PRESIONÁ ESPACIO PARA JUGAR', W/2, H/2 + H*0.22);
+    ctx.shadowBlur = 0;
+  }
+
+  ctx.restore();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.arcTo(x+w, y, x+w, y+h, r);
+  ctx.arcTo(x+w, y+h, x, y+h, r);
+  ctx.arcTo(x, y+h, x, y, r);
+  ctx.arcTo(x, y, x+w, y, r);
+  ctx.closePath();
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
