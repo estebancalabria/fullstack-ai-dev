@@ -150,7 +150,7 @@ import numpy as np
 * Los llm tipo Claude, ChatGPT, Qwen tienen un interprete de python y le podes pedir a la IA que para resolverte un prompt ejecute codigo en python y te muestre el resultado
 * Tienen como un google colab Incorporado
 
-* ChatGPT
+### Inteprete de codigo en ChatGPT
 
 ```
 Utiliza matplotlib para mostrarme un grafico de torta que muestre la poblacion de las 10 provincias mas pobaldas de argentina
@@ -186,6 +186,20 @@ plt.tight_layout()
 plt.show()
 
 ```
+
+### Inteprete de codigo en Claude
+
+```
+Quiero que uses el interprete de codigo para generarme un grafico de lineas  en matplotlib donde se muestre el valor de la accion de nvidia y msft en un mismo grafico
+```
+
+* Genero el siguiente grafico:
+
+<img width="1500" height="900" alt="image" src="https://github.com/user-attachments/assets/514cd668-8332-4792-a07a-0bcd89522f2c" />
+
+### En Quen
+
+... Se animan a probarlo ustedes en qwen
 
 ---
 
