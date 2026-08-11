@@ -205,11 +205,78 @@ Quiero que uses el interprete de codigo para generarme un grafico de lineas  en 
 
  # Github
 
- 
+ * Ustedes crearon el REPO
 
----
+ * Verificar si tienen el comando git instalado
 
- # AiDev
+```
+git --version
+```
+
+* El que no lo tiene instlado lo instala de...
+
+> https://git-scm.com/install/windows
+> Luego ejecuta los compandos
+> git config --global user.email "you@example.com"
+> git config --global user.name "Your Name"
+
+
+* Crear un carpeta localmente para bajar una copia del repositorio
+
+* Bajar el repositorio demoto localmente
+
+```
+>git clone https://github.com/estebancalabria/demo-prueba
+```
+
+> [!WARN]
+> A mi me dice: warning: You appear to have cloned an empty repository. Me creo la carpeta pero esta vacía
+si porque todavia no creaste ningun archivo, es solo la carpeta
+
+* Eso creo la carpeta demo-prueba (Creo una carpeta con el nombre del repositorio)
+
+```
+cd demo-prubea
+```
+
+> [!NOTE]
+> Podes poner cd dem[TAB] el tabulador va auto completando las carpetas
+
+* Van a crear una subcarpeta que se llame clase-01, la idea es que cada clase creen una carpeta y le vayan subiendo contenido de lo que vimos esa clase libremente
+
+```
+md clase-02
+```
+
+* Nos bajamos el notebook de python del colab y lo copiamos a esa carpeta
+
+* Agregar los archivos an repositorio local (no lo subimos a internet todavia)
+* Parados en la carpeta raiz del repositorio
+
+```
+>git add *
+warning: LF will be replaced by CRLF in clase-02/87952_BOOTCAMP_CLASE_02.ipynb.
+The file will have its original line endings in your working directory
+
+>git commit -m "Mi primer commit"
+[main (root-commit) f559b47] Mi primer commit
+ 1 file changed, 126 insertions(+)
+ create mode 100644 clase-02/87952_BOOTCAMP_CLASE_02.ipynb
+```
+
+* Podemos ver la lista de commit
+
+```
+git log
+```
+
+* Subir todo a internet (Al repositorio remoto, a github)
+
+```
+> git push
+```
+
+* Ahora si me fijo la carpeta los cambios estan in internet
 
  ---
 
