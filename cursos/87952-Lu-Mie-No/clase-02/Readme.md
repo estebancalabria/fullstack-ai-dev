@@ -285,3 +285,12 @@ git log
  ## Prompt de Guido para UI
 
 * Ver prompt guido
+
+--- 
+
+# Proxima Clase
+
+* Hablar de modelos de lenguaje y como compararlos (Arena / lmstats)
+* Modelos Open Source
+* HTTP
+* Lenguajes de programacion
