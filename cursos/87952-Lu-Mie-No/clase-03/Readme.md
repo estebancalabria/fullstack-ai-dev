@@ -113,8 +113,31 @@
 
 ---
 BREAK. A la vuenlta
-hay alguna web donde arme un listado con ellos y sus usos?
+Retomamos la pregunta de Matias "hay alguna web donde arme un listado con ellos y sus usos?"
+Ademas hicimos un kahoot
 ----
+
+## Comparativa entre modelos
+
+* Nuestros aliado para comabitir el FOMO
+* Dar nuesto pequeño aporte al mundo de la IA para decir que modelo es mejor
+* URL
+  * https://arena.ai/
+* Caracteristicas
+  * Es una web donde se vota el mejor modelo para una tarea determinada
+  * TIP : Es un buen truco para usar modelos gratiment
+  * Vamos a probar el de generacion de codigo
+
+<img width="962" height="346" alt="image" src="https://github.com/user-attachments/assets/e6c8fe6c-fb03-46e3-86ed-90e2210ae93b" />
+
+
+
+---
+
+# Conocimiento General Programacion
+
+* HTML : Lenguaje utilizaod para la wbe
+* CSS : Lenguaje que se usa para dale estilos a una web
 
 # Gloario
 
