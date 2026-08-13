@@ -95,6 +95,7 @@
       * Menos cenura tiene : te recponde cosas que otros modelos no responderia
 * Open Source
     * Aclaracion : a pesar de que hay una web para usarlos la gracia de estos modelos es poder descargarlos y usarlos en mi pc sin conexion a internet
+    * Aclaracion : Lo modelos open source son grauitos si los descargas localmente y los ejecutas locantente con una buena GPU, pero tambien se pueden ejecutar en webs que te cobran
     * Familia Llama (meta)
         * La que esta en Whsaap
     * Qwen
@@ -119,6 +120,8 @@ Ademas hicimos un kahoot
 
 ## Comparativa entre modelos
 
+### Arena.AI
+
 * Nuestros aliado para comabitir el FOMO
 * Dar nuesto pequeño aporte al mundo de la IA para decir que modelo es mejor
 * URL
@@ -134,6 +137,22 @@ Ademas hicimos un kahoot
 
 > [!NOTE]
 > Me hizo un login buenisimo que subi aca al repo
+
+### LMStats (Aporte de luis)
+
+* URL
+  * https://llm-stats.com/
+
+---
+
+# Pregunta en clase
+
+* Q ganan ellos haciendo un modelo open source?
+   * Este video responde la pregunta : https://www.youtube.com/watch?v=6BtIQIGqGJc&t=333s
+   * De paso aprovecho a recomendarles ese canal de youtube:
+       * https://www.youtube.com/@matthew_berman
+       * SUPER RECOMENDADO
+
 
 ---
 
