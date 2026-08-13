@@ -161,6 +161,9 @@ Ademas hicimos un kahoot
 * HTML : Lenguaje utilizaod para la wbe
 * CSS : Lenguaje que se usa para dale estilos a una web
 
+
+---
+
 # Gloario
 
 * FOMO (Fear of missing out)
@@ -173,3 +176,9 @@ Ademas hicimos un kahoot
     * El famoso "Si  tenes razon, disculpame..."
 * Grounding
     * Anclar la respuesta de la IA en fuentes verificables
+
+---
+
+# Proxima Clase
+
+* Vamos a hablar de los modelos OS, de HF, como ejecutalos localmente y en python
