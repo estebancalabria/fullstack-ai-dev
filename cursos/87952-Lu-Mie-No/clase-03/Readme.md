@@ -127,10 +127,13 @@ Ademas hicimos un kahoot
   * Es una web donde se vota el mejor modelo para una tarea determinada
   * TIP : Es un buen truco para usar modelos gratiment
   * Vamos a probar el de generacion de codigo
+  * En Arena : Hacemos competir dos modelos anonimos y nos quedamos con el meior
+  * En Direct : Podemos Elegir el modelo y ver la lista de modelos
 
 <img width="962" height="346" alt="image" src="https://github.com/user-attachments/assets/e6c8fe6c-fb03-46e3-86ed-90e2210ae93b" />
 
-
+> [!NOTE]
+> Me hizo un login buenisimo que subi aca al repo
 
 ---
 
