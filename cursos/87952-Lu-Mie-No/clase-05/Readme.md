@@ -228,4 +228,22 @@ Despues Kahoot
 
 # Modelos Open Source
 
-## Ejecuat un LLM Localmentec
+## Ejecuat un LLM Localmente
+
+> [!NOTE]
+> Esto es para el entusiasta, no todos van a poder hacerlo. Depende del modelo elegido y del hardware local
+> Attenti los que tienen un placa NVIDIA, les recomiendo hacerlo!
+
+* Hay dos opciones principalmente
+  * Ollama
+    * https://ollama.com/
+  * LMStudio
+    * https://lmstudio.ai/
+
+> [!NOTE]
+> La idea es que para la proxima se instalen el lmStudio
+
+### LMStudio
+
+* Descarga los modelos de HF
+* ES una aplicacion de escritorio que te permtie ejecutar modelos de lengaje open source descargados de HF
