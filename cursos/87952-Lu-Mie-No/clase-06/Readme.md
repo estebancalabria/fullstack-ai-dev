@@ -215,3 +215,78 @@ print(type(sumar))
 * input
 * print
 * type
+
+---
+BREAK
+Hasta 8:45
+---
+
+# LABORATORIO
+
+ * Quiero que declaren en una celda de google colab un diccionario que represente la informacion de un personaje de un juego de rol
+ * Luego quiero que recorran el diccionario con un for y observar que sale por pantalla
+
+```python
+peleador = {
+    "nombre": "Islam Makhachev",
+    "nacionalidad": "Rusia",
+    "division": "Peso ligero",
+    "edad": 34,
+    "altura": 1.78,
+    "peso": 70,
+    "victorias": 28,
+    "derrotas": 1,
+    "empates": 0,
+    "estilo": "Sambo",
+    "ranking": 1
+}
+for key in peleador:
+  print(f"{key}: {peleador[key]}")
+```
+
+* (Version Santiago)
+
+---
+
+# Uso listas con Modelo HF
+
+* Usamos
+  * Esta libreria https://huggingface.co/amazon/chronos-2
+  * Se utiliza para predecir series temporales en base a un modelo pre entrenado
+
+* Instalamos otra libreria para descargar el modelo
+
+```
+!pip install "chronos-forecasting>=2.0"
+```
+ 
+* Descargamos el modelo
+
+```
+import pandas as pd  # requires: pip install 'pandas[pyarrow]'
+from chronos import Chronos2Pipeline
+
+pipeline = Chronos2Pipeline.from_pretrained("amazon/chronos-2")
+
+```
+
+* Realizamos una prediccion (con un poco de ayuda de la IA)
+
+```
+import numpy as np
+
+datos = np.array([1,2,3,4,5,6,7,8,9], dtype=np.float32)
+
+prediccion  = pipeline.predict([datos], prediction_length=1)
+
+print(prediccion[0].mean())
+```
+
+> [!NOTE]
+> Para pasarle como parametro la lista de numeros al modelo la tuve que convertir un un array de numpy
+> Esto es un requerimiento de la libreria, no acepta listas de python sino arrays de numpy
+> No es solo esta liberia, van a ver que nos pasa todo el tiempo
+
+---
+
+# Proxima Clase...vamos a hablar un poquito de la libreria Nympy y porque se usa tanto
