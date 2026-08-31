@@ -40,6 +40,32 @@
 
 * https://colab.research.google.com/drive/1TdThW9HVadxBmfv_yuGdd3XUStjyZuoz?usp=sharing
 
+## Operadores
+
+* Un operador
+ * Es un simbolo que hace algo sobre una o varias variables
+ * Ej
+   * 2+2 suma ambas variables
+* El operador depende del tipo de datos de las variables con las que opera
+    * + no funciona igual con numeros que con listas
+
+* Ejemplo. En el primer escenario el operador suma, en el segundo concatena
+
+```python
+var1 = 3
+var2 = 5
+
+var3 = var1 + var2
+print(var3)
+
+
+var1 = [3]
+var2 = [5]
+
+var3 = var1 + var2
+print(var3)
+```
+
 ## Numpy
 
 * Introduccion:
@@ -124,6 +150,12 @@ print(f"Tiempo total crear y recorrer: {fin - inicio_antes_crear_vector:.6f} seg
 Tiempo recorrer vector: 0.052077 segundos
 Tiempo total crear y recorrer: 1.232392 segundos
 ```
+---
+
+### Sobrecarga de operadores en numpy
+
+* Numpy sobrecarga los operadores para que sea mas facil hacer las operaciones que se suelen hacer con la IA
+
 
 ---
 
