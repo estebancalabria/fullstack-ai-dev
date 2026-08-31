@@ -54,13 +54,17 @@
     * Como es que la ia que necesita capacida de computo, se centra en procesar arreglas larguisimos, hacer operaciones de matrices gigantescas, usa python que es inrepretado?
           * La parte que usa mucho la CPU se hacen con librerias en C++ que estan super optimizadas, la parte generica del algotitmo esta en python
 
+### Comparativa numpy vs array comunes
+
+#### Sin Numpy
+
 * Prompt
 ```
 Quiero un programa en python que cree un vector de quince millones de elementos con valores aleatorios entre 1 y 10. Luego que lo recorra y a cada elemento le sume 10. Quiero que tomes el tiempo que tarda en recorrer el array y a cada elemento sumarle 10.
 ```
 
+
 * Codigo
-* 
 ```
 import random
 import time
@@ -83,8 +87,14 @@ fin = time.perf_counter()
 print(f"Tiempo recorrer vector: {fin - inicio:.6f} segundos")
 print(f"Tiempo total crear y recorrer: {fin - inicio_antes_crear_vector:.6f} segundos")
 ```
+* Resultado
 
-* Con Numpy
+```
+Tiempo recorrer vector: 6.020812 segundos
+Tiempo total crear y recorrer: 43.196821 segundos
+```
+
+#### Con Numpy
 
 ```
 import numpy as np
@@ -108,7 +118,16 @@ print(f"Tiempo recorrer vector: {fin - inicio:.6f} segundos")
 print(f"Tiempo total crear y recorrer: {fin - inicio_antes_crear_vector:.6f} segundos")
 ```
 
-### Observaciones del codigo
+* Resultado
+
+```
+Tiempo recorrer vector: 0.052077 segundos
+Tiempo total crear y recorrer: 1.232392 segundos
+```
+
+---
+
+### Observaciones del codigo generados
 
 * Vemos como usa el _ para el separador de miles (15_000_000) para mayor legi ilidad
 * Esto -> vector = [random.randint(1, 10) for _ in range(15_000_000)] se llama comprension de listas
