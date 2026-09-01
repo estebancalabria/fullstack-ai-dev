@@ -66,6 +66,11 @@ var3 = var1 + var2
 print(var3)
 ```
 
+## Tipos de datos
+
+* Hay un tipo de datos muy importante que es la clase
+* Basicamente un contenedor de metodos
+
 ## Numpy
 
 * Introduccion:
@@ -156,7 +161,6 @@ Tiempo total crear y recorrer: 1.232392 segundos
 
 * Numpy sobrecarga los operadores para que sea mas facil hacer las operaciones que se suelen hacer con la IA
 
-
 ---
 
 ### Observaciones del codigo generados
@@ -165,6 +169,73 @@ Tiempo total crear y recorrer: 1.232392 segundos
 * Esto -> vector = [random.randint(1, 10) for _ in range(15_000_000)] se llama comprension de listas
 *  for _ in range(10) -> el _ significa que hago una iteracion 9 veces pero no quiero usar ninguna variable para guardar el indice
 
+---
+# BREAK
+# Hasta las 20:30
+---
 
+## Explorando numpy
+
+* De que tipo de dato es la variable np
+
+```
+import numpy as np
+
+print(type(np))
+```
+
+* Me devuelve
+
+```
+<class 'module'>
+```
+
+* np es un modulo (module)
+  * Un modulo es un conjunto de variables y funciones
+  * Generamente las variabels y funciones de un modulo se pueden importar y usar en otro modulo
+  * En este caso estoy importando el modulo completo
+* array es un una funcion dentro del modulo np
+* La funcion array me devuelve un objet
+
+* Cuandp importo un modulo le puedo dar el nombre que quiero
+
+```
+#Aca le estoy dando un alias, sobrenombre al moddulo numpy, lo podria llamar pepito
+import numpy as pepito
+# o puedo importarlo sin alias
+import numpy
+
+ver = numpy.array([12,32])
+```
+
+> Es un estandar que establecio la comunidad de facto
+
+> "o nació en IA. Los alias pd para Pandas y np para NumPy vienen del ecosistema científico de Python y se consolidaron antes de que existiera el uso moderno de Python en IA." . Gabriel Dixit
+
+* Como sabe de donde se importan los modulos:
+  * Se busca en la carpeta local
+  * Se busca en el directorio de instalacion global (como pasa con numpy)
+
+```python
+import numpy as np
+print(np.__file__)
+```
+
+* Explorar que funciones y variables tiene declarado el modulo de numpy
+  * Usamos la funcion dir
+
+```python
+import numpy as np
+
+dir(np)
+```
+
+* Explorar la doucumentacion de numpy con help
+
+```python
+```
+
+```python
+```
         
 # WebDev
