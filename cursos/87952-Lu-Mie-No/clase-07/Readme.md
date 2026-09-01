@@ -233,9 +233,31 @@ dir(np)
 * Explorar la doucumentacion de numpy con help
 
 ```python
+import numpy as np
+
+help(np)
 ```
 
 ```python
+import numpy as np
+
+help(np.array)
 ```
+
+---
         
-# WebDev
+# Paginas para practicar python
+
+* Codewars
+  * https://www.codewars.com/kata/search/python
+* Checkio
+  * https://py.checkio.org/
+* Condingame
+  * https://codefinity.com/
+* Para demostrar conocimiento en el CV
+  * https://www.hackerrank.com/
+
+---
+
+# Proxima clase vamos a hablar de funciones...
+
