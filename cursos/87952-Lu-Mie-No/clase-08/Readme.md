@@ -9,11 +9,16 @@
       * Comparacion de performance entre Numpy y listas de pythhon
     * Se usa especiamente en IA
   * tipo de dato module
+  * tipo de dato class
   * Inpeccion
     * help
     * type
     * dir
       * Para listar todas las funciones que exporta un modulo
-    * (__file__)
+    * _file__
       * Para ver donde esta el modulo en la pc fisicamente ubicado
-    * 
+  * Paginas para aprender Pyton
+
+# Ptyhon
+
+## Funciones
