@@ -507,3 +507,106 @@ test_validar_password.py .........                                 [100%]
 
 * (Firma Funcion) -> (Programo los tests) -> FALLAN -> (Corrijo la funcion hasta que pase los tests)
 * TODO Esto con IA
+
+
+---
+# BREAK HASTA MENOS 10
+---
+
+# Vamos a hacer un ejercicio de lo visto hasta ahora
+
+* https://docs.google.com/forms/d/e/1FAIpQLSdSpKii9wlpk5CXXKTRYXOceTiMXyeSWGxUySsif6ANI4my3A/viewform?usp=publish-editor
+
+# Lo hacemos juntos...
+
+* Genere la funcion (que esta mal, es solo la firma)
+
+```python
+
+def es_primo(numero):
+    return True
+```
+
+* Genere los tests
+
+```
+import es_primo
+
+# Separar en casoss
+# Generar Tests PAra
+# Numero que no es primo devuelve false
+# Un par de numeros primos devuelven true
+# Si le pasas un string como parametro devuelve false
+
+def test_es_primo_numeros_primos():
+    assert es_primo.es_primo(2) is True
+    assert es_primo.es_primo(3) is True
+    assert es_primo.es_primo(5) is True
+
+
+def test_es_primo_numeros_no_primos():
+    assert es_primo.es_primo(4) is False
+    assert es_primo.es_primo(1) is False
+
+
+def test_es_primo_string():
+    assert es_primo.es_primo("string") is False
+```
+
+* Ejecutar los tests
+
+```
+>pytest test_es_primo.py      
+==================================== test session starts =====================================
+platform win32 -- Python 3.11.1, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Cursos\fullstack-ai-dev\cursos\87952-Lu-Mie-No\clase-09\python
+plugins: anyio-4.7.0, asyncio-1.3.0, typeguard-4.5.2
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 3 items                                                                             
+
+test_es_primo.py .FF                                                                    [100%]
+
+========================================== FAILURES ==========================================
+______________________________ test_es_primo_numeros_no_primos _______________________________
+
+    def test_es_primo_numeros_no_primos():
+>       assert es_primo.es_primo(4) is False
+E       assert True is False
+E        +  where True = <function es_primo at 0x0000029E51557BA0>(4)
+E        +    where <function es_primo at 0x0000029E51557BA0> = es_primo.es_primo
+
+test_es_primo.py:16: AssertionError
+____________________________________ test_es_primo_string ____________________________________
+
+    def test_es_primo_string():
+>       assert es_primo.es_primo("string") is False
+E       AssertionError: assert True is False
+E        +  where True = <function es_primo at 0x0000029E51557BA0>('string')
+E        +    where <function es_primo at 0x0000029E51557BA0> = es_primo.es_primo
+
+test_es_primo.py:21: AssertionError
+================================== short test summary info ===================================
+FAILED test_es_primo.py::test_es_primo_numeros_no_primos - assert True is False
+FAILED test_es_primo.py::test_es_primo_string - AssertionError: assert True is False
+================================ 2 failed, 1 passed in 0.19s =================================
+```
+
+* Uso copilot para que corrija la funcion
+
+```
+mirar @terminalLastCommand  y corregir el archivo #sym:es_primo para que pasen los tests
+```
+
+* Me lo va a cooregir
+
+```
+def es_primo(numero):
+    if not isinstance(numero, int) or numero < 2:
+        return False
+
+    for divisor in range(2, int(numero ** 0.5) + 1):
+        if numero % divisor == 0:
+            return False
+
+    return True
+``
