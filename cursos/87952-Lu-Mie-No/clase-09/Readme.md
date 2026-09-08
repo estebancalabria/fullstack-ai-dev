@@ -610,3 +610,9 @@ def es_primo(numero):
 
     return True
 ``
+
+
+# PRoxima Clase
+
+
+ * No me quiero olvdar de hablar de los tipe hints
