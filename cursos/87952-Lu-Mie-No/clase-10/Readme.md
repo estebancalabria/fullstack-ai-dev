@@ -124,13 +124,36 @@ def contar_palabras(texto: str) -> dict[str, int]:
 * Codigo Mejorado con IA
 
 ```
+def contar_palabras(texto: str) -> dict[str, int]:
+    """
+    Cuenta la cantidad de veces que aparece cada palabra en un texto.
+
+    Args:
+        texto: Texto del cual se quieren contar las palabras.
+
+    Returns:
+        Un diccionario donde cada clave es una palabra y su valor
+        representa la cantidad de apariciones.
+
+    Raises:
+        TypeError: Si `texto` no es una cadena de texto.
+    """
+    if not isinstance(texto, str):
+        raise TypeError("El parámetro 'texto' debe ser un string.")
+
+    resultado: dict[str, int] = {}
+
+    for palabra in texto.split():
+        resultado[palabra] = resultado.get(palabra, 0) + 1
+
+    return resultado
 ```
 
 > Ejemplo de prompt : "Analiza el siguiente codigo en puthon y propone una versiona mejrada que: mejore la legibilidad y claridad, aplique buenas practicas de python, aplique tecnicas de clean code para que el codigo sea mas facil de mantener, buscar errores, agregar validaciones que sean sean necesarias, hacer el codigo lo mas claro y facil de mantener posible, agregarle la documentacion necesaria para la funcion, agregar type hints."
 
 * Pruebas unitarias sobre ese codigo
 
-```
+```python
 # Prueba 1: texto con palabras repetidas
 assert contar_palabras("hola mundo hola") == {
     "hola": 2,
@@ -170,10 +193,46 @@ print("Todas las pruebas pasaron correctamente.")
 * Completar este link
     * https://forms.gle/rpD39z4nG4j6rs116
 
-### Como convertir funciones impuras en funciones puras
 
 ### Alternativas propias de python a la hora de trabajar con parametros
 
+#### Parametros por defecto
+
+```python
+def input_int(mensaje="Ingrese un número entero: ", minimo=None, maximo=None, mensaje_error=None):
+```
+
+* Los parametros por defectos son opcionales a la hora de invocar la funcion
+* Si el usuario se los especifica se usan, pero sino se usa el valor por defecto que le indico el programador
+* De esa manera por ejemplo a la funcion anterior la podemos invocar de estas dos maneras
+
+```python
+valor = input_int()
+valor = input_int("Ingrese su edad")
+```
+
+##### Ejemplo
+
+* Quiero que desarrollen la funcion Inc que recibe una variable y la incrementa
+* Si no se le especifica nada, la incrementa en uno, sino en el valor especificado por parametro
+* Esta funcion la usaba el profe en turbo pascal, le trae recuerdos
+
+```python
+def Inc(variable, incremento=1):
+    try:
+        return variable + incremento
+    except TypeError:
+        raise TypeError("La variable y el incremento deben ser compatibles.")
+```
+
+* Se puede
+
+```python
+res = inc(2)
+res = inc()
+```
+
+---
 
 ## Excepciones
 
@@ -256,6 +315,46 @@ TypeError                                 Traceback (most recent call last)
 TypeError: can only concatenate str (not "int") to str
 ```
 
+## Ejercicio
+
+* Quiero la funcion input_int que le pida ingresar un numero al usuario y si ingresa otra cosa se lo pida de nuevo hasta que lo haga bien
+ * Completar https://forms.gle/BJ9oi9icjtqrRoH5A
+
+```
+def input_int(mensaje="Ingrese un número entero: ", minimo=None, maximo=None, mensaje_error=None):
+  """
+  Pide al usuario un número entero y valida la entrada.
+
+  Args:
+  mensaje (str): Mensaje que se muestra al usuario.
+  minimo (int, optional): Valor mínimo permitido.
+  maximo (int, optional): Valor máximo permitido.
+  mensaje_error (str, optional): Mensaje de error personalizado.
+
+  Returns:
+  int: El número entero ingresado por el usuario.
+  """
+  if mensaje_error is None:
+     mensaje_error = "Error: Debe ingresar un número entero válido."
+
+  while True:
+    try:
+      numero = int(input(mensaje))
+
+      if minimo is not None and numero < minimo:
+        print(f"Error: El número debe ser mayor o igual a {minimo}.")
+        continue
+
+      if maximo is not None and numero > maximo:
+         print(f"Error: El número debe ser menor o igual a {maximo}.")
+         continue
+
+      return numero
+
+    except ValueError:
+       print(mensaje_error)
+```
+
 ---
 
 # AIDev
@@ -273,3 +372,7 @@ TypeError: can only concatenate str (not "int") to str
 * (Antes o despues) generar pruebas unitarias sobre el codigo generado
 
 
+# Proxima Clase
+
+* Reforzar lo que vamos viendo de Python
+* Hacer algunas cositas con Interfaces Graficas
