@@ -32,7 +32,7 @@
 # Setup
 
 * Google colab de la clase:
-  * 
+  * https://colab.research.google.com/drive/1neYHjWKe5G16yHYom3s_O8g8rYi0etok?usp=sharing
    
 # Python
 
@@ -202,6 +202,60 @@ print("Todas las pruebas pasaron correctamente.")
 > En Python es muy comun validar la entrada de las funciones y tirar un TypeError o un ValueError
 > Esto se le suele llamar programacion defensiva
 
+## Validacion de Datos de Entrada y Conversion entre tipos de Datos
+
+```python
+edad = input("Ingrese su edad: ")
+#De que tipo de dato es la variable edad?
+
+print(type(edad))
+#Lo que ingresa el usuario por teclado siempre se guarda en una variable str
+```
+
+* Este codigo
+
+```
+entrada = input("Ingrese su edad: ")
+edad = int(entrada)
+print(f"Su edad es {edad}")
+```
+
+* Si ingresamos un numero anda bien, sino tira un value error
+
+> [!NOTE]
+> Las conversiones entre tipos de datos son una fuente de errores muy frecuentes en python (y en cualquier lenguaje)
+
+* Si queremos proteger nuestro codigo vamos a usar un bloque try
+```
+# Cuando algo "puede fallar" nos vamos a proteger con un bloque try
+entrada = input("Ingrese su edad: ")
+
+try:
+  edad = int(entrada)
+  print(f"Su edad es {edad}")
+
+except ValueError:
+  print("Ingresaste una edad invalida")
+```
+
+* Un ejemplo de TypeError
+
+```
+cadena = "Hola"
+res = cadena + 5
+```
+
+* Me tira
+
+```
+TypeError                                 Traceback (most recent call last)
+/tmp/ipykernel_1587/572292592.py in <cell line: 0>()
+      1 cadena = "Hola"
+----> 2 res = cadena + 5
+
+TypeError: can only concatenate str (not "int") to str
+```
+
 ---
 
 # AIDev
@@ -213,7 +267,9 @@ print("Todas las pruebas pasaron correctamente.")
 > [!WARN]
 > Si la IA genera codigo muy complejo detenerse
 > No hay que seguir avanzando ahsta no entender el codigo y si se entiende restructurarlo hasta que sea claro y lo pueda entender
-  * E
+
 * Pedirle a la Ia antes que explique lo que va a generar
 * Entender el codigo generado y mejorarlo (no quedarse con la primera version)
-* (Antes o despues) generar pruebas unitarias sobre el codigo generad
+* (Antes o despues) generar pruebas unitarias sobre el codigo generado
+
+
