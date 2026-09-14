@@ -17,3 +17,11 @@
   * Chequear los datos de Entrada -> Programacion Defensiva
 
 ---
+
+# Gemni Notebook (Ex NoteboonLM)
+
+* Url
+  * https://notebooklm.google.com/
+* Caracteristica
+  * Es un RAG sencillo donde cargas una serie de documentos y le haces preguntas que responde basandose en ellos (y no tanto en su conocimiento y suposiciones)
+  * 
