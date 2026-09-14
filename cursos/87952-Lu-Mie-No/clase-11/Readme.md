@@ -189,3 +189,6 @@ def saludar(campo_nombre, label_resultado):
 boton = tk.Button(ventana, text="Saludar", command=lambda: saludar(entrada_nombre, label_saludo))
 boton.pack()
 ```
+
+> [!NOTE]
+> La primera version que me hizo la IA fue con una funcion saludar impura. Tuvimos que retocar el codigo para que sea con funciones puras
