@@ -1,4 +1,4 @@
-<img width="862" height="445" alt="image" src="https://github.com/user-attachments/assets/9b0e1061-2453-4546-b629-dc0aacfeb014" /># Clase 12 - 16 de Septiembre de 2026
+# Clase 12 - 16 de Septiembre de 2026
 
 # Repaso
 
@@ -334,3 +334,68 @@ public:
     }
 };
 ```
+
+# Vamos haciendo una clase nosotros
+
+* Declaramos la clase
+
+```python
+class Personaje:
+
+  def __init__(self, nombre : str, vida : int, fuerza : int):
+
+    self.nombre = nombre
+    self.vida = vida
+    self.fuerza = fuerza
+
+```
+
+* __init__ es el método constructor de una clase.
+* Se ejecuta automáticamente cuando creás un objeto y sirve para inicializar sus atributos.
+
+> [!NOTA]
+> El objetivo del constructor no es solo definir los atributos del objeto, sino tambien validar que el objeto se crea en un estado consistente
+> La IA muchas veces no valida esto. Entonces es algo que nosotros es importante que desde nuestro criterio lo chequeemos
+
+
+* Sabiendo esto siempre le vamos a pedir a la IA
+
+```
+Mira mi codigo y modifica mi init para asegurar que siempre se creen objetos consistentes de acuerdo a la logica de negocio
+```
+
+* Nos queda
+
+```
+class Personaje:
+
+    def __init__(self, nombre: str, vida: int, fuerza: int):
+
+        if not nombre:
+            raise ValueError("El nombre no puede estar vacío")
+
+        if vida <= 0:
+            raise ValueError("La vida debe ser mayor que 0")
+
+        if fuerza <= 0:
+            raise ValueError("La fuerza debe ser mayor que 0")
+
+        self.nombre = nombre
+        self.vida = vida
+        self.fuerza = fuerza
+```
+
+
+* La usamos
+
+```python
+#Aca abajo lo usamos
+
+spider_man = Personaje("Peter", 10000, 100)
+superman = Personaje(vida=100000000, fuerza=100000, nombre= "Clark Kent")
+
+```
+
+# Proxima Clase
+
+* __str__
