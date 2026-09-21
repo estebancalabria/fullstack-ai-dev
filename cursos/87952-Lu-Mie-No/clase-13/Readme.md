@@ -256,3 +256,29 @@ class Jugador:
         """Mueve al jugador hacia abajo."""
         self.y -= self.velocidad
 ```
+
+---
+
+## Representacion de Objetos como Str
+
+* Todos los lenguajes tienen metodos especiales para represetnar un objeto como un string
+* En Python se usa el metodo dunder __str__
+* En Java se sobreescribe el metodo toString()
+
+* El caso anterior sin el str
+
+```python
+player1 = Jugador(x=1, y=2, vida=90, velocidad =1)
+print(player1)
+```
+
+* Me muestra una representacion en string del objeto poco amigable
+
+```
+<__main__.Jugador object at 0x791ba9cc0050>
+
+* Ahora le agregamos el metodo dunder __str__ a la clase
+```python
+    def __str__(self) -> str:
+        return f"Tengo {self.vida} de vida y estoy en el ({self.x},{self.x})"
+```
