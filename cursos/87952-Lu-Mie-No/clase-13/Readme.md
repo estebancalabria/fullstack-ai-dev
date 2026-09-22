@@ -354,3 +354,117 @@ classDiagram
         +recibir_danio(danio: int)
     }
 ```
+
+---
+
+## Jugando un poquito con Mermaid
+
+* Vamos a diseniar sistemas sin programarlos.
+* Quiero el diagrama de clases para un sistema que sea un juego en 2d 
+
+```
+Quiero que me generes un diagram de clases mermaid de un juego en 2d. La parte del modelo.
+```
+
+* Me Genera
+
+```mermaid
+classDiagram
+
+    class EntidadJuego {
+        <<abstract>>
+        -id: int
+        -x: float
+        -y: float
+        -vida: int
+        +recibirDanio(cantidad: int)
+        +estaViva() bool
+    }
+
+    class Personaje {
+        <<abstract>>
+        -nombre: str
+        -fuerza: int
+        +atacar(objetivo: EntidadJuego)
+    }
+
+    class Jugador {
+        -experiencia: int
+        -nivel: int
+        -inventario: Inventario
+        +mover(dx: float, dy: float)
+        +subirNivel()
+        +recoger(objeto: Objeto)
+    }
+
+    class Enemigo {
+        -tipo: str
+        -agresividad: int
+        +perseguir(jugador: Jugador)
+        +atacar(jugador: Jugador)
+    }
+
+    class Inventario {
+        -objetos: List~Objeto~
+        -capacidad: int
+        +agregar(objeto: Objeto)
+        +quitar(objeto: Objeto)
+        +estaLleno() bool
+    }
+
+    class Objeto {
+        <<abstract>>
+        -nombre: str
+        -peso: float
+    }
+
+    class Arma {
+        -danio: int
+        -alcance: float
+        +usar(objetivo: EntidadJuego)
+    }
+
+    class Pocion {
+        -cantidadCuracion: int
+        +usar(personaje: Personaje)
+    }
+
+    class Armadura {
+        -defensa: int
+    }
+
+    class Mundo {
+        -ancho: int
+        -alto: int
+        -entidades: List~EntidadJuego~
+        +agregarEntidad(entidad: EntidadJuego)
+        +eliminarEntidad(entidad: EntidadJuego)
+    }
+
+    class Posicion {
+        +x: float
+        +y: float
+    }
+
+    EntidadJuego <|-- Personaje
+    Personaje <|-- Jugador
+    Personaje <|-- Enemigo
+
+    Objeto <|-- Arma
+    Objeto <|-- Pocion
+    Objeto <|-- Armadura
+
+    Jugador *-- Inventario
+    Inventario o-- Objeto
+
+    Jugador --> Posicion
+    Enemigo --> Posicion
+
+    Mundo o-- EntidadJuego
+
+    Personaje --> Arma : usa
+    Jugador --> Pocion : usa
+    Jugador --> Armadura : equipa
+
+    Personaje --> EntidadJuego : ataca
+```
