@@ -74,6 +74,11 @@ class Personaje:
         self.nombre = nombre
         self.vida = vida
         self.fuerza = fuerza
+
+   def recibir_danio(self, danio: int):
+      if danio <= 0:
+           raise ValueError("El daño debe ser mayor que 0")
+      self.vida -= danio
 ```
 
 * Java
@@ -281,4 +286,71 @@ print(player1)
 ```python
     def __str__(self) -> str:
         return f"Tengo {self.vida} de vida y estoy en el ({self.x},{self.x})"
+```
+
+---
+# BREAK
+# HAsta y 35
+---
+
+# Representacion Visual de Los Objetos
+
+* Cuando uno hace una casa, que hace primero?
+  * Los planos.
+  * En general no nos podes arrojar a construir la casa si no viene primero un arquitecto y firma los planos
+* En programacion no obstante estamos acostrumbrados a tirar lineas de codigo sin ver antes un plano o diagrama de lo que queremos construir
+
+## Ahi aparecio el UML (Unified Modeling Language)
+
+* Se pusieron de acuerdo y generaron un lenguaje unificado para tener una representacion visual del sistema
+  * Antes de construirlo
+  * Para entender un sistema que estaba construido
+
+*  El UML define un monton de Diagramas
+*  Pero para representar las clases se usa el Diagrama de Clases
+*  Existen un millon de herramientas para graficar UML
+*  Pero hoy en dia podemos utilizar el lenguaje estandar de mermaid que permite hacer diagrama de clases
+   *  https://mermaid.live/
+
+> [!NOTE]
+> La IA es buena generando diagramas Mermaid
+
+* Ejemplo tomemos nuestro personaje
+
+* Python
+```python
+class Personaje:
+    def __init__(self, nombre: str, vida: int, fuerza: int):
+        if not nombre:
+            raise ValueError("El nombre no puede estar vacío")
+        if vida <= 0:
+            raise ValueError("La vida debe ser mayor que 0")
+        if fuerza <= 0:
+            raise ValueError("La fuerza debe ser mayor que 0")
+
+        self.nombre = nombre
+        self.vida = vida
+        self.fuerza = fuerza
+
+   def recibir_danio(self, danio: int):
+      if danio <= 0:
+           raise ValueError("El daño debe ser mayor que 0")
+      self.vida -= danio
+```
+
+* Generamos el mermaid con IA
+```
+Tengo esta clase (codigo clase) Generame un diagrama de clases mermaid con esa clase
+```
+(Casi todas las IA ya tienen previsualizacion de Mermaid)
+
+```mermaid
+classDiagram
+    class Personaje {
+        -str nombre
+        -int vida
+        -int fuerza
+        +__init__(nombre: str, vida: int, fuerza: int)
+        +recibir_danio(danio: int)
+    }
 ```
