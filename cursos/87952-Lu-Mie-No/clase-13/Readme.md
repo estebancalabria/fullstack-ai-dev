@@ -516,3 +516,10 @@ classDiagram
     Stock "1" o-- "*" MovimientoStock
     MovimientoStock --> TipoMovimiento
 ```
+
+---
+
+# El sistema que siempre quise hacer....
+
+* Completar este Google Form
+  * https://forms.gle/tB1fkm2j38ut5Ru69
