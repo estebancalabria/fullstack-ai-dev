@@ -468,3 +468,51 @@ classDiagram
 
     Personaje --> EntidadJuego : ataca
 ```
+
+* Ahora vamos con un sistema de inventario de stock
+
+```mermaid
+classDiagram
+
+    class Producto {
+        -codigo: str
+        -nombre: str
+        -precio: float
+    }
+
+    class Stock {
+        -cantidad: int
+        -stockMinimo: int
+        +ingresar(cantidad: int)
+        +egresar(cantidad: int)
+        +hayStock(cantidad: int) bool
+        +necesitaReposicion() bool
+    }
+
+    class Inventario {
+        -productos: List~Producto~
+        +agregarProducto(producto: Producto)
+        +eliminarProducto(codigo: str)
+        +buscarProducto(codigo: str) Producto
+        +obtenerStock(codigo: str) int
+    }
+
+    class MovimientoStock {
+        -fecha: datetime
+        -tipo: TipoMovimiento
+        -cantidad: int
+        -motivo: str
+    }
+
+    class TipoMovimiento {
+        <<enumeration>>
+        ENTRADA
+        SALIDA
+        AJUSTE
+    }
+
+    Inventario "1" *-- "*" Producto
+    Producto "1" *-- "1" Stock
+    Stock "1" o-- "*" MovimientoStock
+    MovimientoStock --> TipoMovimiento
+```
