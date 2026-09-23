@@ -260,3 +260,24 @@ class Persona:
     def __str__(self):
         return f"{self.nombre}, {self.edad} años, {self.altura} m"
 ```
+
+---
+BREAK
+HASTA Y 30
+---
+
+# Pensar en Objetos
+
+## Arquitectura de Referencia
+
+<img width="1775" height="2268" alt="image" src="https://github.com/user-attachments/assets/9abf173c-8ccc-441f-a785-d398d34d0757" />
+
+<img width="3250" height="2268" alt="image" src="https://github.com/user-attachments/assets/25427b35-04a3-4b8f-8d39-1470b466570a" />
+
+
+## Relaciones entre clases
+
+* Hasta ahora vimos como realizar clases sueltas
+* Pero las clases rara vez viven sueltas, sino que colaboran entre si y arman lo que se llama el modelo del sistema
+* Tenemos distintos tipos de clases
+    * Clases del Dominio / Modelo
