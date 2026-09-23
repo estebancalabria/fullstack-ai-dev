@@ -270,10 +270,60 @@ HASTA Y 30
 
 ## Arquitectura de Referencia
 
-<img width="1775" height="2268" alt="image" src="https://github.com/user-attachments/assets/9abf173c-8ccc-441f-a785-d398d34d0757" />
+```mermaid
+graph TD
 
-<img width="3250" height="2268" alt="image" src="https://github.com/user-attachments/assets/25427b35-04a3-4b8f-8d39-1470b466570a" />
+A[Presentación]
+B[Modelo / Dominio]
+C[Persistencia]
 
+A --> B
+B --> C
+```
+
+```mermaid
+flowchart TB
+
+subgraph Clientes
+    U[Usuario]
+    W[Aplicación Web]
+    M[Aplicación Mobile]
+    C[Copilot]
+end
+
+subgraph Presentacion
+    API[Controllers / API REST]
+    DTO[DTOs y Validaciones]
+end
+
+subgraph Dominio
+    UC[Casos de Uso]
+    ENT[Entidades]
+    BR[Reglas de Negocio]
+end
+
+subgraph Persistencia
+    REP[Repositorios]
+    DB["(Base de Datos)"]
+    EXT[Servicios Externos]
+end
+
+U --> API
+W --> API
+M --> API
+C --> API
+
+API --> DTO
+DTO --> UC
+
+UC --> ENT
+UC --> BR
+
+UC --> REP
+
+REP --> DB
+REP --> EXT
+```
 
 ## Relaciones entre clases
 
