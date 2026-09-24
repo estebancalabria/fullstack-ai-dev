@@ -281,6 +281,8 @@ A --> B
 B --> C
 ```
 
+* Diagrama extendido
+
 ```mermaid
 flowchart TB
 
@@ -325,9 +327,313 @@ REP --> DB
 REP --> EXT
 ```
 
-## Relaciones entre clases
+## Tipos de Clases clases
+
+* Tenemos distintos tipos de clases
+    * Las clases que tienen que ver con cosas de presentacion , visuales (Presentacion)
+    * Las que clases que tiene que ver con guardar cosas en la base de datos y comunucarte con sistemas externos (Persistencia)
+    * Clases del Dominio / Modelo
+      * Son particulares para el sistema que estamos resolviendo
+      * Son las que tienen la "logica de negocio"
+      * Estas son las clases que le interesan sobre todo la POO
+      * Lo ideal es que estas clases no sepan nada ni de la presentacion ni de la persistencia
+          * Que sean independientes de la tecnologia (web/escritorio) que se usa en el sistema
+          * Asi es mas facil de mantener
+
+
+# Relaciones entre clases
 
 * Hasta ahora vimos como realizar clases sueltas
 * Pero las clases rara vez viven sueltas, sino que colaboran entre si y arman lo que se llama el modelo del sistema
-* Tenemos distintos tipos de clases
-    * Clases del Dominio / Modelo
+* Vamos a ver un ejemplo de por la parte del dominio de un sistema bancario
+
+* Partamos de la descripcion coloquial de un sistema bancario
+   * "Tengo un banco en el cual se registran cuentas y en las cuentas se lleva un registro de los movimientos que se realizan"
+   * Cuales son las tres clases mencionadas?
+        * banco, cuentas, clientes, movimientos
+    
+* Le pedimos a la IA
+```
+A partir de esta descripcion coloquial ""Tengo un banco en el cual se registran cuentas y en las cuentas se lleva un registro de los movimientos que se realizan"" quiero que me hagas el disenio en mermaid del diagrama de clases del dominio / modelo de mi aplicacion
+```
+
+* La IA me genero
+
+```mermaid
+classDiagram
+    class Banco {
+        -nombre: str
+        -cuentas: List~Cuenta~
+        +registrarCuenta(cuenta: Cuenta)
+        +buscarCuenta(numero: str): Cuenta
+    }
+
+    class Cuenta {
+        -numero: str
+        -titular: str
+        -saldo: float
+        -movimientos: List~Movimiento~
+        +depositar(importe: float)
+        +retirar(importe: float)
+        +registrarMovimiento(movimiento: Movimiento)
+    }
+
+    class Movimiento {
+        -fecha: datetime
+        -tipo: TipoMovimiento
+        -importe: float
+        -descripcion: str
+    }
+
+    class TipoMovimiento {
+        <<enumeration>>
+        DEPOSITO
+        EXTRACCION
+        TRANSFERENCIA
+    }
+
+    Banco "1" *-- "0..*" Cuenta : registra
+    Cuenta "1" *-- "0..*" Movimiento : registra
+    Movimiento --> TipoMovimiento : tiene
+```
+
+* Observaciones
+  * Entre las clases en UML hay relaciones, que se marcan con una flecha
+  * Las relaciones tiene cardinalidad
+     * Una cuenta pertenece a 1 banco
+     * 1 banco tiene varias cuentas (0..*)
+     * 1 movimiento pertenece a una cuenta
+     * 1 cuenta tiene varios movimientos
+
+* Suponiendo que este codigo esta bien hacemos una primera version con la IA
+
+```
+from datetime import datetime
+from enum import Enum
+
+
+class TipoMovimiento(Enum):
+    DEPOSITO = "Depósito"
+    EXTRACCION = "Extracción"
+    TRANSFERENCIA = "Transferencia"
+
+
+class Movimiento:
+    def __init__(
+        self,
+        fecha: datetime,
+        tipo: TipoMovimiento,
+        importe: float,
+        descripcion: str
+    ):
+        self.fecha = fecha
+        self.tipo = tipo
+        self.importe = importe
+        self.descripcion = descripcion
+
+
+class Cuenta:
+    def __init__(self, numero: str, titular: str):
+        self.numero = numero
+        self.titular = titular
+        self.saldo = 0.0
+        self.movimientos = []
+
+    def depositar(self, importe: float):
+        self.saldo += importe
+
+        movimiento = Movimiento(
+            datetime.now(),
+            TipoMovimiento.DEPOSITO,
+            importe,
+            "Depósito"
+        )
+
+        self.registrar_movimiento(movimiento)
+
+    def retirar(self, importe: float):
+        self.saldo -= importe
+
+        movimiento = Movimiento(
+            datetime.now(),
+            TipoMovimiento.EXTRACCION,
+            importe,
+            "Extracción"
+        )
+
+        self.registrar_movimiento(movimiento)
+
+    def registrar_movimiento(self, movimiento: Movimiento):
+        self.movimientos.append(movimiento)
+
+
+class Banco:
+    def __init__(self, nombre: str):
+        self.nombre = nombre
+        self.cuentas = []
+
+    def registrar_cuenta(self, cuenta: Cuenta):
+        self.cuentas.append(cuenta)
+
+    def buscar_cuenta(self, numero: str) -> Cuenta:
+        for cuenta in self.cuentas:
+            if cuenta.numero == numero:
+                return cuenta
+
+        return None
+```
+
+* PEro en funcion de lo que vimos en clase me doy cuenta que si bien la sintaxis es correcta no respeta muchoas de las cosas que vimos en clase
+   * No valida la consistencia de los objetos en todo momento
+   * No tiene getters y setters
+   * A veces los setter no son necesarios (cambiar el numero de una cuenta es incorrecto)
+
+```python
+from datetime import datetime
+from enum import Enum
+
+
+class TipoMovimiento(Enum):
+    DEPOSITO = "Depósito"
+    EXTRACCION = "Extracción"
+    TRANSFERENCIA = "Transferencia"
+
+
+class Movimiento:
+
+    def __init__(
+        self,
+        tipo: TipoMovimiento,
+        importe: float,
+        descripcion: str
+    ):
+        if importe <= 0:
+            raise ValueError("El importe debe ser mayor que cero")
+
+        if not descripcion:
+            raise ValueError("La descripción no puede estar vacía")
+
+        self.__fecha = datetime.now()
+        self.__tipo = tipo
+        self.__importe = importe
+        self.__descripcion = descripcion
+
+    @property
+    def fecha(self):
+        return self.__fecha
+
+    @property
+    def tipo(self):
+        return self.__tipo
+
+    @property
+    def importe(self):
+        return self.__importe
+
+    @property
+    def descripcion(self):
+        return self.__descripcion
+
+
+class Cuenta:
+
+    def __init__(self, numero: str, titular: str):
+        if not numero:
+            raise ValueError("El número de cuenta no puede estar vacío")
+
+        if not titular:
+            raise ValueError("El titular no puede estar vacío")
+
+        self.__numero = numero
+        self.__titular = titular
+        self.__saldo = 0.0
+        self.__movimientos = []
+
+    @property
+    def numero(self):
+        return self.__numero
+
+    @property
+    def titular(self):
+        return self.__titular
+
+    @titular.setter
+    def titular(self, titular):
+        if not titular:
+            raise ValueError("El titular no puede estar vacío")
+
+        self.__titular = titular
+
+    @property
+    def saldo(self):
+        return self.__saldo
+
+    @property
+    def movimientos(self):
+        return tuple(self.__movimientos)
+
+    def depositar(self, importe: float):
+        if importe <= 0:
+            raise ValueError("El importe debe ser mayor que cero")
+
+        self.__saldo += importe
+
+        movimiento = Movimiento(
+            TipoMovimiento.DEPOSITO,
+            importe,
+            "Depósito"
+        )
+
+        self.__movimientos.append(movimiento)
+
+    def retirar(self, importe: float):
+        if importe <= 0:
+            raise ValueError("El importe debe ser mayor que cero")
+
+        if importe > self.__saldo:
+            raise ValueError("Saldo insuficiente")
+
+        self.__saldo -= importe
+
+        movimiento = Movimiento(
+            TipoMovimiento.EXTRACCION,
+            importe,
+            "Extracción"
+        )
+
+        self.__movimientos.append(movimiento)
+
+
+class Banco:
+
+    def __init__(self, nombre: str):
+        if not nombre:
+            raise ValueError("El nombre del banco no puede estar vacío")
+
+        self.__nombre = nombre
+        self.__cuentas = []
+
+    @property
+    def nombre(self):
+        return self.__nombre
+
+    @property
+    def cuentas(self):
+        return tuple(self.__cuentas)
+
+    def registrar_cuenta(self, cuenta: Cuenta):
+        if cuenta is None:
+            raise ValueError("La cuenta no puede ser None")
+
+        if self.buscar_cuenta(cuenta.numero) is not None:
+            raise ValueError("Ya existe una cuenta con ese número")
+
+        self.__cuentas.append(cuenta)
+
+    def buscar_cuenta(self, numero: str):
+        for cuenta in self.__cuentas:
+            if cuenta.numero == numero:
+                return cuenta
+
+        return None
+```
