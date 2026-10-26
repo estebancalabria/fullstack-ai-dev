@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        async function getByUrl(){
+            const url = document.getElementById('url').value;
+            const response = await fetch(url);
+            const data = await response.json();
+            document.getElementById('resultText').value = JSON.stringify(data, null, 2);
+        }
+    </script>
+</head>
+<body>
+
+    <input type="text" id="url" placeholder="url"> 
+    <div>
+        <button id="btnGet" onclick="getByUrl()">GET</button>
+    </div>
+    <button id="btnPost">POST</button>
+
+    <div id="result">
+        Resultado
+        <div>
+            <textarea id="resultText"> </textarea>
+        </div>
+    </div>
+</body>
+</html>

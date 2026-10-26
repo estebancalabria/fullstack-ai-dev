@@ -1,0 +1,17 @@
+{
+  "personas": [
+    {
+      "id": "1",
+      "nombre": "Juan"
+    },
+    {
+      "id": "2",
+      "nombre": "Maria"
+    },
+    {
+      "id": "3",
+      "nombre": "Pedro"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

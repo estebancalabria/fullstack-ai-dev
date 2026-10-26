@@ -1,12 +1,14 @@
 from datetime import date
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from models.alumno import Alumno
 from services.alumno_service import AlumnoService
 
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.get("/alumnos")
