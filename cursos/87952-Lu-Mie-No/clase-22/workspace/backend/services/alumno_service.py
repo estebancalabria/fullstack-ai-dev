@@ -14,6 +14,7 @@ class AlumnoService:
 
     def obtener_alumnos(self) -> list[Alumno]:
         return self.repo.obtener_todos()
+    
 
     def obtener_alumno_por_legajo(self, legajo: int) -> Alumno | None:
         return self.repo.obtener_por_legajo(legajo)
