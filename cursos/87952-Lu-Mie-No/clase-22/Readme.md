@@ -253,3 +253,117 @@ def eliminar(self, legajo: int) -> bool:
 # Este codigo lo vamos a probar y lo vamos a mejorar....
 #...despues del break hasta y 40
 ---
+
+* Hicimos Kahott
+* Y completar este form... https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=FPbD6dnIlUCa1IfSyafYxE4uGCthyi9EnQYg85vv3slURUJaT08yRjI3UUo0TVZDRkdQNEVSMlE2Qi4u
+
+* Hay que probar nuesta API, pero antes algunos refactorigns
+
+* Es una buena practica una vez que tengo el codigo y lo pruebo mejorarle la calida con IA
+  * Sacarle los valores hardcodeados
+  * Luego le podemos sugeir mejoras
+ 
+```
+from contextlib import closing
+from datetime import date
+import sqlite3
+
+from models.alumno import Alumno
+
+DB_NAME = "universidad.db"
+
+SQL_CREAR_TABLA_ALUMNOS = """
+CREATE TABLE IF NOT EXISTS alumnos (
+    legajo INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    apellido TEXT NOT NULL,
+    fecha_nacimiento DATE NOT NULL
+);
+"""
+
+SQL_INSERTAR_ALUMNO = """
+INSERT INTO alumnos (nombre, apellido, fecha_nacimiento)
+VALUES (?, ?, ?);
+"""
+
+SQL_OBTENER_ALUMNO_POR_LEGAJO = """
+SELECT legajo, nombre, apellido, fecha_nacimiento
+FROM alumnos
+WHERE legajo = ?;
+"""
+
+SQL_OBTENER_TODOS_LOS_ALUMNOS = """
+SELECT legajo, nombre, apellido, fecha_nacimiento
+FROM alumnos;
+"""
+
+SQL_ELIMINAR_ALUMNO = """
+DELETE FROM alumnos
+WHERE legajo = ?;
+"""
+
+
+class RepositorioAlumnos:
+
+    def _conectar(self):
+        return sqlite3.connect(DB_NAME)
+
+    def __init__(self):
+        with closing(self._conectar()) as conn:
+            with conn:
+                conn.execute(SQL_CREAR_TABLA_ALUMNOS)
+
+    def guardar(self, alumno: Alumno) -> None:
+        with closing(self._conectar()) as conn:
+            with conn:
+                conn.execute(SQL_INSERTAR_ALUMNO, (
+                    alumno.nombre,
+                    alumno.apellido,
+                    alumno.fecha_nacimiento
+                ))
+
+    def obtener_por_legajo(self, legajo: int) -> Alumno | None:
+        with closing(self._conectar()) as conn:
+            fila = conn.execute(
+                SQL_OBTENER_ALUMNO_POR_LEGAJO,
+                (legajo,)
+            ).fetchone()
+
+            if fila is None:
+                return None
+
+            return Alumno(
+                legajo=fila[0],
+                nombre=fila[1],
+                apellido=fila[2],
+                fecha_nacimiento=date.fromisoformat(fila[3])
+            )
+
+    def obtener_todos(self) -> list[Alumno]:
+        with closing(self._conectar()) as conn:
+            filas = conn.execute(
+                SQL_OBTENER_TODOS_LOS_ALUMNOS
+            ).fetchall()
+
+            return [
+                Alumno(
+                    legajo=fila[0],
+                    nombre=fila[1],
+                    apellido=fila[2],
+                    fecha_nacimiento=date.fromisoformat(fila[3])
+                )
+                for fila in filas
+            ]
+
+    def eliminar(self, legajo: int) -> bool:
+        with closing(self._conectar()) as conn:
+            with conn:
+                cursor = conn.execute(
+                    SQL_ELIMINAR_ALUMNO,
+                    (legajo,)
+                )
+                return cursor.rowcount > 0
+```
+
+> [!NOTE]
+> Si el codigo que me propone la IA me parece mejor, acepto los cambios, sino me quedo con la version que mas entiendo y mas me gusta
