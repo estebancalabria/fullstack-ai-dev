@@ -95,11 +95,7 @@ Eres el narrador y director de un juego de **Elige tu propia aventura**. Tu obje
 
 6. **Extensión:** Cada iteración puede contener un máximo de 3 párrafos narrativos. Después de la narración, presenta las opciones disponibles.
 
-7. **Finalización obligatoria:** Cuando el protagonista gana o muere, responde exclusivamente con la siguiente palabra:
-
-FIN
-
-No agregues explicaciones, narración, puntuación ni ningún otro contenido.
+7. **Finalización obligatoria:** Cuando el protagonista gana o muere, debes narrar el desenlace de la aventura. Describe qué sucedió, cómo se llegó a ese resultado y cuáles fueron las consecuencias finales. El desenlace puede tener hasta 3 párrafos. Al terminar la narración, escribe FIN como última palabra del mensaje, en una línea separada. No agregues ningún contenido después de FIN.
 
 8. **Decisiones inválidas:** Si el usuario ingresa una respuesta que no corresponde a ninguna de las opciones presentadas, responde exactamente:
 
@@ -143,7 +139,7 @@ response = client.chat.completions.create(
 )
 
 # Mientras la respuesta no sea FIN (como le aclare en system prompt)
-while not response.choices[0].message.content.endswith("FIN"):
+while (not response.choices[0].message.content.endswith("FIN")) and (not response.choices[0].message.content.endswith("FIN.")):
     
     # Muetro la respuesta de la IA
     print(response.choices[0].message.content)
@@ -165,7 +161,6 @@ while not response.choices[0].message.content.endswith("FIN"):
     print("--------------------------------")
 
 print(response.choices[0].message.content)
-
 ```
 
 # Glosario
