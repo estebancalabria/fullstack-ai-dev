@@ -163,6 +163,13 @@ while (not response.choices[0].message.content.endswith("FIN")) and (not respons
 print(response.choices[0].message.content)
 ```
 
+> [!NOTE]
+> IDEON! Por ejemplo usar algo asi para generar los dialogos de los NPC de un juego re ROL!
+
+* Sugerencias de mejora con IA
+  * Siempre le pongo a la IA el codigo y veo que mejoras me sugirere
+  * Si me gustan, la acepto, sino no
+
 # Glosario
 
 * Slop
