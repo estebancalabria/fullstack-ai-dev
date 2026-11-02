@@ -46,8 +46,32 @@
 
 # Juego con IA
 
+* Vamos a abrir un colab
+  * (DEspues les paso el link(
+* Vamos a sacar una api key de GROQ
+  * https://console.groq.com/keys
+  * Saco mi api Key y la guardo en un lugar seguro
+
+* Alguno leyo lo libros de "Elige tu propia aventura"?
+  * https://es.scribd.com/document/342956073/27-En-globo-por-el-Sahara-pdf
+    
+<img width="360" height="555" alt="image" src="https://github.com/user-attachments/assets/abf0a0a1-0289-41e1-879b-c75e7d47face" />
+
+
+* Vamos a hacer un Elije tu propia aventura con IA.
+  * La IA nos cuenta una historia. Nos da opciones para elegir.
+  * El juego termina con que ganamos o morimos
+  * El juego tiene maximo 5 iteraciones
+  * Cada iteracion la IA genera maximo 3 parrafos y luego las opciones
+  * Si el juego termina la IA responde FIN sin nada mas. Solmente la palabra FIN
+  * Si el usuario no elije una de las opcione splanteada la IA responde "No entiendo la opcion y vuelve a repetir lo ultimo"
+    
+  
+ * Primero tenemos que definir el System Prompt donde vamos a programar las intrucciones generales del juego
+
 # Glosario
 
 * Slop
   * Slop es contenido de baja calidad, genérico o sin valor, producido masivamente —generalmente mediante IA— sin criterio, originalidad ni cuidado.
+    * Con esto empezamos a Mejorar los prompts, armar documentos confiables como parte del contexto
     
