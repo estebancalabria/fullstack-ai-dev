@@ -73,6 +73,7 @@
 from openai import OpenAI
 
 api_key = input("Ingrese su API Key: ")
+
 system_prompt = """
 # SYSTEM PROMPT — Elige tu propia aventura
 
@@ -141,8 +142,30 @@ response = client.chat.completions.create(
     messages=messages,
 )
 
-print("--------------------------------")
+# Mientras la respuesta no sea FIN (como le aclare en system prompt)
+while not response.choices[0].message.content.endswith("FIN"):
+    
+    # Muetro la respuesta de la IA
+    print(response.choices[0].message.content)
+
+    #Agrego la respuesta de la IA como rol assistant en la conversacion (para mantener el historial)
+    messages.append({"role" : "assistant", "content" : response.choices[0].message.content})
+
+    #Preguto la opcion al usuario
+    user_input = input("Ingrese su respuesta: ")
+
+    # Agrego la respuesta del usario a la conversacion
+    messages.append({"role" : "user", "content" : user_input})
+
+    response = client.chat.completions.create(
+    model="openai/gpt-oss-20b",
+    messages=messages,
+    )
+
+    print("--------------------------------")
+
 print(response.choices[0].message.content)
+
 ```
 
 # Glosario
