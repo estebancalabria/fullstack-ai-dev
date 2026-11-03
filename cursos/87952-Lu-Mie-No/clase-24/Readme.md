@@ -381,6 +381,8 @@ response = client.chat.completions.create(
 # Convertimos la respuesta JSON en un diccionario
 contenido = response.choices[0].message.content
 resultado = json.loads(contenido)
+print(resultado)
+
 
 # Verificamos si hubo un error
 if "error" in resultado:
@@ -415,6 +417,7 @@ else:
 
     else:
         print("\nOpción inválida.")
+
 
 ```
 
