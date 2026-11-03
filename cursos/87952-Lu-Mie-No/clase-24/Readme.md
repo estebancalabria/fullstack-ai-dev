@@ -267,6 +267,7 @@ Devuelve exclusivamente un objeto JSON con esta estructura:
 
 ```python
 from openai import OpenAI
+import json
 
 api_key = input("Ingrese su API Key: ")
 
@@ -359,6 +360,61 @@ response = client.chat.completions.create(
     messages=messages,
 )
 
+# Parámetros fijos del juego
+parametros = {
+    "categoria": "Ciencia",
+    "dificultad": "media"
+}
+
+messages.append({
+    "role": "user",
+    "content": json.dumps(parametros)
+})
+
+# Consultamos a la IA
+response = client.chat.completions.create(
+    model="openai/gpt-oss-20b",
+    messages=messages,
+    response_format={"type": "json_object"}
+)
+
+# Convertimos la respuesta JSON en un diccionario
+contenido = response.choices[0].message.content
+resultado = json.loads(contenido)
+
+# Verificamos si hubo un error
+if "error" in resultado:
+
+    print(resultado["error"])
+
+else:
+
+    # Mostramos la pregunta
+    print("\n" + resultado["pregunta"])
+    print()
+
+    opciones = resultado["opciones"]
+
+    # Mostramos las opciones
+    for i, opcion in enumerate(opciones):
+        print(f"{i + 1}. {opcion['texto']}")
+
+    # Evaluamos la respuesta
+    respuesta = int(input("\nTu respuesta (1-4): "))
+
+    if 1 <= respuesta <= len(opciones):
+
+        if opciones[respuesta - 1]["correcta"]:
+            print("\n¡CORRECTO!")
+        else:
+            print("\nINCORRECTO")
+
+            for i, opcion in enumerate(opciones):
+                if opcion["correcta"]:
+                    print(f"La respuesta correcta era: {i + 1}. {opcion['texto']}")
+
+    else:
+        print("\nOpción inválida.")
 
 ```
 
