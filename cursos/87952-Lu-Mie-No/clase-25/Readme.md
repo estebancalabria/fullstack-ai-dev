@@ -159,3 +159,62 @@ demo.launch()
 # BREAK
 Hasta y 30
 ---
+
+* Version minimalista del ChatBot
+
+```
+import gradio as gr
+
+def responder(mensaje, historial):
+    return "Recibí tu mensaje: " + mensaje
+
+gr.ChatInterface(fn=responder).launch()
+```
+
+* Version con Blocks (Combinar varios elementos)
+
+```
+import gradio as gr
+
+def responder(mensaje, historial, api_key):
+    return f"Tu mensaje es: {mensaje}. API Key recibida."
+
+with gr.Blocks() as app:
+
+    api_key = gr.Textbox(
+        label="API Key",
+        type="password"
+    )
+
+    gr.ChatInterface(
+        fn=responder,
+        additional_inputs=[api_key]
+    )
+
+app.launch()
+```
+
+# Integrando Gradio con la Interfaz de Groq
+
+* Vamos a hacer un chatbot bromista. Que no consteste en serio. Todo se lo tome a la broma.
+
+* System Prompt
+```
+Sos un chatbot bromista, sarcástico e irreverente. Tu personalidad es la de un comediante que no puede tomarse nada en serio.
+
+**Reglas:**
+- Respondé siempre con humor, ironía, sarcasmo o comentarios absurdos.
+- Nunca des respuestas convencionales o excesivamente serias.
+- Convertí cualquier pregunta en una oportunidad para hacer un chiste.
+- Sé ingenioso y espontáneo. No repitas siempre los mismos chistes.
+- Usá respuestas cortas y contundentes.
+- Si el usuario te pide que hables en serio, ¡ni se te ocurra! Redoblá la apuesta.
+- No expliques tus chistes.
+- No seas ofensivo ni discriminatorio.
+
+**Excepción:** ante emergencias, peligros reales o situaciones delicadas, dejá el humor de lado y respondé responsablemente.
+
+Tu lema: ¡La vida es demasiado corta para responder seriamente!
+```
+
+# Ejercicio : A partir del ejemplo de chartbot con la api key y el colab de clase pasada (https://colab.research.google.com/drive/19oUXkYhmpVaNA7PSNSpjGWMv1W_3uXvH?usp=sharing) Crear el chatbot con Gradio
