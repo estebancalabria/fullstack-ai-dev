@@ -303,3 +303,212 @@ app.launch()
 # BREAK
 Hasta y 20
 ---
+
+* Agregarle al codigo anterior para que permtia seleccionar la opcion con un boton, combo o desplegable
+
+```
+
+import re
+import gradio as gr
+from openai import OpenAI
+
+
+SYSTEM_PROMPT = """
+# SYSTEM PROMPT — Elige tu propia aventura
+
+Eres el narrador y director de un juego de Elige tu propia aventura.
+Tu objetivo es crear una historia interactiva en la que el usuario
+toma decisiones que determinan el desarrollo y el desenlace.
+
+## Reglas del juego
+
+1. Narrativa:
+Cuenta una historia atrapante, con contexto, personajes,
+conflictos y situaciones que requieran tomar decisiones.
+
+2. Opciones:
+Al final de cada iteración, presenta entre 2 y 3 opciones
+numeradas para que el usuario elija cómo continuar la historia.
+
+3. Consecuencias:
+Cada decisión debe tener consecuencias reales sobre el desarrollo
+de la historia. Puede conducir al éxito, al fracaso o a situaciones
+inesperadas.
+
+4. Condiciones de finalización:
+La aventura debe terminar obligatoriamente con uno de estos
+dos resultados:
+- Victoria: el protagonista alcanza su objetivo.
+- Derrota: el protagonista muere.
+
+5. Duración:
+El juego tiene un máximo de 5 iteraciones. Controla internamente
+cuántas iteraciones se han desarrollado. La aventura debe concluir
+antes o al llegar a la quinta iteración.
+
+6. Extensión:
+Cada iteración puede contener un máximo de 3 párrafos narrativos.
+Después de la narración, presenta las opciones disponibles.
+
+7. Finalización obligatoria:
+Cuando el protagonista gana o muere, narra el desenlace.
+Describe qué sucedió, cómo se llegó a ese resultado y las
+consecuencias finales.
+
+El desenlace puede tener hasta 3 párrafos.
+Al terminar la narración, escribe FIN como última palabra,
+en una línea separada. No agregues contenido después de FIN.
+
+8. Decisiones inválidas:
+Si el usuario ingresa una respuesta que no corresponde a
+ninguna de las opciones presentadas, responde exactamente:
+
+No entiendo la opción.
+
+A continuación, repite la última narración y las mismas opciones,
+sin avanzar la historia ni consumir una iteración adicional.
+
+9. Control de continuidad:
+Mantén coherencia entre las decisiones, los personajes,
+los acontecimientos y sus consecuencias.
+
+10. Control de elecciones:
+No elijas por el usuario. Espera siempre su respuesta.
+
+## Formato de cada iteración
+
+**Narración:**
+
+Hasta 3 párrafos describiendo la situación actual y sus consecuencias.
+
+**¿Qué haces?**
+
+1. Primera opción.
+2. Segunda opción.
+3. Tercera opción (opcional).
+
+## Instrucción final
+
+Comienza directamente con la primera escena de la aventura.
+No expliques las reglas ni reveles posibles desenlaces.
+Sumérgete inmediatamente en la historia.
+"""
+
+
+def separar_opciones(texto):
+    """Separa la narración de las opciones numeradas."""
+
+    coincidencia = re.search(
+        r"\*\*¿Qué haces\?\*\*|¿Qué haces\?",
+        texto,
+        re.IGNORECASE
+    )
+
+    if coincidencia:
+        narracion = texto[:coincidencia.start()].strip()
+        bloque_opciones = texto[coincidencia.end():]
+    else:
+        narracion = texto
+        bloque_opciones = texto
+
+    encontradas = re.findall(
+        r"^\s*(\d+)[.)]\s+(.+?)\s*$",
+        bloque_opciones,
+        re.MULTILINE
+    )
+
+    opciones = [
+        {
+            "label": descripcion,
+            "value": f"{numero}. {descripcion}"
+        }
+        for numero, descripcion in encontradas
+    ]
+
+    # Si no encontramos el encabezado, conservamos
+    # el texto original como narración.
+    if not coincidencia:
+        narracion = re.sub(
+            r"^\s*\d+[.)]\s+.+$",
+            "",
+            texto,
+            flags=re.MULTILINE
+        ).strip()
+
+    return narracion, opciones
+
+
+def responder(mensaje, historial, api_key):
+
+    try:
+        if not api_key:
+            return "Por favor, ingresá tu API Key de Groq."
+
+        client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.groq.com/openai/v1"
+        )
+
+        messages = [
+            {"role": "system", "content": SYSTEM_PROMPT}
+        ]
+
+        for intercambio in historial:
+            messages.append({
+                "role": intercambio["role"],
+                "content": intercambio["content"]
+            })
+
+        messages.append({
+            "role": "user",
+            "content": mensaje
+        })
+
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=messages
+        )
+
+        texto = response.choices[0].message.content
+
+        narracion, opciones = separar_opciones(texto)
+
+        # Gradio muestra las opciones como botones
+        # directamente dentro del Chatbot.
+
+        return {
+            "role": "assistant",
+            "content": narracion,
+            "options": opciones
+        }
+
+    except Exception as e:
+        return f"Error: {type(e).__name__}: {str(e)}"
+
+
+with gr.Blocks(title="Elige tu propia aventura") as app:
+
+    gr.Markdown("# Elige tu propia aventura")
+
+    gr.Markdown(
+        "Una aventura interactiva en la que "
+        "tus decisiones determinan el destino."
+    )
+
+    api_key = gr.Textbox(
+        label="Groq API Key",
+        placeholder="Ingresá tu API Key",
+        type="password"
+    )
+
+    gr.ChatInterface(
+        fn=responder,
+        additional_inputs=[api_key],
+        additional_inputs_accordion="Configuración"
+    )
+
+
+app.launch()
+```
+
+* 
