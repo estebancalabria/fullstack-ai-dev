@@ -523,3 +523,237 @@ app.launch()
 
 * Una vez que lo tenga completar el siguiente link:
   * https://forms.cloud.microsoft/r/8WNbNSBkJS 
+
+* Ejemplo. Version de Diego
+
+```
+#Elige tu propia aventura con Gradio, y pide opciones con botones
+import re
+
+import gradio as gr
+import openai
+from openai import OpenAI
+
+
+MODELO = "openai/gpt-oss-20b"
+MAX_OPCIONES = 3
+
+SYSTEM_PROMPT = """
+# SYSTEM PROMPT — Elige tu propia aventura
+
+Eres el narrador y director de un juego de Elige tu propia aventura.
+Tu objetivo es crear una historia interactiva en la que el usuario
+toma decisiones que determinan el desarrollo y el desenlace.
+
+## Reglas del juego
+
+1. Narrativa:
+Cuenta una historia atrapante, con contexto, personajes,
+conflictos y situaciones que requieran tomar decisiones.
+
+2. Opciones:
+Al final de cada iteración, presenta entre 2 y 3 opciones
+numeradas para que el usuario elija cómo continuar la historia.
+
+3. Consecuencias:
+Cada decisión debe tener consecuencias reales sobre el desarrollo
+de la historia. Puede conducir al éxito, al fracaso o a situaciones
+inesperadas.
+
+4. Condiciones de finalización:
+La aventura debe terminar obligatoriamente con uno de estos
+dos resultados:
+- Victoria: el protagonista alcanza su objetivo.
+- Derrota: el protagonista muere.
+
+5. Duración:
+El juego tiene un máximo de 5 iteraciones. Controla internamente
+cuántas iteraciones se han desarrollado. La aventura debe concluir
+antes o al llegar a la quinta iteración.
+
+6. Extensión:
+Cada iteración puede contener un máximo de 3 párrafos narrativos.
+Después de la narración, presenta las opciones disponibles.
+
+7. Finalización obligatoria:
+Cuando el protagonista gana o muere, narra el desenlace.
+Describe qué sucedió, cómo se llegó a ese resultado y las
+consecuencias finales.
+
+El desenlace puede tener hasta 3 párrafos.
+Al terminar la narración, escribe FIN como última palabra,
+en una línea separada. No agregues contenido después de FIN.
+
+8. Decisiones inválidas:
+Si el usuario ingresa una respuesta que no corresponde a
+ninguna de las opciones presentadas, responde exactamente:
+
+No entiendo la opción.
+
+A continuación, repite la última narración y las mismas opciones,
+sin avanzar la historia ni consumir una iteración adicional.
+
+9. Control de continuidad:
+Mantén coherencia entre las decisiones, los personajes,
+los acontecimientos y sus consecuencias.
+
+10. Control de elecciones:
+No elijas por el usuario. Espera siempre su respuesta.
+
+## Formato de cada iteración
+
+**Narración:**
+
+Hasta 3 párrafos describiendo la situación actual y sus consecuencias.
+
+**¿Qué haces?**
+
+1. Primera opción.
+2. Segunda opción.
+3. Tercera opción (opcional).
+
+## Instrucción final
+
+Comienza directamente con la primera escena de la aventura.
+No expliques las reglas ni reveles posibles desenlaces.
+Sumérgete inmediatamente en la historia.
+"""
+
+# Mensaje inicial (no se muestra en el chat) para que el modelo arranque la historia
+MENSAJE_INICIAL = "Comenzá la aventura."
+
+# Reconoce líneas de opciones como "1. Texto", "2) Texto" o "**3.** Texto"
+PATRON_OPCION = re.compile(r"^\s*(?:\*\*)?([1-9])[.)]\s*(?:\*\*)?\s*(.+)$")
+
+
+# ---------- Comunicación con Groq ----------
+
+def pedir_respuesta(api_key, mensajes):
+    """Le manda la conversación al modelo y devuelve el texto de su respuesta."""
+    client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
+    respuesta = client.chat.completions.create(model=MODELO, messages=mensajes)
+    return respuesta.choices[0].message.content or ""
+
+
+# ---------- Lectura de la respuesta ----------
+
+def es_final(texto):
+    """True si la respuesta termina con FIN (acepta 'FIN', 'FIN.' o '**FIN**')."""
+    return texto.strip().rstrip(".*_ \n").endswith("FIN")
+
+
+def extraer_opciones(texto):
+    """Busca las opciones numeradas después de '¿Qué haces?' y las devuelve como '1. Texto'."""
+    parte_final = texto.rsplit("¿Qué haces?", 1)[-1]
+    opciones = {}
+    for linea in parte_final.splitlines():
+        coincidencia = PATRON_OPCION.match(linea)
+        if coincidencia:
+            numero, descripcion = coincidencia.groups()
+            opciones[int(numero)] = descripcion.replace("**", "").strip()
+    return [f"{numero}. {opciones[numero]}" for numero in sorted(opciones)][:MAX_OPCIONES]
+
+
+# ---------- Actualización de la pantalla ----------
+
+def para_mostrar(mensajes):
+    """Lo que se ve en el chat: todo menos el prompt de sistema y el mensaje inicial."""
+    return [{"role": m["role"], "content": m["content"]} for m in mensajes[2:]]
+
+
+def ocultar_botones():
+    return [gr.Button(visible=False) for _ in range(MAX_OPCIONES)]
+
+
+def botones_para(texto):
+    """Arma los botones de opciones a partir de la última respuesta del modelo."""
+    if es_final(texto):
+        return ocultar_botones()
+
+    opciones = extraer_opciones(texto)
+    if not opciones:
+        # Si el modelo no respetó el formato, ofrecemos botones genéricos
+        opciones = [f"Opción {numero}" for numero in range(1, MAX_OPCIONES + 1)]
+
+    botones = []
+    for i in range(MAX_OPCIONES):
+        if i < len(opciones):
+            botones.append(gr.Button(value=opciones[i], visible=True, interactive=True))
+        else:
+            botones.append(gr.Button(visible=False))
+    return botones
+
+
+def bloquear_botones():
+    """Mientras el modelo piensa, los botones no se pueden tocar (evita elegir dos veces)."""
+    return [gr.Button(interactive=False) for _ in range(MAX_OPCIONES)]
+
+
+# ---------- Acciones del juego ----------
+
+def comenzar(api_key):
+    if not api_key:
+        aviso = [{"role": "assistant", "content": "Por favor, ingresá tu API Key de Groq."}]
+        return [], aviso, *ocultar_botones()
+
+    mensajes = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": MENSAJE_INICIAL},
+    ]
+    try:
+        texto = pedir_respuesta(api_key, mensajes)
+    except openai.APIError as e:
+        aviso = [{"role": "assistant", "content": f"No pude empezar la aventura. Error: {type(e).__name__}: {e}"}]
+        return [], aviso, *ocultar_botones()
+
+    mensajes = mensajes + [{"role": "assistant", "content": texto}]
+    return mensajes, para_mostrar(mensajes), *botones_para(texto)
+
+
+def elegir(opcion, api_key, mensajes):
+    """Se ejecuta al tocar un botón. 'opcion' es el texto del botón, por ejemplo '2. Huir por el bosque'."""
+    con_eleccion = mensajes + [{"role": "user", "content": opcion}]
+    try:
+        texto = pedir_respuesta(api_key, con_eleccion)
+    except openai.APIError as e:
+        # No guardamos la elección y devolvemos los mismos botones, así se puede volver a intentar
+        aviso = {"role": "assistant", "content": f"Error: {type(e).__name__}: {e}. Probá de nuevo."}
+        return mensajes, para_mostrar(mensajes) + [aviso], *botones_para(mensajes[-1]["content"])
+
+    mensajes = con_eleccion + [{"role": "assistant", "content": texto}]
+    return mensajes, para_mostrar(mensajes), *botones_para(texto)
+
+
+# ---------- Interfaz ----------
+
+# Gradio 5 necesita que se le aclare el formato de los mensajes; Gradio 6 ya lo usa por defecto
+OPCIONES_CHAT = {"type": "messages"} if int(gr.__version__.split(".")[0]) < 6 else {}
+
+with gr.Blocks(title="Elige tu propia aventura") as app:
+
+    gr.Markdown("# Elige tu propia aventura")
+    gr.Markdown("Una aventura interactiva en la que tus decisiones determinan el destino.")
+
+    api_key = gr.Textbox(label="Groq API Key", placeholder="Ingresá tu API Key", type="password")
+    boton_comenzar = gr.Button("Comenzar nueva aventura", variant="primary")
+
+    estado = gr.State([])  # la conversación completa de esta partida
+    chat = gr.Chatbot(label="Aventura", height=450, **OPCIONES_CHAT)
+
+    with gr.Column():
+        botones_opciones = [gr.Button(visible=False) for _ in range(MAX_OPCIONES)]
+
+    salidas = [estado, chat, *botones_opciones]
+
+    boton_comenzar.click(comenzar, inputs=[api_key], outputs=salidas)
+
+    for boton in botones_opciones:
+        # Primero se bloquean los botones y después se pide la respuesta.
+        # 'boton' como input le pasa a 'elegir' el texto del botón tocado.
+        boton.click(bloquear_botones, outputs=botones_opciones).then(
+            elegir, inputs=[boton, api_key, estado], outputs=salidas
+        )
+
+
+app.launch(debug=True)
+```
