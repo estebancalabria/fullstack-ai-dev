@@ -511,4 +511,15 @@ with gr.Blocks(title="Elige tu propia aventura") as app:
 app.launch()
 ```
 
-* 
+# Trabajo Practico
+
+* Mejorar la version anterior  y obtener la version final mejorada del juego
+  * Que primero solo muestre para ingresar API key y un boton para iniciar aventura
+  * Mostrar el ChatIngerface solo cuando inicias aventura
+  * Tener el boton para reiniciar aventura
+  * Que no se pu eda seguir iterando si dio Fin
+  * Cambiar el estilo visual
+
+
+* Una vez que lo tenga completar el siguiente link:
+  * https://forms.cloud.microsoft/r/8WNbNSBkJS 
