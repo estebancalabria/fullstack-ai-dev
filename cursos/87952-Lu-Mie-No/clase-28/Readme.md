@@ -183,3 +183,61 @@ https://agenticskills.io/ Skills y MCP compatibles con claude, code, etc
 # Break
 hasta y 45
 ---
+
+## Skiil con Claude Code
+
+* Claude Code es para mucho el estandar en agentes de codificacion
+* Se especializa en tareas complejas
+* Solo se puede usar en forma paga, pero vamos a intentar usarlo por medio de ollama
+
+## Requisitos
+
+* Instalar CURL
+	* https://curl.se/
+
+* Primero instalamos Claude Code
+	* https://claude.com/es/product/claude-code
+	 * https://code.claude.com/docs/es/quickstart#step-1-install-claude-code
+	* Ejecutamos en powershell en modo administrador
+
+```
+irm https://claude.ai/install.ps1 | iex
+```
+
+* Para verificar si instalo cierro la ventana de powershell, abro una terminal nueva y pongo
+
+```
+claude --version
+```
+
+* Instalar Ollama
+	* https://ollama.com/
+	* Es para instalar modelos localmente
+	* Pero ellos tambien te dejan utilizar algunos modelos online te regalan cierta cantidad de tokens para jugar por dia
+	 * Me logueo
+  
+* En powershell modo administrador ejecuto
+
+```
+irm https://ollama.com/install.ps1 | iex
+```
+
+* Para verificar la instalacion le damos en una nueva terminal
+
+```
+ollama --version
+```
+
+* Inicio el servicor de Ollama en la linea de comandos
+
+```
+ollama serve
+```
+
+* Luego en otra terminal
+
+```
+ollama launch claude
+```
+
+# Lo seguimos la proxima...
