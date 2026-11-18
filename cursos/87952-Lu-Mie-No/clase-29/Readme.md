@@ -2,7 +2,15 @@
 
 # Repaso
 
-
+* AiDev
+   * ff
+* Tratamos de Ejecutar Claude Code Con Illama
+   * Instalamos Claude Code
+   * Installamos Ollama
+   * Peeeroooo perrrrrrrro peeeeeeeeerooo...
+         * Ollama ya no deja usar modelos OS en la nube gratis para probar Claude Code
+     
+     
 
 # Novedades
 
